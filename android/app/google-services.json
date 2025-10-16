@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "837366691306",
+    "project_id": "tickets-firebase-aba0a",
+    "storage_bucket": "tickets-firebase-aba0a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:837366691306:android:d42729b06274e244652e93",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAe9NwLwhD2JVrzmzJm5NWhTOM5jv7kvns"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:837366691306:android:f007ca1ae528cc0e652e93",
+        "android_client_info": {
+          "package_name": "com.example.ticket_ilumel_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAe9NwLwhD2JVrzmzJm5NWhTOM5jv7kvns"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
