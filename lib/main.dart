@@ -6,6 +6,7 @@ import 'package:flutter_application_2/vistas/cliente.dart';
 import 'package:flutter_application_2/vistas/inicio.dart';
 import 'package:flutter_application_2/vistas/contable.dart';
 import 'package:flutter_application_2/vistas/cajera.dart';
+import 'package:flutter_application_2/vistas/login.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,13 +24,13 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       title: 'Contabilidad Ilumel',
       debugShowCheckedModeBanner: false,
-      initialRoute: '/Inicio',
+      initialRoute: '/Login',
       routes: {
+        '/Login': (context) => const LoginView(),
         '/Inicio': (context) => const Inicio(),
         '/Cliente': (context) => const Cliente(),
         '/Contable': (context) => const Contable(),
         '/Cajera': (context) => const Cajera(),
-
       }
     );
   }

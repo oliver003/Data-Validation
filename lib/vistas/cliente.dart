@@ -1,10 +1,46 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_2/services/select_image.dart';
 import 'package:flutter_application_2/services/upload_image.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+
+/// Formatter que obliga un prefijo fijo y permite solo N dígitos después.
+class PrefixDigitsFormatter extends TextInputFormatter {
+  final String prefix;
+  final int maxDigits;
+
+  PrefixDigitsFormatter({required this.prefix, required this.maxDigits});
+
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    String text = newValue.text;
+
+    // Si no empieza por el prefijo, reconstruimos manteniendo solo dígitos en el sufijo
+    if (!text.startsWith(prefix)) {
+      String onlyDigits = text.replaceAll(RegExp(r'[^0-9]'), '');
+      if (onlyDigits.length > maxDigits) onlyDigits = onlyDigits.substring(0, maxDigits);
+      final result = prefix + onlyDigits;
+      return TextEditingValue(
+        text: result,
+        selection: TextSelection.collapsed(offset: result.length),
+      );
+    }
+
+    // Normalizar sufijo: solo dígitos y límite de longitud
+    String suffix = text.substring(prefix.length);
+    suffix = suffix.replaceAll(RegExp(r'[^0-9]'), '');
+    if (suffix.length > maxDigits) suffix = suffix.substring(0, maxDigits);
+    final finalText = prefix + suffix;
+
+    int selIndex = newValue.selection.end;
+    if (selIndex < prefix.length) selIndex = prefix.length;
+    if (selIndex > finalText.length) selIndex = finalText.length;
+
+    return TextEditingValue(text: finalText, selection: TextSelection.collapsed(offset: selIndex));
+  }
+}
 
 class Cliente extends StatefulWidget {
   const Cliente({super.key});
@@ -23,6 +59,16 @@ class _ClienteState extends State<Cliente> {
   // ignore: non_constant_identifier_names
   final TextEditingController N_Pedido = TextEditingController();
   final formKey = GlobalKey<FormState>();
+
+  static const _prefix = 'PV-';
+
+  @override
+  void initState() {
+    super.initState();
+    // prefijar y posicionar el cursor después del prefijo
+    N_Pedido.text = _prefix;
+    N_Pedido.selection = TextSelection.collapsed(offset: _prefix.length);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,20 +149,33 @@ class _ClienteState extends State<Cliente> {
               children: [
                 TextFormField (
                   controller: N_Pedido,
-                  style: TextStyle(color: Colors.black),
+                  style: const TextStyle(color: Colors.black),
+                  // Limitar a 9 caracteres: 'PV-' + 6 dígitos = 9
+                  maxLength: 9,
+                  inputFormatters: [
+                    PrefixDigitsFormatter(prefix: _prefix, maxDigits: 6),
+                  ],
+                  textCapitalization: TextCapitalization.characters,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese el Numero de Pedido'; // Texto del mensaje de error
+                      return 'Por favor ingrese el Numero de Pedido';
+                    }
+
+                    // Requerimos el formato exacto: PV- seguido de 6 dígitos
+                      final pattern = RegExp(r'^PV-\d{6}$');
+                    if (!pattern.hasMatch(value)) {
+                      return 'Formato requerido: PV-123456';
                     }
                     return null;
                   },
                   decoration: InputDecoration(
                     labelText: "Numero de Pedido",
+                    hintText: "PV-000001",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       //borderSide: BorderSide(color: Colors.blue, width: 2)
                     ),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                   )
                 ),
               
@@ -129,6 +188,7 @@ class _ClienteState extends State<Cliente> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text("Por favor selecciona una imagen.")),
                         );
+                /// Formatter que obliga un prefijo fijo y permite solo N dígitos después.
                         return;
                       }
 
@@ -161,7 +221,8 @@ class _ClienteState extends State<Cliente> {
                           setState(() {
                             imagen_to_upload = null;
                             webImageBytes = null;
-                            N_Pedido.clear();
+                            N_Pedido.text = _prefix;
+                            N_Pedido.selection = TextSelection.collapsed(offset: _prefix.length);
                           });
                         } else {
                           if (context.mounted) {
