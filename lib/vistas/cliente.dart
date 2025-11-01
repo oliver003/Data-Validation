@@ -122,6 +122,7 @@ class _ClienteState extends State<Cliente> {
                             .add({
                           'N_Pedido': N_Pedido.text,
                           'Fecha': DateTime.now(),
+                          'estado': 'Enviado',
                         });
 
                         // 2️⃣ Subir imagen vinculada con el ID del documento

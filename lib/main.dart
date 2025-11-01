@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'package:flutter_application_2/vistas/cliente.dart';
-import 'package:flutter_application_2/vistas/inicio.dart';
-import 'package:flutter_application_2/vistas/contable.dart';
-import 'package:flutter_application_2/vistas/cajera.dart';
+import 'firebase_options.dart';  // Generado por flutterfire configure
+import 'vistas/contable.dart';
+import 'vistas/inicio.dart';
+import 'vistas/cliente.dart';
+import 'vistas/cajera.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MainApp());
+  runApp(const MainApp()
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -25,12 +26,15 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/Inicio',
       routes: {
-        '/Inicio': (context) => const Inicio(),
+        '/Inicio': (context) => const Inicio(),  // Tu pantalla de inicio/login
         '/Cliente': (context) => const Cliente(),
-        '/Contable': (context) => const Contable(),
+        '/Contable': (context) => Contable(),  // Integra aquí el flujo de contabilidad
         '/Cajera': (context) => const Cajera(),
-
-      }
-    );
+       
+  });
   }
 }
+
+// Ejemplos de clases de pantalla (reemplaza con tus implementaciones reales)
+// Si ya tienes estas clases, ignora y ajusta imports.
+
