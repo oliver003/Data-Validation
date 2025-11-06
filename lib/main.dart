@@ -8,6 +8,10 @@ import 'package:flutter_application_2/vistas/contable.dart';
 import 'package:flutter_application_2/vistas/cajera.dart';
 import 'package:flutter_application_2/vistas/login.dart';
 
+class AppData {
+  static String nombre = '';
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(

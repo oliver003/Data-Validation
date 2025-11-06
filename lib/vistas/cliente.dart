@@ -2,9 +2,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_application_2/main.dart' show AppData;
 import 'package:flutter_application_2/services/select_image.dart';
 import 'package:flutter_application_2/services/upload_image.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+
+final String nombre = AppData.nombre;
 
 /// Formatter que obliga un prefijo fijo y permite solo N dígitos después.
 class PrefixDigitsFormatter extends TextInputFormatter {
@@ -188,20 +191,34 @@ class _ClienteState extends State<Cliente> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text("Por favor selecciona una imagen.")),
                         );
-                /// Formatter que obliga un prefijo fijo y permite solo N dígitos después.
                         return;
                       }
 
                       try {
-                        // 1️⃣ Crear documento con los datos básicos
-                        final docRef = await FirebaseFirestore.instance
+                        // 1️⃣ Crear documento con el ID igual a N_Pedido (comprobar existencia primero)
+                        final docRef = FirebaseFirestore.instance
                             .collection('Ilumel-Pedidos')
-                            .add({
+                            .doc(N_Pedido.text);
+
+                        // Evitar sobrescribir un pedido existente
+                        /*final snapshot = await docRef.get();
+                        if (snapshot.exists) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Ya existe un pedido con ese N_Pedido. Usa otro identificador.")),
+                            );
+                          }
+                          return;
+                        }*/
+
+                        // Crear documento inicial sin URL de imagen (se añadirá luego)
+                        await docRef.set({
                           'N_Pedido': N_Pedido.text,
                           'Fecha': DateTime.now(),
+                          'Nombre': nombre,
                         });
 
-                        // 2️⃣ Subir imagen vinculada con el ID del documento
+                        // 2️⃣ Subir imagen vinculada con el ID del documento (ahora docRef.id == N_Pedido.text)
                         final imageUrl = await uploadImage(
                           file: imagen_to_upload,
                           bytes: webImageBytes,
@@ -214,7 +231,7 @@ class _ClienteState extends State<Cliente> {
                           await docRef.update({'imagenUrl': imageUrl});
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text("Pedido e imagen subidos correctamente")),
+                              SnackBar(content: Text("Pedido e imagen subidos correctamente $nombre")),
                             );
                           }
                           // Opcional: limpiar formulario

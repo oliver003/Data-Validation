@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/main.dart' show AppData;
 import 'package:flutter_application_2/services/auth_service.dart';
-
-/*import 'package:flutter_application_2/vistas/inicio.dart';
-import 'package:flutter_application_2/vistas/cliente.dart';
-import 'package:flutter_application_2/vistas/contable.dart';
-import 'package:flutter_application_2/vistas/cajera.dart';*/
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -32,15 +28,46 @@ class _LoginViewState extends State<LoginView> {
     if (usuario != null) {
       final rol = usuario['Rol'];
       final nombre = usuario['Nombre'];
+      AppData.nombre = nombre;
 
       if (rol == 'Programmer') {
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Bienvenido $nombre")),
+          SnackBar(content: Text("Bienvenid@ $nombre")),
         );
         // ignore: use_build_context_synchronously
         Navigator.pushNamed(context, '/Inicio');
       } 
+      else if (rol == 'Vendedor') {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Bienvenid@ $nombre")),
+        );
+        // ignore: use_build_context_synchronously
+        Navigator.pushNamed(context, '/Cliente');
+      } 
+      else if (rol == 'Contable') {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Bienvenid@ $nombre")),
+        );
+        // ignore: use_build_context_synchronously
+        Navigator.pushNamed(context, '/Contable');
+      } 
+      else if (rol == 'Cajera') {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Bienvenid@ $nombre")),
+        );
+        // ignore: use_build_context_synchronously
+        Navigator.pushNamed(context, '/Cajera');
+      } 
+      else {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Rol de usuario no reconocido")),
+        );
+      }
     } else {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
