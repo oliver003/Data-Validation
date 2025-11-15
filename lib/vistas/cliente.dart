@@ -216,6 +216,7 @@ class _ClienteState extends State<Cliente> {
                           'N_Pedido': N_Pedido.text,
                           'Fecha': DateTime.now(),
                           'Nombre': nombre,
+                          'Estado': 'Enviado',
                         });
 
                         // 2️⃣ Subir imagen vinculada con el ID del documento (ahora docRef.id == N_Pedido.text)
