@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Contable extends StatelessWidget {
@@ -69,7 +70,7 @@ class Contable extends StatelessWidget {
                               .update({'ConfirmadoPor': 'Contabilidad', 'estado':'Confirmado'});
 
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Pedido #$pedido confirmado.')),
+                            SnackBar(content: Text('Pedido #$pedido confirmado y entregado por $nombre.')),
                           );
                         },
                       ),

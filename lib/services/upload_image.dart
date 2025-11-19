@@ -1,30 +1,43 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 final FirebaseStorage storage = FirebaseStorage.instance;
 
-/// Sube una imagen a Firebase Storage y devuelve la URL de descarga.
-/// [image] → archivo a subir.
-/// [docId] → opcional, se usa para nombrar la imagen igual que el documento Firestore.
-Future<String?> uploadImage(File image, {String? docId}) async {
-
-  // Si se pasa un docId, usa ese nombre para vincular con Firestore
-  final String nombreArchivo = docId != null
+/// Sube una imagen (desde móvil o web) y devuelve la URL
+Future<String?> uploadImage({
+  File? file,
+  Uint8List? bytes,
+  String? name,
+  String? docId,
+}) async {
+  final String fileName = docId != null
       ? "$docId.jpg"
-      : image.path.split("/").last;
+      : name ?? DateTime.now().millisecondsSinceEpoch.toString();
 
-  // Carpeta de destino en Firebase Storage
-  Reference ubicacionArchivo = storage.ref().child("images").child(nombreArchivo);
+  Reference ref = storage.ref().child("images/$fileName");
 
-  // Subir imagen
-  final UploadTask subiendoImagen = ubicacionArchivo.putFile(image);
-  final TaskSnapshot snapshot = await subiendoImagen.whenComplete(() => true);
+  // 🔹 Tipo MIME según la extensión
+  String contentType = "image/jpeg";
+  final metadata = SettableMetadata(contentType: contentType);
 
-  // Verificar estado y devolver URL pública
-  if (snapshot.state == TaskState.success) {
-     final String url = await ubicacionArchivo.getDownloadURL();
-    return url; // 🔹 devolvemos la URL
+  UploadTask uploadTask;
+
+  if (kIsWeb) {
+    // 🌐 Subida en Web con bytes
+    if (bytes == null) return null;
+    uploadTask = ref.putData(bytes, metadata);
   } else {
-     return null;
+    // 📱 Subida en Móvil con File
+    if (file == null) return null;
+    uploadTask = ref.putFile(file);
   }
-} 
+
+  final TaskSnapshot snapshot = await uploadTask;
+  if (snapshot.state == TaskState.success) {
+    final url = await ref.getDownloadURL();
+    return url;
+  }
+  return null;
+}
