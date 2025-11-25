@@ -51,40 +51,104 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text("Inicio de Sesión", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 20),
-              TextField(
-                controller: _codigoController,
-                decoration: const InputDecoration(
-                  labelText: "Código de usuario",
-                  border: OutlineInputBorder(),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        child: Stack(
+          children: [
+            // Fondo degradado verde pastel
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color.fromRGBO(134, 207, 61, 1),
+                    Color.fromRGBO(248, 249, 248, 1),
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
               ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: _passwordController,
-                decoration: const InputDecoration(
-                  labelText: "Contraseña",
-                  border: OutlineInputBorder(),
+              width: double.infinity,
+              height: size.height * 0.4,
+            ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                margin: const EdgeInsets.only(top: 20),
+                child: Image.asset("lib/vistas/assets/img/hola.png",
+                width: 250,
+                height: 250,
+                fit: BoxFit.contain,
                 ),
-                obscureText: false,
               ),
-              const SizedBox(height: 20),
-              _isLoading
-                  ? const CircularProgressIndicator()
-                  : ElevatedButton(
-                      onPressed: _login,
-                      child: const Text("Ingresar"),
+            ),
+            // Contenido del login
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Inicio de Sesión",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
                     ),
-            ],
-          ),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: _codigoController,
+                      decoration: const InputDecoration(
+                        labelText: "Código de usuario",
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Color.fromRGBO(134, 207, 61, 1))
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Color.fromRGBO(134, 207, 61, 1))
+                        )
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _passwordController,
+                      decoration: const InputDecoration(
+                        labelText: "Contraseña",
+                        border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color.fromRGBO(134, 207, 61, 1))),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Color.fromRGBO(134, 207, 61, 1))
+                        )
+                      ),
+                      obscureText: true,
+                    ),
+                    const SizedBox(height: 20),
+                    _isLoading
+                        ? const CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Color.fromRGBO(134, 207, 61, 1)),
+                        )
+                        : ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromRGBO(134, 207, 61, 1),//color del fondo
+                            foregroundColor:  Colors.white,
+                            minimumSize: const Size(200, 60),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24)
+                            )
+                          ),
+                            onPressed: _login,
+                            child: const Text("Ingresar",
+                            style: TextStyle(fontSize: 18),),
+                          ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
