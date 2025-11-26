@@ -132,7 +132,7 @@ class _ClienteState extends State<Cliente> {
                           SizedBox(height: 10),
                           Text(
                             "Toca para seleccionar una imagen",
-                            style: TextStyle(color: Colors.blueGrey, fontSize: 16)
+                            style: TextStyle(color: Colors.blueGrey, fontSize: 16),
                           ),
                         ],
                       ),
