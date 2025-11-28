@@ -1,0 +1,73 @@
+{
+   "checksum": "d6d675851a786bade5c63b589e8b3832",
+   "roots": {
+      "bookmark_bar": {
+         "children": [ {
+            "date_added": "13335114298482598",
+            "date_last_used": "0",
+            "guid": "be942426-ca21-4ed1-9bd5-6cde58fd75fa",
+            "id": "6",
+            "name": "Gmail",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://accounts.google.com/b/0/AddMailService",
+            "visit_count": 0
+         }, {
+            "date_added": "13335114298483190",
+            "date_last_used": "13380569449569573",
+            "guid": "6a1452a8-c022-4981-8165-65931153b4a1",
+            "id": "7",
+            "name": "YouTube",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://youtube.com/",
+            "visit_count": 1
+         }, {
+            "date_added": "13335114298483451",
+            "date_last_used": "0",
+            "guid": "0804fc32-dfc7-4ef4-b6df-e9efd8c7f81c",
+            "id": "8",
+            "name": "Maps",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "https://maps.google.com/",
+            "visit_count": 0
+         } ],
+         "date_added": "13406440010567225",
+         "date_last_used": "0",
+         "date_modified": "13335114298483451",
+         "guid": "0bc5d13f-2cba-5d74-951f-3f233fe6c908",
+         "id": "1",
+         "name": "Barra de favoritos",
+         "source": "unknown",
+         "type": "folder"
+      },
+      "other": {
+         "children": [  ],
+         "date_added": "13406440010567225",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "82b081ec-3dd3-529c-8475-ab6c344590dd",
+         "id": "2",
+         "name": "Otros favoritos",
+         "source": "unknown",
+         "type": "folder"
+      },
+      "synced": {
+         "children": [  ],
+         "date_added": "13406440010567225",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "4cf2e351-0e85-532b-bb37-df045d8f8d0f",
+         "id": "3",
+         "name": "Favoritos móviles",
+         "source": "unknown",
+         "type": "folder"
+      }
+   },
+   "sync_metadata": "CkEKHgiIgQISCI+pXT2aAQAAKg4QABgBIAAoBjAAOABAABIAKhhCTDlqWUFYeEdlL1ZWbndmVUJyRlRBPT1IA6AGDBKtAQgIEqgBChxnSkF6czBITnJ1ejVYVHpWSXJma1psWVBwQkk9EiQwODA0ZmMzMi1kZmM3LTRlZjQtYjZkZi1lOWVmZDhjN2Y4MWMYACAAKAAw+t/ckb0yOP7m3JG9MkD+5tyRvTJKHEJkTDVlUTZnMkFYSmJycmczRGc0Q3E1aG5SWT1aHyId1GJTSEN0cHZFSWVtNFM3d1ZXK01FYk12YkQrOD1lnpCbgsI+AmAFEq0BCAcSqAEKHFNBeE5YNzM3UjFMeFhRbUdpeTc2VzdNc0ZzST0SJDZhMTQ1MmE4LWMwMjItNDk4MS04MTY1LTY1OTMxMTUzYjRhMRgAIAAoADDQ84G7wzI4y+bckb0yQMvm3JG9MkocK2U5Z3VoK3JlcHluMFR2QWZJVHdwZ3JZdnNjPVofIh2pQitNWEhMK1BWT2tDT1ZtUmJJYi9yUDdaUE1vPWXZNhZIwj4CYAUSjgEIAhKJAQocWWNTVG9udkVTUHdxQ3M0TDJjclZodjY4TDk4PRIkY2Y0M2E3ZjAtZmUxNC01YzhjLWFjNTctYzdjZjAwNjRkODQwGAAgACgAMKzYip+aMTiG3IqfmjFAhtyKn5oxShxvUFZraHdCUmJWNjVLQ1dSMitJT05IV29PdTg9WgBlAAAAAMI+AmAAEqwBCAYSpwEKHFdhSGtHN1BQeTZiUXphazVNUnB6SEMyaW5CST0SJGJlOTQyNDI2LWNhMjEtNGVkMS05YmQ1LTZjZGU1OGZkNzVmYRgAIAAoADD539yRvTI45Obckb0yQOTm3JG9MkocaEwzZWNBc3JLSDJibmgvSnVXcmo5QnRJRmI4PVoeIhxTQ2dLNG8yanlxQ2JpK0dxY3FVQ2pBUllWZ2s9Za88FhrCPgJgBRKOAQgBEokBChx5eEovNmZ2a2VjcjdrcDVFUXpCNHRXTHBkYkU9EiQwMTkwYWE0OC00NTU3LTVhMjQtODBjYy05ZGNjYjAzMTlmZTMYACAAKAAwq9iKn5oxOO7bip+aMUDu24qfmjFKHGFSQ1dMZ2hGOWI1SW5xS0lEdnVKL2p2UWtGYz1aAGUAAAAAwj4CYAASjgEIAxKJAQocbmpnRHU4OGVDcnZYcDg2cEQ3ZkhHY3FGcDg4PRIkMWU0NmJiM2MtOWUyYS01OTQyLTgwOGItZWYyMDk5MTkzNDFhGAAgACgAMLHYip+aMTi43IqfmjFAuNyKn5oxShx5ek5CMDFjbjU0QTdjUlUwdVQrL1BnbVR0VW89WgBlAAAAAMI+AmAAMAA4AA==",
+   "version": 1
+}
