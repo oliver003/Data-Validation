@@ -79,7 +79,7 @@ class _ClienteState extends State<Cliente> {
           gradient: LinearGradient(
             colors: [
               Color.fromRGBO(134, 207, 61, 1),   // Verde pastel
-              Color.fromRGBO(248, 249, 248, 1), // Blanco suave
+              Color.fromRGBO(248, 249, 248, 1) // Blanco suave
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
