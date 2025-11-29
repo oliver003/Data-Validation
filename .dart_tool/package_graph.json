@@ -12,7 +12,8 @@
         "firebase_core",
         "firebase_storage",
         "flutter",
-        "image_picker"
+        "image_picker",
+        "intl"
       ],
       "devDependencies": [
         "flutter_lints",
@@ -93,6 +94,15 @@
         "meta",
         "sky_engine",
         "vector_math"
+      ]
+    },
+    {
+      "name": "intl",
+      "version": "0.20.2",
+      "dependencies": [
+        "clock",
+        "meta",
+        "path"
       ]
     },
     {
