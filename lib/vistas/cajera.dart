@@ -6,6 +6,10 @@ import 'dart:io' show Platform;
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_application_2/main.dart' show AppData;
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
+import 'dart:typed_data';
 
 final String nombre = AppData.nombre;
 
@@ -245,7 +249,6 @@ class _CajeraState extends State<Cajera> {
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // ==== ICONO DE IMAGEN ====
                           if (imagenUrl.isNotEmpty)
                             IconButton(
                               icon: const Icon(Icons.image, color: Colors.blue),
@@ -254,7 +257,6 @@ class _CajeraState extends State<Cajera> {
                               },
                             ),
 
-                          // ==== MENÚ DE OPCIONES ====
                           PopupMenuButton<String>(
                             icon: const Icon(Icons.more_vert),
                             onSelected: (value) {
@@ -297,21 +299,281 @@ class _CajeraState extends State<Cajera> {
             onPressed: pedidoSeleccionado == null ? null : _showConsumirConfirmDialog,
             child: const Text("Consumir"),
           ),
-          ElevatedButton(
+          ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
               foregroundColor: Colors.white,
             ),
-            onPressed: pedidoSeleccionado == null
-                ? null
-                : () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Función de impresión aquí."),
+            icon: const Icon(Icons.picture_as_pdf),
+            onPressed: pedidoSeleccionado == null ? null : _compartirComoPDF,
+            label: const Text("Compartir"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ==================== COMPARTIR COMO PDF ====================
+  Future<void> _compartirComoPDF() async {
+    if (pedidoSeleccionado == null) return;
+
+    // Mostrar indicador de carga
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => const Center(
+        child: Card(
+          child: Padding(
+            padding: EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 16),
+                Text('Generando PDF...'),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    try {
+      // Obtener datos del pedido
+      Map<String, dynamic>? datosPedido;
+      
+      if (kIsWeb || !Platform.isWindows) {
+        final doc = await FirebaseFirestore.instance
+            .collection('Ilumel-Pedidos')
+            .doc(pedidoSeleccionado)
+            .get();
+        datosPedido = doc.data();
+      } else {
+        datosPedido = _pedidos.firstWhere(
+          (p) => p['id'] == pedidoSeleccionado,
+          orElse: () => {},
+        );
+      }
+
+      if (datosPedido == null || datosPedido.isEmpty) {
+        throw Exception('No se encontraron datos del pedido');
+      }
+
+      // Generar PDF
+      final pdfBytes = await _generarPDF(datosPedido);
+
+      if (mounted) {
+        Navigator.pop(context); // Cerrar loading
+
+        // Compartir/Descargar PDF
+        await Printing.sharePdf(
+          bytes: pdfBytes,
+          filename: 'Pedido_${datosPedido['N_Pedido']}.pdf',
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('✓ PDF generado exitosamente'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        Navigator.pop(context); // Cerrar loading
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al generar PDF: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<Uint8List> _generarPDF(Map<String, dynamic> datos) async {
+    final pdf = pw.Document();
+    final DateFormat formato = DateFormat("dd/MM/yyyy hh:mm a");
+
+    String formatear(dynamic valor) {
+      if (valor is Timestamp) {
+        return formato.format(valor.toDate());
+      }
+      return valor?.toString() ?? "";
+    }
+
+    // Descargar imagen si existe
+    pw.ImageProvider? imagenComprobante;
+    final imagenUrl = datos['imagenUrl']?.toString() ?? '';
+    
+    if (imagenUrl.isNotEmpty) {
+      try {
+        final response = await http.get(Uri.parse(imagenUrl));
+        if (response.statusCode == 200) {
+          imagenComprobante = pw.MemoryImage(response.bodyBytes);
+        }
+      } catch (e) {
+        print('Error al descargar imagen: $e');
+      }
+    }
+
+    // Crear PDF
+    pdf.addPage(
+      pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        build: (pw.Context context) {
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              // ENCABEZADO
+              pw.Container(
+                width: double.infinity,
+                padding: const pw.EdgeInsets.all(20),
+                decoration: pw.BoxDecoration(
+                  gradient: const pw.LinearGradient(
+                    colors: [
+                      PdfColor.fromInt(0xFF86CF3D),
+                      PdfColor.fromInt(0xFF6FB82E),
+                    ],
+                  ),
+                  borderRadius: pw.BorderRadius.circular(8),
+                ),
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text(
+                      'DETALLES DEL PEDIDO',
+                      style: pw.TextStyle(
+                        fontSize: 24,
+                        fontWeight: pw.FontWeight.bold,
+                        color: PdfColors.white,
                       ),
-                    );
-                  },
-            child: const Text("Imprimir"),
+                    ),
+                    pw.SizedBox(height: 8),
+                    pw.Text(
+                      'Pedido #${datos['N_Pedido'] ?? 'N/A'}',
+                      style: pw.TextStyle(
+                        fontSize: 18,
+                        color: PdfColors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              pw.SizedBox(height: 20),
+
+              // INFORMACIÓN DEL PEDIDO
+              _buildCampoPDF('Número de Pedido', datos['N_Pedido']),
+              _buildCampoPDF('Cliente', datos['Nombre']),
+              _buildCampoPDF('Fecha del Pedido', formatear(datos['Fecha'])),
+              
+              if (datos['ConfirmadoPor'] != null)
+                _buildCampoPDF('Confirmado por', datos['ConfirmadoPor']),
+              
+              if (datos['FechaConfirmado'] != null)
+                _buildCampoPDF('Fecha de Confirmación', formatear(datos['FechaConfirmado'])),
+              
+              if (datos['Banco'] != null)
+                _buildCampoPDF('Banco', datos['Banco']),
+              
+              if (datos['NumeroAprobacion'] != null)
+                _buildCampoPDF('Número de Aprobación', datos['NumeroAprobacion']),
+              
+              _buildCampoPDF('Estado', datos['Estado']),
+
+              pw.SizedBox(height: 20),
+
+              // IMAGEN DEL COMPROBANTE
+              if (imagenComprobante != null) ...[
+                pw.Container(
+                  padding: const pw.EdgeInsets.all(10),
+                  decoration: pw.BoxDecoration(
+                    border: pw.Border.all(color: PdfColors.grey400),
+                    borderRadius: pw.BorderRadius.circular(8),
+                  ),
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text(
+                        'COMPROBANTE DE PAGO',
+                        style: pw.TextStyle(
+                          fontSize: 16,
+                          fontWeight: pw.FontWeight.bold,
+                          color: const PdfColor.fromInt(0xFF86CF3D),
+                        ),
+                      ),
+                      pw.SizedBox(height: 10),
+                      pw.Center(
+                        child: pw.Image(
+                          imagenComprobante,
+                          height: 300,
+                          fit: pw.BoxFit.contain,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+
+              pw.Spacer(),
+
+              // PIE DE PÁGINA
+              pw.Divider(),
+              pw.SizedBox(height: 10),
+              pw.Text(
+                'Generado el ${formato.format(DateTime.now())}',
+                style: const pw.TextStyle(
+                  fontSize: 10,
+                  color: PdfColors.grey700,
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+
+    return pdf.save();
+  }
+
+  pw.Widget _buildCampoPDF(String label, dynamic value) {
+    if (value == null || value.toString().trim().isEmpty) {
+      return pw.SizedBox.shrink();
+    }
+
+    return pw.Container(
+      margin: const pw.EdgeInsets.only(bottom: 12),
+      padding: const pw.EdgeInsets.all(12),
+      decoration: pw.BoxDecoration(
+        color: PdfColors.grey100,
+        border: pw.Border(
+          left: pw.BorderSide(
+            color: const PdfColor.fromInt(0xFF86CF3D),
+            width: 3,
+          ),
+        ),
+      ),
+      child: pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Text(
+            label,
+            style: pw.TextStyle(
+              fontSize: 11,
+              fontWeight: pw.FontWeight.bold,
+              color: PdfColors.grey800,
+            ),
+          ),
+          pw.SizedBox(height: 4),
+          pw.Text(
+            value.toString(),
+            style: const pw.TextStyle(
+              fontSize: 13,
+              color: PdfColors.black,
+            ),
           ),
         ],
       ),
@@ -321,14 +583,15 @@ class _CajeraState extends State<Cajera> {
   void _showConsumirConfirmDialog() {
     if (pedidoSeleccionado == null) return;
     String pedidoNumero = pedidoSeleccionado!;
-    // Intentar obtener el número de pedido real si estamos en Windows (REST)
+    
     if (!kIsWeb && Platform.isWindows) {
       final match = _pedidos.firstWhere(
         (p) => p['id'] == pedidoSeleccionado,
         orElse: () => {},
       );
       pedidoNumero = match['N_Pedido'] ?? pedidoNumero;
-        }
+    }
+    
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -415,11 +678,9 @@ class _CajeraState extends State<Cajera> {
     }
   }
 
-  // ==================== MOSTRAR DATOS ====================
   void mostrarDatosPedido(BuildContext context, Map<String, dynamic> data) {
     final DateFormat formato = DateFormat("dd/MM/yyyy hh:mm a");
 
-    // --- FUNCIÓN PARA FORMATEAR FECHAS ---
     String formatear(dynamic valor) {
       if (valor is Timestamp) {
         return formato.format(valor.toDate());
@@ -427,16 +688,13 @@ class _CajeraState extends State<Cajera> {
       return valor?.toString() ?? "";
     }
 
-    // Quitar imagenURL
     final Map<String, dynamic> datos = Map.of(data);
     datos.remove("imagenUrl");
 
-    // --- REEMPLAZAR TODAS LAS FECHAS ---
     datos["Fecha"] = formatear(datos["Fecha"]);
     datos["FechaConfirmado"] = formatear(datos["FechaConfirmado"]);
     datos["FechaConsumido"] = formatear(datos["FechaConsumido"]);
 
-    // --- ORDEN QUE QUIERES ---
     final List<String> orden = [
       "N_Pedido",
       "Nombre",
@@ -450,7 +708,6 @@ class _CajeraState extends State<Cajera> {
       "Estado",
     ];
 
-    // Diccionario con nombres bonitos
     final Map<String, String> nombresBonitos = {
       "N_Pedido": "Número de Pedido",
       "Nombre": "Cliente",
@@ -464,7 +721,6 @@ class _CajeraState extends State<Cajera> {
       "Estado": "Estado",
     };
 
-    // Ordenar datos
     final Map<String, dynamic> datosOrdenados = {};
 
     for (var campo in orden) {
@@ -476,7 +732,6 @@ class _CajeraState extends State<Cajera> {
 
     datosOrdenados.addAll(datos);
 
-    // --- FILTRAR CAMPOS VACÍOS O NULOS ---
     final camposFiltrados = datosOrdenados.entries.where((entry) {
       final valor = entry.value;
 
@@ -487,7 +742,6 @@ class _CajeraState extends State<Cajera> {
       return true;
     }).toList();
 
-    // --- MOSTRAR DIÁLOGO ---
     showDialog(
       context: context,
       builder: (context) {
@@ -525,8 +779,6 @@ class _CajeraState extends State<Cajera> {
     );
   }
 
-
-  // ==================== MOSTRAR IMAGEN ====================
   void mostrarImagen(BuildContext context, String url) {
     showDialog(
       context: context,
