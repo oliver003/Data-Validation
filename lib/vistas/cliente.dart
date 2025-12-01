@@ -6,6 +6,8 @@ import 'package:flutter_application_2/main.dart' show AppData;
 import 'package:flutter_application_2/services/select_image.dart';
 import 'package:flutter_application_2/services/upload_image.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 final String nombre = AppData.nombre;
 
@@ -79,7 +81,21 @@ class _ClienteState extends State<Cliente> {
       appBar: AppBar(
         title: const Text('Cliente'),
       ),
-      body: Column(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromRGBO(134, 207, 61, 1),   // Verde pastel
+              Color.fromRGBO(248, 249, 248, 1) // Blanco suave
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+      
+      child: Column(
         children: [
           GestureDetector(
             onTap: () async {
@@ -195,60 +211,107 @@ class _ClienteState extends State<Cliente> {
                       }
 
                       try {
-                        // 1️⃣ Crear documento con el ID igual a N_Pedido (comprobar existencia primero)
-                        final docRef = FirebaseFirestore.instance
-                            .collection('Ilumel-Pedidos')
-                            .doc(N_Pedido.text);
+                        final pedidoId = N_Pedido.text;
 
-                        // Evitar sobrescribir un pedido existente
-                        /*final snapshot = await docRef.get();
-                        if (snapshot.exists) {
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text("Ya existe un pedido con ese N_Pedido. Usa otro identificador.")),
-                            );
-                          }
-                          return;
-                        }*/
+                        // 🌐 Caso móvil/web → usar Firestore plugin
+                        if (kIsWeb || Platform.isAndroid || Platform.isIOS) {
+                          final docRef = FirebaseFirestore.instance
+                              .collection('Ilumel-Pedidos')
+                              .doc(pedidoId);
 
-                        // Crear documento inicial sin URL de imagen (se añadirá luego)
-                        await docRef.set({
-                          'N_Pedido': N_Pedido.text,
-                          'Fecha': DateTime.now(),
-                          'Nombre': nombre,
-                          'Estado': 'Enviado',
-                        });
-
-                        // 2️⃣ Subir imagen vinculada con el ID del documento (ahora docRef.id == N_Pedido.text)
-                        final imageUrl = await uploadImage(
-                          file: imagen_to_upload,
-                          bytes: webImageBytes,
-                          name: imageName,
-                          docId: docRef.id,
-                        );
-
-                        if (imageUrl != null) {
-                          // 3️⃣ Guardar la URL dentro del mismo documento
-                          await docRef.update({'imagenUrl': imageUrl});
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text("Pedido e imagen subidos correctamente $nombre")),
-                            );
-                          }
-                          // Opcional: limpiar formulario
-                          setState(() {
-                            imagen_to_upload = null;
-                            webImageBytes = null;
-                            N_Pedido.text = _prefix;
-                            N_Pedido.selection = TextSelection.collapsed(offset: _prefix.length);
+                          await docRef.set({
+                            'N_Pedido': pedidoId,
+                            'Fecha': DateTime.now(),
+                            'Nombre': nombre,
+                            'Estado': 'Enviado',
                           });
-                        } else {
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text("Error al subir la imagen.")),
-                            );
+
+                          final imageUrl = await uploadImage(
+                            file: imagen_to_upload,
+                            bytes: webImageBytes,
+                            name: imageName,
+                            docId: docRef.id,
+                          );
+
+                          if (imageUrl != null) {
+                            await docRef.update({'imagenUrl': imageUrl});
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("Pedido e imagen subidos correctamente $nombre")),
+                              );
+                            }
                           }
                         }
+
+                        // 💻 Caso Windows → usar REST API
+                        else if (Platform.isWindows) {
+                          const projectId = "tickets-firebase-aba0a"; // ⚠️ cambia por tu Project ID
+
+                          // 1️⃣ Crear documento en Firestore vía REST
+                          final firestoreUrl = Uri.parse(
+                            "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents/Ilumel-Pedidos/$pedidoId",
+                          );
+
+                          final firestoreBody = {
+                            "fields": {
+                              "N_Pedido": {"stringValue": pedidoId},
+                              "Fecha": {"timestampValue": DateTime.now().toUtc().toIso8601String()},
+                              "Nombre": {"stringValue": nombre},
+                              "Estado": {"stringValue": "Enviado"},
+                            }
+                          };
+
+                          final firestoreResponse = await http.patch(
+                            firestoreUrl,
+                            headers: {"Content-Type": "application/json"},
+                            body: jsonEncode(firestoreBody),
+                          );
+
+                          if (firestoreResponse.statusCode != 200) {
+                            throw Exception("Error al crear documento: ${firestoreResponse.body}");
+                          }
+
+                          // 2️⃣ Subir imagen a Storage vía REST
+                          final imageUrl = await uploadImage(
+                            file: imagen_to_upload,
+                            bytes: webImageBytes,
+                            name: imageName,
+                            docId: pedidoId,
+                          );
+
+                          // 3️⃣ Actualizar documento con la URL
+                          if (imageUrl != null) {
+                            final updateBody = {
+                              "fields": {
+                                "imagenUrl": {"stringValue": imageUrl}
+                              }
+                            };
+
+                            final updateResponse = await http.patch(
+                              firestoreUrl,
+                              headers: {"Content-Type": "application/json"},
+                              body: jsonEncode(updateBody),
+                            );
+
+                            if (updateResponse.statusCode != 200) {
+                              throw Exception("Error al actualizar documento: ${updateResponse.body}");
+                            }
+
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("Pedido e imagen subidos correctamente $nombre")),
+                              );
+                            }
+                          }
+                        }
+
+                        // Opcional: limpiar formulario
+                        setState(() {
+                          imagen_to_upload = null;
+                          webImageBytes = null;
+                          N_Pedido.text = _prefix;
+                          N_Pedido.selection = TextSelection.collapsed(offset: _prefix.length);
+                        });
                       } catch (e) {
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -263,12 +326,12 @@ class _ClienteState extends State<Cliente> {
                     }
                   },
                   child: const Text("Subir a Base de Datos"),
-                ),
+                )
               ],
             ),
           ),
         ],
       )
-    );
+    ));
   }
 }
