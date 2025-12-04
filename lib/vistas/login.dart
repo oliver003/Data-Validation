@@ -31,53 +31,48 @@ class _LoginViewState extends State<LoginView> {
       AppData.nombre = nombre;
 
       if (rol == 'Programmer') {
-        // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Bienvenid@ $nombre")),
-        );
+        snackbarUsers(nombre);
         // ignore: use_build_context_synchronously
         Navigator.pushNamed(context, '/Inicio');
       } 
       else if (rol == 'Vendedor') {
-        // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Bienvenid@ $nombre")),
-        );
+        snackbarUsers(nombre);
         // ignore: use_build_context_synchronously
         Navigator.pushNamed(context, '/Cliente');
       } 
       else if (rol == 'Contabilidad') {
-        // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Bienvenid@ $nombre")),
-        );
+        snackbarUsers(nombre);
         // ignore: use_build_context_synchronously
         Navigator.pushNamed(context, '/Contable');
       } 
       else if (rol == 'Cajera') {
-        // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Bienvenid@ $nombre")),
-        );
+        snackbarUsers(nombre);
         // ignore: use_build_context_synchronously
         Navigator.pushNamed(context, '/Cajera');
       } 
       else {
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Rol de usuario no reconocido")),
+          const SnackBar(
+            content: Text("Rol de usuario no reconocido ❌"),
+            duration: Duration(seconds: 4),
+          ),
         );
       }
     } else {
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Código o contraseña incorrectos")),
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Código o contraseña incorrectos 🚫"),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 4),
+          ),
       );
     }
   }
 
   @override
-Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -177,6 +172,16 @@ Widget build(BuildContext context) {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void snackbarUsers(String nombre) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Bienvenid@ $nombre ✔"),
+        backgroundColor: Colors.blue,
+        duration: const Duration(seconds: 4),
       ),
     );
   }

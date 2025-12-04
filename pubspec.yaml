@@ -12,6 +12,8 @@ dependencies:
   cloud_firestore: ^6.0.0
   intl: ^0.20.2
   http: ^1.2.0
+  pdf: ^3.10.4           
+  printing: ^5.11.0
   flutter:
     sdk: flutter
   image_picker: ^1.2.0
