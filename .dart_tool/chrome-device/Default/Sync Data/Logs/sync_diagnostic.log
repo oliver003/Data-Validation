@@ -2013,3 +2013,891 @@
 2025-11-29 06:29:28.390: [INFO][SyncEngineBackend::DoStartSyncing] Start syncing
 2025-11-29 06:31:37.741: [INFO][Sync] Reset engine, reason: 0
 2025-11-29 06:31:37.741: [INFO][Sync] Reset engine with reason: 0
+2025-12-01 14:02:33.294: [INFO][Sync] SyncState after authenticated was: FeatureCanStart
+2025-12-01 14:02:34.462: [INFO][Sync] Try to start sync engine
+2025-12-01 14:02:34.471: [INFO][SyncManagerImpl::NudgeForInitialDownload] Initial download nudge for Encryption Keys
+2025-12-01 14:02:34.471: [INFO][SyncEngineBackend::LoadAndConnectNigoriController] Load and connect Nigori controller
+2025-12-01 14:02:34.471: [INFO][SyncEngineBackend::DoInitialize] Control Types added: Encryption Keys
+2025-12-01 14:02:34.471: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download: Encryption Keys with reason: 3
+2025-12-01 14:02:34.471: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Configure job was blocked
+2025-12-01 14:02:36.508: [INFO][SyncAuthManager::SetLastAuthError] Current auth error: None
+2025-12-01 14:02:36.521: [INFO][SyncAuthManager::EdgeLogTokenErrorState] Token error with: None for account type: MSA
+2025-12-01 14:02:36.521: [INFO][Sync] Credentials changed for: EdgeSyncKeyDataScope
+2025-12-01 14:02:36.521: [INFO][SyncEngineBackend::DoUpdateKeyDataCredentials] Update key data credentials
+2025-12-01 14:02:37.051: [INFO][SyncAuthManager::SetLastAuthError] Current auth error: None
+2025-12-01 14:02:37.051: [INFO][SyncAuthManager::EdgeLogTokenErrorState] Token error with: None for account type: MSA
+2025-12-01 14:02:37.051: [INFO][Sync] Credentials changed for: EdgeSyncScopeNew
+2025-12-01 14:02:37.051: [INFO][SyncEngineBackend::DoUpdateCredentials] Update credentials
+2025-12-01 14:02:37.051: [INFO][SyncEngineBackend::DoUpdateKeyDataCredentials] Update key data credentials
+2025-12-01 14:02:37.051: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Blocked types:  and types to download: Encryption Keys
+2025-12-01 14:02:45.197: [INFO][Sync] Started DataTypeManager configuration, reason: 4
+2025-12-01 14:02:45.202: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 4, current state: 0
+2025-12-01 14:02:45.206: [WARN][Sync] Crypto error data types: Passwords, Autofill Profiles, Autofill
+2025-12-01 14:02:45.221: [INFO][Sync] Configure, desired: Bookmarks, Preferences, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys; Allow fail: Passwords, Autofill Profiles, Autofill
+2025-12-01 14:02:45.230: [INFO][Sync] Loading: Bookmarks
+2025-12-01 14:02:45.230: [ERROR][Sync] Load Preferences, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.230: [ERROR][Sync] Stoping type: Preferences, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.230: [INFO][Sync] Loading: Preferences
+2025-12-01 14:02:45.231: [ERROR][Sync] Load Extensions, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.231: [ERROR][Sync] Stoping type: Extensions, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.231: [INFO][Sync] Loading: Extensions
+2025-12-01 14:02:45.236: [INFO][Sync] Loading: Sessions
+2025-12-01 14:02:45.242: [INFO][Sync] Loading: Extension settings
+2025-12-01 14:02:45.242: [ERROR][Sync] Load History Delete Directives, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.242: [ERROR][Sync] Stoping type: History Delete Directives, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.242: [INFO][Sync] Loading: History Delete Directives
+2025-12-01 14:02:45.248: [ERROR][Sync] Load Device Info, failed: OnStoreCreated@components\sync_device_info\device_info_sync_bridge.cc:808 - Model error type: 94
+2025-12-01 14:02:45.248: [ERROR][Sync] Stoping type: Device Info, error: OnStoreCreated@components\sync_device_info\device_info_sync_bridge.cc:808 - Model error type: 94
+2025-12-01 14:02:45.248: [INFO][Sync] Loading: Device Info
+2025-12-01 14:02:45.248: [ERROR][Sync] Load User Consents, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.248: [ERROR][Sync] Stoping type: User Consents, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.248: [INFO][Sync] Loading: User Consents
+2025-12-01 14:02:45.248: [ERROR][Sync] Load Send Tab To Self, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.248: [ERROR][Sync] Stoping type: Send Tab To Self, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.248: [INFO][Sync] Loading: Send Tab To Self
+2025-12-01 14:02:45.248: [ERROR][Sync] Load Web Apps, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.248: [ERROR][Sync] Stoping type: Web Apps, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.248: [INFO][Sync] Loading: Web Apps
+2025-12-01 14:02:45.248: [INFO][Sync] Loading: History
+2025-12-01 14:02:45.252: [ERROR][Sync] Load Saved Tab Group, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.252: [ERROR][Sync] Stoping type: Saved Tab Group, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.252: [INFO][Sync] Loading: Saved Tab Group
+2025-12-01 14:02:45.252: [ERROR][Sync] Load WebAuthn Credentials, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.252: [ERROR][Sync] Stoping type: WebAuthn Credentials, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.252: [INFO][Sync] Loading: WebAuthn Credentials
+2025-12-01 14:02:45.252: [ERROR][Sync] Load Collection, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.252: [ERROR][Sync] Stoping type: Collection, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.252: [INFO][Sync] Loading: Collection
+2025-12-01 14:02:45.252: [INFO][Sync] Loading: Edge E Drop
+2025-12-01 14:02:45.252: [INFO][Sync] Loading: Edge Hub App Usage
+2025-12-01 14:02:45.252: [INFO][Sync] Loading: Edge Wallet
+2025-12-01 14:02:45.262: [ERROR][Sync] Load Sessions, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.262: [ERROR][Sync] Stoping type: Sessions, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.262: [ERROR][Sync] Load Extension settings, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.262: [ERROR][Sync] Stoping type: Extension settings, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 14:02:45.262: [ERROR][Sync] Load Edge E Drop, failed: EDropSyncBridge@components\edge_e_drop\core\browser\sync\e_drop_sync_bridge.cc:71: DataTypeStore for Drop initialization failed
+2025-12-01 14:02:45.262: [ERROR][Sync] Stoping type: Edge E Drop, error: EDropSyncBridge@components\edge_e_drop\core\browser\sync\e_drop_sync_bridge.cc:71: DataTypeStore for Drop initialization failed
+2025-12-01 14:02:45.262: [ERROR][Sync] Load Edge Hub App Usage, failed: EdgeHubAppUsageSyncBridge@components\edge_hub_apps\sync\edge_hub_app_usage_sync_bridge.cc:55: ModelTypeStore for Hub App Usage initialization failed
+2025-12-01 14:02:45.262: [ERROR][Sync] Stoping type: Edge Hub App Usage, error: EdgeHubAppUsageSyncBridge@components\edge_hub_apps\sync\edge_hub_app_usage_sync_bridge.cc:55: ModelTypeStore for Hub App Usage initialization failed
+2025-12-01 14:02:45.263: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 6, current state: 2
+2025-12-01 14:02:45.263: [WARN][Sync] Crypto error data types: 
+2025-12-01 14:02:45.263: [INFO][Sync] Configure, desired: Bookmarks, History, Edge Wallet, Encryption Keys; Allow fail: Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage
+2025-12-01 14:02:45.263: [INFO][Sync] All data types are ready for configure.
+2025-12-01 14:02:46.637: [INFO][Sync] Started DataTypeManager configuration, reason: 5
+2025-12-01 14:02:46.637: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 5, current state: 1
+2025-12-01 14:02:47.115: [INFO][SyncEngineBackend::DoStartConfiguration] Start configuration
+2025-12-01 14:02:47.254: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 6
+2025-12-01 14:02:47.254: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-01 14:02:48.405: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 3
+2025-12-01 14:02:48.405: [WARN][Sync]     Reconfigure requested while configuration ongoing.
+2025-12-01 14:02:48.405: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 5, current state: 2
+2025-12-01 14:02:48.405: [INFO][Sync] Configure, desired: Bookmarks, Passwords, Autofill Profiles, Autofill, History, Edge Wallet, Encryption Keys; Allow fail: Preferences, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage
+2025-12-01 14:02:48.405: [INFO][Sync] Loading: Passwords
+2025-12-01 14:02:48.405: [INFO][Sync] Loading: Autofill Profiles
+2025-12-01 14:02:48.405: [INFO][Sync] Loading: Autofill
+2025-12-01 14:02:49.333: [INFO][Sync] All data types are ready for configure.
+2025-12-01 14:02:49.333: [INFO][SyncManagerImpl::NudgeForInitialDownload] Initial download nudge for Passwords
+2025-12-01 14:02:49.734: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-01 14:02:49.734: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-01 14:02:49.734: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 4
+2025-12-01 14:02:49.734: [INFO][Sync] Prepare to configure types: Passwords, Encryption Keys
+2025-12-01 14:02:49.734: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download: Passwords, Encryption Keys with reason: 5
+2025-12-01 14:02:49.734: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Blocked types:  and types to download: Passwords, Encryption Keys
+2025-12-01 14:02:55.143: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: Passwords, Encryption Keys
+2025-12-01 14:02:55.347: [INFO][Sync] ConfigurationDone, failed: , succeeded: Passwords, Encryption Keys, remaining count: 3
+2025-12-01 14:02:55.347: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-01 14:02:55.347: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-01 14:02:55.383: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 2
+2025-12-01 14:02:55.384: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-01 14:02:55.384: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-01 14:02:55.390: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 1
+2025-12-01 14:02:55.650: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-01 14:02:55.650: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-01 14:02:55.652: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 0
+2025-12-01 14:02:55.654: [INFO][Sync]     Configuration completed, state: 7
+2025-12-01 14:02:55.722: [INFO][Sync] Configured DataTypeManager: Ok
+2025-12-01 14:02:56.363: [INFO][SyncEngineBackend::DoStartSyncing] Start syncing
+2025-12-01 15:18:05.189: [INFO][Sync] Reset engine, reason: 0
+2025-12-01 15:18:05.189: [INFO][Sync] Reset engine with reason: 0
+2025-12-01 15:21:21.802: [INFO][Sync] SyncState after authenticated was: FeatureCanStart
+2025-12-01 15:21:23.084: [INFO][Sync] Try to start sync engine
+2025-12-01 15:21:23.098: [INFO][SyncManagerImpl::NudgeForInitialDownload] Initial download nudge for Encryption Keys
+2025-12-01 15:21:23.098: [INFO][SyncEngineBackend::LoadAndConnectNigoriController] Load and connect Nigori controller
+2025-12-01 15:21:23.098: [INFO][SyncEngineBackend::DoInitialize] Control Types added: Encryption Keys
+2025-12-01 15:21:23.098: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download: Encryption Keys with reason: 3
+2025-12-01 15:21:23.098: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Configure job was blocked
+2025-12-01 15:21:23.900: [INFO][SyncAuthManager::SetLastAuthError] Current auth error: None
+2025-12-01 15:21:23.900: [INFO][SyncAuthManager::EdgeLogTokenErrorState] Token error with: None for account type: MSA
+2025-12-01 15:21:23.900: [INFO][Sync] Credentials changed for: EdgeSyncScopeNew
+2025-12-01 15:21:24.510: [INFO][SyncAuthManager::SetLastAuthError] Current auth error: None
+2025-12-01 15:21:24.510: [INFO][SyncAuthManager::EdgeLogTokenErrorState] Token error with: None for account type: MSA
+2025-12-01 15:21:24.510: [INFO][Sync] Credentials changed for: EdgeSyncKeyDataScope
+2025-12-01 15:21:24.510: [INFO][SyncEngineBackend::DoUpdateKeyDataCredentials] Update key data credentials
+2025-12-01 15:21:24.510: [INFO][SyncEngineBackend::DoUpdateCredentials] Update credentials
+2025-12-01 15:21:24.510: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Blocked types:  and types to download: Encryption Keys
+2025-12-01 15:21:24.964: [INFO][Sync] Started DataTypeManager configuration, reason: 4
+2025-12-01 15:21:24.965: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 4, current state: 0
+2025-12-01 15:21:24.965: [WARN][Sync] Crypto error data types: Passwords, Autofill Profiles, Autofill
+2025-12-01 15:21:24.968: [INFO][Sync] Configure, desired: Bookmarks, Preferences, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys; Allow fail: Passwords, Autofill Profiles, Autofill
+2025-12-01 15:21:24.968: [INFO][Sync] Loading: Bookmarks
+2025-12-01 15:21:24.968: [ERROR][Sync] Load Preferences, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.968: [ERROR][Sync] Stoping type: Preferences, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.968: [INFO][Sync] Loading: Preferences
+2025-12-01 15:21:24.968: [ERROR][Sync] Load Extensions, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.968: [ERROR][Sync] Stoping type: Extensions, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.968: [INFO][Sync] Loading: Extensions
+2025-12-01 15:21:24.968: [INFO][Sync] Loading: Sessions
+2025-12-01 15:21:24.968: [INFO][Sync] Loading: Extension settings
+2025-12-01 15:21:24.968: [ERROR][Sync] Load History Delete Directives, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.968: [ERROR][Sync] Stoping type: History Delete Directives, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.968: [INFO][Sync] Loading: History Delete Directives
+2025-12-01 15:21:24.969: [ERROR][Sync] Load Device Info, failed: OnStoreCreated@components\sync_device_info\device_info_sync_bridge.cc:808 - Model error type: 94
+2025-12-01 15:21:24.969: [ERROR][Sync] Stoping type: Device Info, error: OnStoreCreated@components\sync_device_info\device_info_sync_bridge.cc:808 - Model error type: 94
+2025-12-01 15:21:24.969: [INFO][Sync] Loading: Device Info
+2025-12-01 15:21:24.969: [ERROR][Sync] Load User Consents, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.969: [ERROR][Sync] Stoping type: User Consents, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.969: [INFO][Sync] Loading: User Consents
+2025-12-01 15:21:24.969: [ERROR][Sync] Load Send Tab To Self, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.969: [ERROR][Sync] Stoping type: Send Tab To Self, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.969: [INFO][Sync] Loading: Send Tab To Self
+2025-12-01 15:21:24.969: [ERROR][Sync] Load Web Apps, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.969: [ERROR][Sync] Stoping type: Web Apps, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.969: [INFO][Sync] Loading: Web Apps
+2025-12-01 15:21:24.969: [INFO][Sync] Loading: History
+2025-12-01 15:21:24.969: [ERROR][Sync] Load Saved Tab Group, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.969: [ERROR][Sync] Stoping type: Saved Tab Group, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.969: [INFO][Sync] Loading: Saved Tab Group
+2025-12-01 15:21:24.969: [ERROR][Sync] Load WebAuthn Credentials, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.969: [ERROR][Sync] Stoping type: WebAuthn Credentials, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.969: [INFO][Sync] Loading: WebAuthn Credentials
+2025-12-01 15:21:24.969: [ERROR][Sync] Load Collection, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.969: [ERROR][Sync] Stoping type: Collection, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.969: [INFO][Sync] Loading: Collection
+2025-12-01 15:21:24.969: [INFO][Sync] Loading: Edge E Drop
+2025-12-01 15:21:24.969: [INFO][Sync] Loading: Edge Hub App Usage
+2025-12-01 15:21:24.969: [INFO][Sync] Loading: Edge Wallet
+2025-12-01 15:21:24.977: [ERROR][Sync] Load Sessions, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.977: [ERROR][Sync] Stoping type: Sessions, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.977: [ERROR][Sync] Load Extension settings, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.977: [ERROR][Sync] Stoping type: Extension settings, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:21:24.977: [ERROR][Sync] Load Edge E Drop, failed: EDropSyncBridge@components\edge_e_drop\core\browser\sync\e_drop_sync_bridge.cc:71: DataTypeStore for Drop initialization failed
+2025-12-01 15:21:24.977: [ERROR][Sync] Stoping type: Edge E Drop, error: EDropSyncBridge@components\edge_e_drop\core\browser\sync\e_drop_sync_bridge.cc:71: DataTypeStore for Drop initialization failed
+2025-12-01 15:21:24.977: [ERROR][Sync] Load Edge Hub App Usage, failed: EdgeHubAppUsageSyncBridge@components\edge_hub_apps\sync\edge_hub_app_usage_sync_bridge.cc:55: ModelTypeStore for Hub App Usage initialization failed
+2025-12-01 15:21:24.977: [ERROR][Sync] Stoping type: Edge Hub App Usage, error: EdgeHubAppUsageSyncBridge@components\edge_hub_apps\sync\edge_hub_app_usage_sync_bridge.cc:55: ModelTypeStore for Hub App Usage initialization failed
+2025-12-01 15:21:24.977: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 6, current state: 2
+2025-12-01 15:21:24.977: [WARN][Sync] Crypto error data types: 
+2025-12-01 15:21:24.977: [INFO][Sync] Configure, desired: Bookmarks, History, Edge Wallet, Encryption Keys; Allow fail: Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage
+2025-12-01 15:21:24.977: [INFO][Sync] All data types are ready for configure.
+2025-12-01 15:21:25.311: [INFO][Sync] Started DataTypeManager configuration, reason: 5
+2025-12-01 15:21:25.311: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 5, current state: 1
+2025-12-01 15:21:25.323: [INFO][SyncEngineBackend::DoStartConfiguration] Start configuration
+2025-12-01 15:21:25.323: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 6
+2025-12-01 15:21:25.323: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-01 15:21:25.324: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 3
+2025-12-01 15:21:25.324: [WARN][Sync]     Reconfigure requested while configuration ongoing.
+2025-12-01 15:21:25.324: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 5, current state: 2
+2025-12-01 15:21:25.324: [INFO][Sync] Configure, desired: Bookmarks, Passwords, Autofill Profiles, Autofill, History, Edge Wallet, Encryption Keys; Allow fail: Preferences, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage
+2025-12-01 15:21:25.324: [INFO][Sync] Loading: Passwords
+2025-12-01 15:21:25.324: [INFO][Sync] Loading: Autofill Profiles
+2025-12-01 15:21:25.324: [INFO][Sync] Loading: Autofill
+2025-12-01 15:21:25.324: [INFO][Sync] All data types are ready for configure.
+2025-12-01 15:21:25.325: [INFO][SyncManagerImpl::NudgeForInitialDownload] Initial download nudge for Passwords
+2025-12-01 15:21:25.325: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-01 15:21:25.325: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-01 15:21:25.325: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 4
+2025-12-01 15:21:25.325: [INFO][Sync] Prepare to configure types: Passwords, Encryption Keys
+2025-12-01 15:21:25.325: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download: Passwords, Encryption Keys with reason: 5
+2025-12-01 15:21:25.325: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Blocked types:  and types to download: Passwords, Encryption Keys
+2025-12-01 15:21:25.606: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: Passwords, Encryption Keys
+2025-12-01 15:21:25.608: [INFO][Sync] ConfigurationDone, failed: , succeeded: Passwords, Encryption Keys, remaining count: 3
+2025-12-01 15:21:25.608: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-01 15:21:25.608: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-01 15:21:25.608: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 2
+2025-12-01 15:21:25.608: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-01 15:21:25.608: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-01 15:21:25.614: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 1
+2025-12-01 15:21:25.616: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-01 15:21:25.616: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-01 15:21:25.616: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 0
+2025-12-01 15:21:25.618: [INFO][Sync]     Configuration completed, state: 7
+2025-12-01 15:21:25.619: [INFO][Sync] Configured DataTypeManager: Ok
+2025-12-01 15:21:25.621: [INFO][SyncEngineBackend::DoStartSyncing] Start syncing
+2025-12-01 15:26:13.755: [INFO][Sync] Reset engine, reason: 0
+2025-12-01 15:26:13.755: [INFO][Sync] Reset engine with reason: 0
+2025-12-01 15:31:12.007: [INFO][Sync] SyncState after authenticated was: FeatureCanStart
+2025-12-01 15:31:12.996: [INFO][Sync] Try to start sync engine
+2025-12-01 15:31:12.997: [INFO][SyncManagerImpl::NudgeForInitialDownload] Initial download nudge for Encryption Keys
+2025-12-01 15:31:12.997: [INFO][SyncEngineBackend::LoadAndConnectNigoriController] Load and connect Nigori controller
+2025-12-01 15:31:12.997: [INFO][SyncEngineBackend::DoInitialize] Control Types added: Encryption Keys
+2025-12-01 15:31:12.997: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download: Encryption Keys with reason: 3
+2025-12-01 15:31:12.997: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Configure job was blocked
+2025-12-01 15:31:13.339: [INFO][SyncAuthManager::SetLastAuthError] Current auth error: None
+2025-12-01 15:31:13.339: [INFO][SyncAuthManager::EdgeLogTokenErrorState] Token error with: None for account type: MSA
+2025-12-01 15:31:13.339: [INFO][Sync] Credentials changed for: EdgeSyncScopeNew
+2025-12-01 15:31:14.463: [INFO][SyncAuthManager::SetLastAuthError] Current auth error: None
+2025-12-01 15:31:14.463: [INFO][SyncAuthManager::EdgeLogTokenErrorState] Token error with: None for account type: MSA
+2025-12-01 15:31:14.463: [INFO][Sync] Credentials changed for: EdgeSyncKeyDataScope
+2025-12-01 15:31:14.463: [INFO][SyncEngineBackend::DoUpdateKeyDataCredentials] Update key data credentials
+2025-12-01 15:31:14.463: [INFO][SyncEngineBackend::DoUpdateCredentials] Update credentials
+2025-12-01 15:31:14.463: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Blocked types:  and types to download: Encryption Keys
+2025-12-01 15:31:14.895: [INFO][Sync] Started DataTypeManager configuration, reason: 4
+2025-12-01 15:31:14.895: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 4, current state: 0
+2025-12-01 15:31:14.895: [WARN][Sync] Crypto error data types: Passwords, Autofill Profiles, Autofill
+2025-12-01 15:31:14.897: [INFO][Sync] Configure, desired: Bookmarks, Preferences, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys; Allow fail: Passwords, Autofill Profiles, Autofill
+2025-12-01 15:31:14.897: [INFO][Sync] Loading: Bookmarks
+2025-12-01 15:31:14.897: [ERROR][Sync] Load Preferences, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.897: [ERROR][Sync] Stoping type: Preferences, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.897: [INFO][Sync] Loading: Preferences
+2025-12-01 15:31:14.897: [ERROR][Sync] Load Extensions, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.897: [ERROR][Sync] Stoping type: Extensions, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.897: [INFO][Sync] Loading: Extensions
+2025-12-01 15:31:14.897: [INFO][Sync] Loading: Sessions
+2025-12-01 15:31:14.897: [INFO][Sync] Loading: Extension settings
+2025-12-01 15:31:14.897: [ERROR][Sync] Load History Delete Directives, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.897: [ERROR][Sync] Stoping type: History Delete Directives, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.897: [INFO][Sync] Loading: History Delete Directives
+2025-12-01 15:31:14.898: [ERROR][Sync] Load Device Info, failed: OnStoreCreated@components\sync_device_info\device_info_sync_bridge.cc:808 - Model error type: 94
+2025-12-01 15:31:14.898: [ERROR][Sync] Stoping type: Device Info, error: OnStoreCreated@components\sync_device_info\device_info_sync_bridge.cc:808 - Model error type: 94
+2025-12-01 15:31:14.898: [INFO][Sync] Loading: Device Info
+2025-12-01 15:31:14.898: [ERROR][Sync] Load User Consents, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.898: [ERROR][Sync] Stoping type: User Consents, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.898: [INFO][Sync] Loading: User Consents
+2025-12-01 15:31:14.898: [ERROR][Sync] Load Send Tab To Self, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.898: [ERROR][Sync] Stoping type: Send Tab To Self, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.898: [INFO][Sync] Loading: Send Tab To Self
+2025-12-01 15:31:14.898: [ERROR][Sync] Load Web Apps, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.898: [ERROR][Sync] Stoping type: Web Apps, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.898: [INFO][Sync] Loading: Web Apps
+2025-12-01 15:31:14.898: [INFO][Sync] Loading: History
+2025-12-01 15:31:14.898: [ERROR][Sync] Load Saved Tab Group, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.898: [ERROR][Sync] Stoping type: Saved Tab Group, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.898: [INFO][Sync] Loading: Saved Tab Group
+2025-12-01 15:31:14.898: [ERROR][Sync] Load WebAuthn Credentials, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.898: [ERROR][Sync] Stoping type: WebAuthn Credentials, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.898: [INFO][Sync] Loading: WebAuthn Credentials
+2025-12-01 15:31:14.898: [ERROR][Sync] Load Collection, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.898: [ERROR][Sync] Stoping type: Collection, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.898: [INFO][Sync] Loading: Collection
+2025-12-01 15:31:14.898: [INFO][Sync] Loading: Edge E Drop
+2025-12-01 15:31:14.898: [INFO][Sync] Loading: Edge Hub App Usage
+2025-12-01 15:31:14.898: [INFO][Sync] Loading: Edge Wallet
+2025-12-01 15:31:14.900: [ERROR][Sync] Load Sessions, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.900: [ERROR][Sync] Stoping type: Sessions, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.900: [ERROR][Sync] Load Extension settings, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.900: [ERROR][Sync] Stoping type: Extension settings, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-01 15:31:14.900: [ERROR][Sync] Load Edge E Drop, failed: EDropSyncBridge@components\edge_e_drop\core\browser\sync\e_drop_sync_bridge.cc:71: DataTypeStore for Drop initialization failed
+2025-12-01 15:31:14.900: [ERROR][Sync] Stoping type: Edge E Drop, error: EDropSyncBridge@components\edge_e_drop\core\browser\sync\e_drop_sync_bridge.cc:71: DataTypeStore for Drop initialization failed
+2025-12-01 15:31:14.900: [ERROR][Sync] Load Edge Hub App Usage, failed: EdgeHubAppUsageSyncBridge@components\edge_hub_apps\sync\edge_hub_app_usage_sync_bridge.cc:55: ModelTypeStore for Hub App Usage initialization failed
+2025-12-01 15:31:14.900: [ERROR][Sync] Stoping type: Edge Hub App Usage, error: EdgeHubAppUsageSyncBridge@components\edge_hub_apps\sync\edge_hub_app_usage_sync_bridge.cc:55: ModelTypeStore for Hub App Usage initialization failed
+2025-12-01 15:31:14.900: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 6, current state: 2
+2025-12-01 15:31:14.900: [WARN][Sync] Crypto error data types: 
+2025-12-01 15:31:14.900: [INFO][Sync] Configure, desired: Bookmarks, History, Edge Wallet, Encryption Keys; Allow fail: Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage
+2025-12-01 15:31:14.900: [INFO][Sync] All data types are ready for configure.
+2025-12-01 15:31:15.314: [INFO][Sync] Started DataTypeManager configuration, reason: 5
+2025-12-01 15:31:15.314: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 5, current state: 1
+2025-12-01 15:31:15.326: [INFO][SyncEngineBackend::DoStartConfiguration] Start configuration
+2025-12-01 15:31:15.326: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 6
+2025-12-01 15:31:15.326: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-01 15:31:15.326: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 3
+2025-12-01 15:31:15.326: [WARN][Sync]     Reconfigure requested while configuration ongoing.
+2025-12-01 15:31:15.326: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 5, current state: 2
+2025-12-01 15:31:15.327: [INFO][Sync] Configure, desired: Bookmarks, Passwords, Autofill Profiles, Autofill, History, Edge Wallet, Encryption Keys; Allow fail: Preferences, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage
+2025-12-01 15:31:15.327: [INFO][Sync] Loading: Passwords
+2025-12-01 15:31:15.327: [INFO][Sync] Loading: Autofill Profiles
+2025-12-01 15:31:15.327: [INFO][Sync] Loading: Autofill
+2025-12-01 15:31:15.327: [INFO][Sync] All data types are ready for configure.
+2025-12-01 15:31:15.327: [INFO][SyncManagerImpl::NudgeForInitialDownload] Initial download nudge for Passwords
+2025-12-01 15:31:15.327: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-01 15:31:15.327: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-01 15:31:15.327: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 4
+2025-12-01 15:31:15.327: [INFO][Sync] Prepare to configure types: Passwords, Encryption Keys
+2025-12-01 15:31:15.327: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download: Passwords, Encryption Keys with reason: 5
+2025-12-01 15:31:15.327: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Blocked types:  and types to download: Passwords, Encryption Keys
+2025-12-01 15:31:15.664: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: Passwords, Encryption Keys
+2025-12-01 15:31:15.666: [INFO][Sync] ConfigurationDone, failed: , succeeded: Passwords, Encryption Keys, remaining count: 3
+2025-12-01 15:31:15.666: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-01 15:31:15.666: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-01 15:31:15.666: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 2
+2025-12-01 15:31:15.666: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-01 15:31:15.666: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-01 15:31:15.672: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 1
+2025-12-01 15:31:15.674: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-01 15:31:15.674: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-01 15:31:15.674: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 0
+2025-12-01 15:31:15.676: [INFO][Sync]     Configuration completed, state: 7
+2025-12-01 15:31:15.676: [INFO][Sync] Configured DataTypeManager: Ok
+2025-12-01 15:31:15.680: [INFO][SyncEngineBackend::DoStartSyncing] Start syncing
+2025-12-02 12:23:21.330: [INFO][SyncSchedulerImpl::OnSyncNetworkError] Syncer error: Network error (ERR_NAME_NOT_RESOLVED)
+2025-12-02 12:23:21.330: [INFO][SyncSchedulerImpl::DoPollSyncCycleJob] Syncer error: Network error (ERR_NAME_NOT_RESOLVED)
+2025-12-02 12:23:21.333: [WARN][Sync] NetworkError: Network error (ERR_NAME_NOT_RESOLVED)
+2025-12-02 12:23:21.979: [INFO][Sync] Connection status changed to: 2
+2025-12-02 12:23:21.980: [INFO][SyncSchedulerImpl::OnSyncNetworkError] Syncer error: HTTP error (401)
+2025-12-02 12:23:21.983: [INFO][SyncSchedulerImpl::DoPollSyncCycleJob] Syncer error: HTTP error (401)
+2025-12-02 12:23:21.984: [WARN][Sync] NetworkError: HTTP error (401)
+2025-12-02 12:23:31.500: [INFO][SyncAuthManager::SetLastAuthError] Current auth error: None
+2025-12-02 12:23:31.500: [INFO][SyncAuthManager::EdgeLogTokenErrorState] Token error with: None for account type: MSA
+2025-12-02 12:23:31.500: [INFO][Sync] Credentials changed for: EdgeSyncKeyDataScope
+2025-12-02 12:23:31.500: [INFO][SyncEngineBackend::DoUpdateKeyDataCredentials] Update key data credentials
+2025-12-02 12:23:33.108: [INFO][SyncAuthManager::SetLastAuthError] Current auth error: None
+2025-12-02 12:23:33.108: [INFO][SyncAuthManager::EdgeLogTokenErrorState] Token error with: None for account type: MSA
+2025-12-02 12:23:33.108: [INFO][Sync] Credentials changed for: EdgeSyncScopeNew
+2025-12-02 12:23:33.108: [INFO][SyncEngineBackend::DoUpdateCredentials] Update credentials
+2025-12-02 12:23:34.187: [INFO][SyncEngineBackend::DoUpdateKeyDataCredentials] Update key data credentials
+2025-12-02 21:50:36.400: [INFO][SyncSchedulerImpl::OnSyncNetworkError] Syncer error: Network error (ERR_NAME_NOT_RESOLVED)
+2025-12-02 21:50:36.401: [INFO][SyncSchedulerImpl::DoPollSyncCycleJob] Syncer error: Network error (ERR_NAME_NOT_RESOLVED)
+2025-12-02 21:50:36.415: [WARN][Sync] NetworkError: Network error (ERR_NAME_NOT_RESOLVED)
+2025-12-02 21:50:36.898: [INFO][SyncSchedulerImpl::OnSyncNetworkError] Syncer error: Network error (ERR_NAME_NOT_RESOLVED)
+2025-12-02 21:50:36.899: [INFO][SyncSchedulerImpl::DoPollSyncCycleJob] Syncer error: Network error (ERR_NAME_NOT_RESOLVED)
+2025-12-02 21:50:36.903: [WARN][Sync] NetworkError: Network error (ERR_NAME_NOT_RESOLVED)
+2025-12-02 21:50:36.990: [INFO][SyncSchedulerImpl::OnSyncNetworkError] Syncer error: Network error (ERR_NAME_NOT_RESOLVED)
+2025-12-02 21:50:36.991: [INFO][SyncSchedulerImpl::DoPollSyncCycleJob] Syncer error: Network error (ERR_NAME_NOT_RESOLVED)
+2025-12-02 21:50:36.995: [WARN][Sync] NetworkError: Network error (ERR_NAME_NOT_RESOLVED)
+2025-12-02 21:50:37.061: [INFO][SyncSchedulerImpl::OnSyncNetworkError] Syncer error: Network error (ERR_NAME_NOT_RESOLVED)
+2025-12-02 21:50:37.062: [INFO][SyncSchedulerImpl::DoPollSyncCycleJob] Syncer error: Network error (ERR_NAME_NOT_RESOLVED)
+2025-12-02 21:50:37.066: [WARN][Sync] NetworkError: Network error (ERR_NAME_NOT_RESOLVED)
+2025-12-02 21:50:38.040: [INFO][SyncSchedulerImpl::OnSyncNetworkError] Syncer error: Network error (ERR_NAME_NOT_RESOLVED)
+2025-12-02 21:50:38.041: [INFO][SyncSchedulerImpl::DoPollSyncCycleJob] Syncer error: Network error (ERR_NAME_NOT_RESOLVED)
+2025-12-02 21:50:38.043: [WARN][Sync] NetworkError: Network error (ERR_NAME_NOT_RESOLVED)
+2025-12-02 21:50:48.835: [INFO][Sync] Connection status changed to: 2
+2025-12-02 21:50:48.836: [INFO][SyncSchedulerImpl::OnSyncNetworkError] Syncer error: HTTP error (401)
+2025-12-02 21:50:48.836: [INFO][SyncSchedulerImpl::DoPollSyncCycleJob] Syncer error: HTTP error (401)
+2025-12-02 21:50:48.842: [WARN][Sync] NetworkError: HTTP error (401)
+2025-12-02 21:50:49.401: [INFO][Sync] Connection status changed to: 2
+2025-12-02 21:50:53.139: [INFO][SyncAuthManager::SetLastAuthError] Current auth error: None
+2025-12-02 21:50:53.139: [INFO][SyncAuthManager::EdgeLogTokenErrorState] Token error with: None for account type: MSA
+2025-12-02 21:50:53.139: [INFO][Sync] Credentials changed for: EdgeSyncKeyDataScope
+2025-12-02 21:50:53.146: [INFO][SyncEngineBackend::DoUpdateKeyDataCredentials] Update key data credentials
+2025-12-02 21:50:54.338: [INFO][SyncAuthManager::SetLastAuthError] Current auth error: None
+2025-12-02 21:50:54.338: [INFO][SyncAuthManager::EdgeLogTokenErrorState] Token error with: None for account type: MSA
+2025-12-02 21:50:54.338: [INFO][Sync] Credentials changed for: EdgeSyncScopeNew
+2025-12-02 21:50:54.339: [INFO][SyncEngineBackend::DoUpdateCredentials] Update credentials
+2025-12-02 21:50:54.340: [INFO][SyncEngineBackend::DoUpdateKeyDataCredentials] Update key data credentials
+2025-12-02 22:41:45.159: [INFO][Sync] Reset engine, reason: 0
+2025-12-02 22:41:45.159: [INFO][Sync] Reset engine with reason: 0
+2025-12-04 17:11:28.128: [INFO][Sync] SyncState after authenticated was: FeatureCanStart
+2025-12-04 17:11:29.990: [INFO][SyncAuthManager::SetLastAuthError] Current auth error: None
+2025-12-04 17:11:29.991: [INFO][SyncAuthManager::EdgeLogTokenErrorState] Token error with: None for account type: MSA
+2025-12-04 17:11:29.991: [INFO][Sync] Credentials changed for: EdgeSyncKeyDataScope
+2025-12-04 17:11:30.833: [INFO][Sync] Try to start sync engine
+2025-12-04 17:11:30.859: [INFO][SyncManagerImpl::NudgeForInitialDownload] Initial download nudge for Encryption Keys
+2025-12-04 17:11:30.859: [INFO][SyncEngineBackend::LoadAndConnectNigoriController] Load and connect Nigori controller
+2025-12-04 17:11:30.860: [INFO][SyncEngineBackend::DoInitialize] Control Types added: Encryption Keys
+2025-12-04 17:11:30.860: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download: Encryption Keys with reason: 3
+2025-12-04 17:11:30.862: [INFO][SyncEngineBackend::DoUpdateKeyDataCredentials] Update key data credentials
+2025-12-04 17:11:30.862: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Configure job was blocked
+2025-12-04 17:11:30.897: [INFO][SyncAuthManager::SetLastAuthError] Current auth error: None
+2025-12-04 17:11:30.897: [INFO][SyncAuthManager::EdgeLogTokenErrorState] Token error with: None for account type: MSA
+2025-12-04 17:11:30.897: [INFO][Sync] Credentials changed for: EdgeSyncScopeNew
+2025-12-04 17:11:30.897: [INFO][SyncEngineBackend::DoUpdateCredentials] Update credentials
+2025-12-04 17:11:30.897: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Blocked types:  and types to download: Encryption Keys
+2025-12-04 17:11:34.510: [INFO][SyncEngineBackend::DoUpdateKeyDataCredentials] Update key data credentials
+2025-12-04 17:11:34.519: [INFO][Sync] Started DataTypeManager configuration, reason: 4
+2025-12-04 17:11:34.520: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 4, current state: 0
+2025-12-04 17:11:34.520: [WARN][Sync] Crypto error data types: Passwords, Autofill Profiles, Autofill
+2025-12-04 17:11:34.525: [INFO][Sync] Configure, desired: Bookmarks, Preferences, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys; Allow fail: Passwords, Autofill Profiles, Autofill
+2025-12-04 17:11:34.527: [INFO][Sync] Loading: Bookmarks
+2025-12-04 17:11:34.527: [ERROR][Sync] Load Preferences, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.527: [ERROR][Sync] Stoping type: Preferences, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.527: [INFO][Sync] Loading: Preferences
+2025-12-04 17:11:34.527: [ERROR][Sync] Load Extensions, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.527: [ERROR][Sync] Stoping type: Extensions, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.527: [INFO][Sync] Loading: Extensions
+2025-12-04 17:11:34.528: [INFO][Sync] Loading: Sessions
+2025-12-04 17:11:34.528: [INFO][Sync] Loading: Extension settings
+2025-12-04 17:11:34.528: [ERROR][Sync] Load History Delete Directives, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.528: [ERROR][Sync] Stoping type: History Delete Directives, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.528: [INFO][Sync] Loading: History Delete Directives
+2025-12-04 17:11:34.528: [ERROR][Sync] Load Device Info, failed: OnStoreCreated@components\sync_device_info\device_info_sync_bridge.cc:808 - Model error type: 94
+2025-12-04 17:11:34.528: [ERROR][Sync] Stoping type: Device Info, error: OnStoreCreated@components\sync_device_info\device_info_sync_bridge.cc:808 - Model error type: 94
+2025-12-04 17:11:34.528: [INFO][Sync] Loading: Device Info
+2025-12-04 17:11:34.528: [ERROR][Sync] Load User Consents, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.528: [ERROR][Sync] Stoping type: User Consents, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.528: [INFO][Sync] Loading: User Consents
+2025-12-04 17:11:34.528: [ERROR][Sync] Load Send Tab To Self, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.528: [ERROR][Sync] Stoping type: Send Tab To Self, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.528: [INFO][Sync] Loading: Send Tab To Self
+2025-12-04 17:11:34.528: [ERROR][Sync] Load Web Apps, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.528: [ERROR][Sync] Stoping type: Web Apps, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.528: [INFO][Sync] Loading: Web Apps
+2025-12-04 17:11:34.528: [INFO][Sync] Loading: History
+2025-12-04 17:11:34.529: [ERROR][Sync] Load Saved Tab Group, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.529: [ERROR][Sync] Stoping type: Saved Tab Group, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.529: [INFO][Sync] Loading: Saved Tab Group
+2025-12-04 17:11:34.529: [ERROR][Sync] Load WebAuthn Credentials, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.529: [ERROR][Sync] Stoping type: WebAuthn Credentials, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.529: [INFO][Sync] Loading: WebAuthn Credentials
+2025-12-04 17:11:34.529: [ERROR][Sync] Load Collection, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.529: [ERROR][Sync] Stoping type: Collection, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.529: [INFO][Sync] Loading: Collection
+2025-12-04 17:11:34.529: [INFO][Sync] Loading: Edge E Drop
+2025-12-04 17:11:34.529: [INFO][Sync] Loading: Edge Hub App Usage
+2025-12-04 17:11:34.529: [INFO][Sync] Loading: Edge Wallet
+2025-12-04 17:11:34.537: [ERROR][Sync] Load Sessions, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.537: [ERROR][Sync] Stoping type: Sessions, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.537: [ERROR][Sync] Load Extension settings, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.537: [ERROR][Sync] Stoping type: Extension settings, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-04 17:11:34.537: [ERROR][Sync] Load Edge E Drop, failed: EDropSyncBridge@components\edge_e_drop\core\browser\sync\e_drop_sync_bridge.cc:71: DataTypeStore for Drop initialization failed
+2025-12-04 17:11:34.537: [ERROR][Sync] Stoping type: Edge E Drop, error: EDropSyncBridge@components\edge_e_drop\core\browser\sync\e_drop_sync_bridge.cc:71: DataTypeStore for Drop initialization failed
+2025-12-04 17:11:34.537: [ERROR][Sync] Load Edge Hub App Usage, failed: EdgeHubAppUsageSyncBridge@components\edge_hub_apps\sync\edge_hub_app_usage_sync_bridge.cc:55: ModelTypeStore for Hub App Usage initialization failed
+2025-12-04 17:11:34.537: [ERROR][Sync] Stoping type: Edge Hub App Usage, error: EdgeHubAppUsageSyncBridge@components\edge_hub_apps\sync\edge_hub_app_usage_sync_bridge.cc:55: ModelTypeStore for Hub App Usage initialization failed
+2025-12-04 17:11:34.537: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 6, current state: 2
+2025-12-04 17:11:34.537: [WARN][Sync] Crypto error data types: 
+2025-12-04 17:11:34.538: [INFO][Sync] Configure, desired: Bookmarks, History, Edge Wallet, Encryption Keys; Allow fail: Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage
+2025-12-04 17:11:34.538: [INFO][Sync] All data types are ready for configure.
+2025-12-04 17:11:38.193: [INFO][Sync] Started DataTypeManager configuration, reason: 5
+2025-12-04 17:11:38.193: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 5, current state: 1
+2025-12-04 17:11:38.208: [INFO][SyncEngineBackend::DoStartConfiguration] Start configuration
+2025-12-04 17:11:38.209: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 6
+2025-12-04 17:11:38.209: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-04 17:11:38.212: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 3
+2025-12-04 17:11:38.212: [WARN][Sync]     Reconfigure requested while configuration ongoing.
+2025-12-04 17:11:38.212: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 5, current state: 2
+2025-12-04 17:11:38.212: [INFO][Sync] Configure, desired: Bookmarks, Passwords, Autofill Profiles, Autofill, History, Edge Wallet, Encryption Keys; Allow fail: Preferences, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage
+2025-12-04 17:11:38.212: [INFO][Sync] Loading: Passwords
+2025-12-04 17:11:38.212: [INFO][Sync] Loading: Autofill Profiles
+2025-12-04 17:11:38.212: [INFO][Sync] Loading: Autofill
+2025-12-04 17:11:38.214: [INFO][Sync] All data types are ready for configure.
+2025-12-04 17:11:38.215: [INFO][SyncManagerImpl::NudgeForInitialDownload] Initial download nudge for Passwords
+2025-12-04 17:11:38.216: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-04 17:11:38.216: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-04 17:11:38.216: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 4
+2025-12-04 17:11:38.216: [INFO][Sync] Prepare to configure types: Passwords, Encryption Keys
+2025-12-04 17:11:38.216: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download: Passwords, Encryption Keys with reason: 5
+2025-12-04 17:11:38.216: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Blocked types:  and types to download: Passwords, Encryption Keys
+2025-12-04 17:11:38.684: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: Passwords, Encryption Keys
+2025-12-04 17:11:38.689: [INFO][Sync] ConfigurationDone, failed: , succeeded: Passwords, Encryption Keys, remaining count: 3
+2025-12-04 17:11:38.689: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-04 17:11:38.689: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-04 17:11:38.689: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 2
+2025-12-04 17:11:38.689: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-04 17:11:38.689: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-04 17:11:38.695: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 1
+2025-12-04 17:11:38.698: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-04 17:11:38.698: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-04 17:11:38.699: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 0
+2025-12-04 17:11:38.701: [INFO][Sync]     Configuration completed, state: 7
+2025-12-04 17:11:38.702: [INFO][Sync] Configured DataTypeManager: Ok
+2025-12-04 17:11:38.710: [INFO][SyncEngineBackend::DoStartSyncing] Start syncing
+2025-12-04 17:20:19.583: [INFO][Sync] Reset engine, reason: 0
+2025-12-04 17:20:19.583: [INFO][Sync] Reset engine with reason: 0
+2025-12-05 02:35:23.502: [INFO][Sync] SyncState after authenticated was: FeatureCanStart
+2025-12-05 02:35:25.184: [INFO][Sync] Try to start sync engine
+2025-12-05 02:35:25.249: [INFO][SyncManagerImpl::NudgeForInitialDownload] Initial download nudge for Encryption Keys
+2025-12-05 02:35:25.249: [INFO][SyncEngineBackend::LoadAndConnectNigoriController] Load and connect Nigori controller
+2025-12-05 02:35:25.256: [INFO][SyncEngineBackend::DoInitialize] Control Types added: Encryption Keys
+2025-12-05 02:35:25.256: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download: Encryption Keys with reason: 3
+2025-12-05 02:35:25.287: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Configure job was blocked
+2025-12-05 02:35:33.152: [INFO][SyncAuthManager::SetLastAuthError] Current auth error: None
+2025-12-05 02:35:33.154: [INFO][SyncAuthManager::EdgeLogTokenErrorState] Token error with: None for account type: MSA
+2025-12-05 02:35:33.154: [INFO][Sync] Credentials changed for: EdgeSyncKeyDataScope
+2025-12-05 02:35:33.155: [INFO][SyncEngineBackend::DoUpdateKeyDataCredentials] Update key data credentials
+2025-12-05 02:35:36.389: [INFO][SyncAuthManager::SetLastAuthError] Current auth error: None
+2025-12-05 02:35:36.389: [INFO][SyncAuthManager::EdgeLogTokenErrorState] Token error with: None for account type: MSA
+2025-12-05 02:35:36.658: [INFO][Sync] Credentials changed for: EdgeSyncScopeNew
+2025-12-05 02:35:36.658: [INFO][SyncEngineBackend::DoUpdateCredentials] Update credentials
+2025-12-05 02:35:36.658: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Blocked types:  and types to download: Encryption Keys
+2025-12-05 02:35:41.465: [INFO][SyncEngineBackend::DoUpdateKeyDataCredentials] Update key data credentials
+2025-12-05 02:35:41.472: [INFO][Sync] Started DataTypeManager configuration, reason: 4
+2025-12-05 02:35:41.481: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 4, current state: 0
+2025-12-05 02:35:41.481: [WARN][Sync] Crypto error data types: Passwords, Autofill Profiles, Autofill
+2025-12-05 02:35:41.490: [INFO][Sync] Configure, desired: Bookmarks, Preferences, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys; Allow fail: Passwords, Autofill Profiles, Autofill
+2025-12-05 02:35:41.500: [INFO][Sync] Loading: Bookmarks
+2025-12-05 02:35:41.500: [ERROR][Sync] Load Preferences, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.500: [ERROR][Sync] Stoping type: Preferences, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.500: [INFO][Sync] Loading: Preferences
+2025-12-05 02:35:41.500: [ERROR][Sync] Load Extensions, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.501: [ERROR][Sync] Stoping type: Extensions, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.501: [INFO][Sync] Loading: Extensions
+2025-12-05 02:35:41.505: [INFO][Sync] Loading: Sessions
+2025-12-05 02:35:41.510: [INFO][Sync] Loading: Extension settings
+2025-12-05 02:35:41.511: [ERROR][Sync] Load History Delete Directives, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.511: [ERROR][Sync] Stoping type: History Delete Directives, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.511: [INFO][Sync] Loading: History Delete Directives
+2025-12-05 02:35:41.511: [ERROR][Sync] Load Device Info, failed: OnStoreCreated@components\sync_device_info\device_info_sync_bridge.cc:808 - Model error type: 94
+2025-12-05 02:35:41.511: [ERROR][Sync] Stoping type: Device Info, error: OnStoreCreated@components\sync_device_info\device_info_sync_bridge.cc:808 - Model error type: 94
+2025-12-05 02:35:41.511: [INFO][Sync] Loading: Device Info
+2025-12-05 02:35:41.511: [ERROR][Sync] Load User Consents, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.511: [ERROR][Sync] Stoping type: User Consents, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.511: [INFO][Sync] Loading: User Consents
+2025-12-05 02:35:41.511: [ERROR][Sync] Load Send Tab To Self, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.511: [ERROR][Sync] Stoping type: Send Tab To Self, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.511: [INFO][Sync] Loading: Send Tab To Self
+2025-12-05 02:35:41.511: [ERROR][Sync] Load Web Apps, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.511: [ERROR][Sync] Stoping type: Web Apps, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.511: [INFO][Sync] Loading: Web Apps
+2025-12-05 02:35:41.511: [INFO][Sync] Loading: History
+2025-12-05 02:35:41.516: [ERROR][Sync] Load Saved Tab Group, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.516: [ERROR][Sync] Stoping type: Saved Tab Group, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.516: [INFO][Sync] Loading: Saved Tab Group
+2025-12-05 02:35:41.516: [ERROR][Sync] Load WebAuthn Credentials, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.516: [ERROR][Sync] Stoping type: WebAuthn Credentials, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.516: [INFO][Sync] Loading: WebAuthn Credentials
+2025-12-05 02:35:41.516: [ERROR][Sync] Load Collection, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.516: [ERROR][Sync] Stoping type: Collection, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.516: [INFO][Sync] Loading: Collection
+2025-12-05 02:35:41.516: [INFO][Sync] Loading: Edge E Drop
+2025-12-05 02:35:41.516: [INFO][Sync] Loading: Edge Hub App Usage
+2025-12-05 02:35:41.516: [INFO][Sync] Loading: Edge Wallet
+2025-12-05 02:35:41.518: [ERROR][Sync] Load Sessions, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.518: [ERROR][Sync] Stoping type: Sessions, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.518: [ERROR][Sync] Load Extension settings, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.518: [ERROR][Sync] Stoping type: Extension settings, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 02:35:41.525: [ERROR][Sync] Load Edge E Drop, failed: EDropSyncBridge@components\edge_e_drop\core\browser\sync\e_drop_sync_bridge.cc:71: DataTypeStore for Drop initialization failed
+2025-12-05 02:35:41.525: [ERROR][Sync] Stoping type: Edge E Drop, error: EDropSyncBridge@components\edge_e_drop\core\browser\sync\e_drop_sync_bridge.cc:71: DataTypeStore for Drop initialization failed
+2025-12-05 02:35:41.525: [ERROR][Sync] Load Edge Hub App Usage, failed: EdgeHubAppUsageSyncBridge@components\edge_hub_apps\sync\edge_hub_app_usage_sync_bridge.cc:55: ModelTypeStore for Hub App Usage initialization failed
+2025-12-05 02:35:41.525: [ERROR][Sync] Stoping type: Edge Hub App Usage, error: EdgeHubAppUsageSyncBridge@components\edge_hub_apps\sync\edge_hub_app_usage_sync_bridge.cc:55: ModelTypeStore for Hub App Usage initialization failed
+2025-12-05 02:35:41.525: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 6, current state: 2
+2025-12-05 02:35:41.525: [WARN][Sync] Crypto error data types: 
+2025-12-05 02:35:41.525: [INFO][Sync] Configure, desired: Bookmarks, History, Edge Wallet, Encryption Keys; Allow fail: Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage
+2025-12-05 02:35:41.525: [INFO][Sync] All data types are ready for configure.
+2025-12-05 02:35:43.097: [INFO][Sync] Started DataTypeManager configuration, reason: 5
+2025-12-05 02:35:43.098: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 5, current state: 1
+2025-12-05 02:35:43.128: [INFO][SyncEngineBackend::DoStartConfiguration] Start configuration
+2025-12-05 02:35:43.130: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 6
+2025-12-05 02:35:43.130: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-05 02:35:43.147: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 3
+2025-12-05 02:35:43.147: [WARN][Sync]     Reconfigure requested while configuration ongoing.
+2025-12-05 02:35:43.147: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 5, current state: 2
+2025-12-05 02:35:43.147: [INFO][Sync] Configure, desired: Bookmarks, Passwords, Autofill Profiles, Autofill, History, Edge Wallet, Encryption Keys; Allow fail: Preferences, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage
+2025-12-05 02:35:43.147: [INFO][Sync] Loading: Passwords
+2025-12-05 02:35:43.147: [INFO][Sync] Loading: Autofill Profiles
+2025-12-05 02:35:43.148: [INFO][Sync] Loading: Autofill
+2025-12-05 02:35:43.166: [INFO][Sync] All data types are ready for configure.
+2025-12-05 02:35:43.166: [INFO][SyncManagerImpl::NudgeForInitialDownload] Initial download nudge for Passwords
+2025-12-05 02:35:43.176: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-05 02:35:43.176: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-05 02:35:43.176: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 4
+2025-12-05 02:35:43.176: [INFO][Sync] Prepare to configure types: Passwords, Encryption Keys
+2025-12-05 02:35:43.176: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download: Passwords, Encryption Keys with reason: 5
+2025-12-05 02:35:43.176: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Blocked types:  and types to download: Passwords, Encryption Keys
+2025-12-05 02:35:43.434: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: Passwords, Encryption Keys
+2025-12-05 02:35:43.459: [INFO][Sync] ConfigurationDone, failed: , succeeded: Passwords, Encryption Keys, remaining count: 3
+2025-12-05 02:35:43.460: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-05 02:35:43.460: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-05 02:35:43.462: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 2
+2025-12-05 02:35:43.464: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-05 02:35:43.464: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-05 02:35:43.469: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 1
+2025-12-05 02:35:43.472: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-05 02:35:43.472: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-05 02:35:43.472: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 0
+2025-12-05 02:35:43.473: [INFO][Sync]     Configuration completed, state: 7
+2025-12-05 02:35:43.489: [INFO][Sync] Configured DataTypeManager: Ok
+2025-12-05 02:35:43.723: [INFO][SyncEngineBackend::DoStartSyncing] Start syncing
+2025-12-05 03:01:48.196: [INFO][Sync] Reset engine, reason: 0
+2025-12-05 03:01:48.196: [INFO][Sync] Reset engine with reason: 0
+2025-12-05 03:03:50.375: [INFO][Sync] SyncState after authenticated was: FeatureCanStart
+2025-12-05 03:03:53.204: [INFO][Sync] Try to start sync engine
+2025-12-05 03:03:53.341: [INFO][SyncManagerImpl::NudgeForInitialDownload] Initial download nudge for Encryption Keys
+2025-12-05 03:03:53.341: [INFO][SyncEngineBackend::LoadAndConnectNigoriController] Load and connect Nigori controller
+2025-12-05 03:03:53.341: [INFO][SyncEngineBackend::DoInitialize] Control Types added: Encryption Keys
+2025-12-05 03:03:53.341: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download: Encryption Keys with reason: 3
+2025-12-05 03:03:53.350: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Configure job was blocked
+2025-12-05 03:03:53.369: [INFO][SyncAuthManager::SetLastAuthError] Current auth error: None
+2025-12-05 03:03:53.373: [INFO][SyncAuthManager::EdgeLogTokenErrorState] Token error with: None for account type: MSA
+2025-12-05 03:03:53.373: [INFO][Sync] Credentials changed for: EdgeSyncScopeNew
+2025-12-05 03:03:54.713: [INFO][SyncAuthManager::SetLastAuthError] Current auth error: None
+2025-12-05 03:03:54.713: [INFO][SyncAuthManager::EdgeLogTokenErrorState] Token error with: None for account type: MSA
+2025-12-05 03:03:54.713: [INFO][Sync] Credentials changed for: EdgeSyncKeyDataScope
+2025-12-05 03:03:54.713: [INFO][SyncEngineBackend::DoUpdateKeyDataCredentials] Update key data credentials
+2025-12-05 03:03:54.713: [INFO][SyncEngineBackend::DoUpdateCredentials] Update credentials
+2025-12-05 03:03:54.713: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Blocked types:  and types to download: Encryption Keys
+2025-12-05 03:04:00.035: [INFO][Sync] Started DataTypeManager configuration, reason: 4
+2025-12-05 03:04:00.041: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 4, current state: 0
+2025-12-05 03:04:00.041: [WARN][Sync] Crypto error data types: Passwords, Autofill Profiles, Autofill
+2025-12-05 03:04:00.048: [INFO][Sync] Configure, desired: Bookmarks, Preferences, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys; Allow fail: Passwords, Autofill Profiles, Autofill
+2025-12-05 03:04:00.052: [INFO][Sync] Loading: Bookmarks
+2025-12-05 03:04:00.052: [ERROR][Sync] Load Preferences, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.052: [ERROR][Sync] Stoping type: Preferences, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.052: [INFO][Sync] Loading: Preferences
+2025-12-05 03:04:00.052: [ERROR][Sync] Load Extensions, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.052: [ERROR][Sync] Stoping type: Extensions, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.052: [INFO][Sync] Loading: Extensions
+2025-12-05 03:04:00.052: [INFO][Sync] Loading: Sessions
+2025-12-05 03:04:00.057: [INFO][Sync] Loading: Extension settings
+2025-12-05 03:04:00.057: [ERROR][Sync] Load History Delete Directives, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.057: [ERROR][Sync] Stoping type: History Delete Directives, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.057: [INFO][Sync] Loading: History Delete Directives
+2025-12-05 03:04:00.057: [ERROR][Sync] Load Device Info, failed: OnStoreCreated@components\sync_device_info\device_info_sync_bridge.cc:808 - Model error type: 94
+2025-12-05 03:04:00.057: [ERROR][Sync] Stoping type: Device Info, error: OnStoreCreated@components\sync_device_info\device_info_sync_bridge.cc:808 - Model error type: 94
+2025-12-05 03:04:00.057: [INFO][Sync] Loading: Device Info
+2025-12-05 03:04:00.057: [ERROR][Sync] Load User Consents, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.057: [ERROR][Sync] Stoping type: User Consents, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.057: [INFO][Sync] Loading: User Consents
+2025-12-05 03:04:00.057: [ERROR][Sync] Load Send Tab To Self, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.057: [ERROR][Sync] Stoping type: Send Tab To Self, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.057: [INFO][Sync] Loading: Send Tab To Self
+2025-12-05 03:04:00.057: [ERROR][Sync] Load Web Apps, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.057: [ERROR][Sync] Stoping type: Web Apps, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.057: [INFO][Sync] Loading: Web Apps
+2025-12-05 03:04:00.057: [INFO][Sync] Loading: History
+2025-12-05 03:04:00.057: [ERROR][Sync] Load Saved Tab Group, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.057: [ERROR][Sync] Stoping type: Saved Tab Group, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.057: [INFO][Sync] Loading: Saved Tab Group
+2025-12-05 03:04:00.057: [ERROR][Sync] Load WebAuthn Credentials, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.057: [ERROR][Sync] Stoping type: WebAuthn Credentials, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.058: [INFO][Sync] Loading: WebAuthn Credentials
+2025-12-05 03:04:00.058: [ERROR][Sync] Load Collection, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.058: [ERROR][Sync] Stoping type: Collection, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.058: [INFO][Sync] Loading: Collection
+2025-12-05 03:04:00.058: [INFO][Sync] Loading: Edge E Drop
+2025-12-05 03:04:00.058: [INFO][Sync] Loading: Edge Hub App Usage
+2025-12-05 03:04:00.058: [INFO][Sync] Loading: Edge Wallet
+2025-12-05 03:04:00.060: [ERROR][Sync] Load Sessions, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.060: [ERROR][Sync] Stoping type: Sessions, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.082: [ERROR][Sync] Load Edge E Drop, failed: EDropSyncBridge@components\edge_e_drop\core\browser\sync\e_drop_sync_bridge.cc:71: DataTypeStore for Drop initialization failed
+2025-12-05 03:04:00.082: [ERROR][Sync] Stoping type: Edge E Drop, error: EDropSyncBridge@components\edge_e_drop\core\browser\sync\e_drop_sync_bridge.cc:71: DataTypeStore for Drop initialization failed
+2025-12-05 03:04:00.082: [ERROR][Sync] Load Extension settings, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.082: [ERROR][Sync] Stoping type: Extension settings, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:04:00.082: [ERROR][Sync] Load Edge Hub App Usage, failed: EdgeHubAppUsageSyncBridge@components\edge_hub_apps\sync\edge_hub_app_usage_sync_bridge.cc:55: ModelTypeStore for Hub App Usage initialization failed
+2025-12-05 03:04:00.082: [ERROR][Sync] Stoping type: Edge Hub App Usage, error: EdgeHubAppUsageSyncBridge@components\edge_hub_apps\sync\edge_hub_app_usage_sync_bridge.cc:55: ModelTypeStore for Hub App Usage initialization failed
+2025-12-05 03:04:00.145: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 6, current state: 2
+2025-12-05 03:04:00.145: [WARN][Sync] Crypto error data types: 
+2025-12-05 03:04:00.145: [INFO][Sync] Configure, desired: Bookmarks, History, Edge Wallet, Encryption Keys; Allow fail: Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage
+2025-12-05 03:04:00.145: [INFO][Sync] All data types are ready for configure.
+2025-12-05 03:04:00.673: [INFO][Sync] Started DataTypeManager configuration, reason: 5
+2025-12-05 03:04:00.673: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 5, current state: 1
+2025-12-05 03:04:00.725: [INFO][SyncEngineBackend::DoStartConfiguration] Start configuration
+2025-12-05 03:04:00.726: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 6
+2025-12-05 03:04:00.727: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-05 03:04:00.744: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 3
+2025-12-05 03:04:00.744: [WARN][Sync]     Reconfigure requested while configuration ongoing.
+2025-12-05 03:04:00.744: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 5, current state: 2
+2025-12-05 03:04:00.744: [INFO][Sync] Configure, desired: Bookmarks, Passwords, Autofill Profiles, Autofill, History, Edge Wallet, Encryption Keys; Allow fail: Preferences, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage
+2025-12-05 03:04:00.744: [INFO][Sync] Loading: Passwords
+2025-12-05 03:04:00.744: [INFO][Sync] Loading: Autofill Profiles
+2025-12-05 03:04:00.744: [INFO][Sync] Loading: Autofill
+2025-12-05 03:04:00.809: [INFO][Sync] All data types are ready for configure.
+2025-12-05 03:04:00.820: [INFO][SyncManagerImpl::NudgeForInitialDownload] Initial download nudge for Passwords
+2025-12-05 03:04:00.836: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-05 03:04:00.836: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-05 03:04:00.836: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 4
+2025-12-05 03:04:00.836: [INFO][Sync] Prepare to configure types: Passwords, Encryption Keys
+2025-12-05 03:04:00.836: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download: Passwords, Encryption Keys with reason: 5
+2025-12-05 03:04:00.836: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Blocked types:  and types to download: Passwords, Encryption Keys
+2025-12-05 03:04:01.291: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: Passwords, Encryption Keys
+2025-12-05 03:04:01.312: [INFO][Sync] ConfigurationDone, failed: , succeeded: Passwords, Encryption Keys, remaining count: 3
+2025-12-05 03:04:01.312: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-05 03:04:01.312: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-05 03:04:01.314: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 2
+2025-12-05 03:04:01.314: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-05 03:04:01.314: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-05 03:04:01.314: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 1
+2025-12-05 03:04:01.320: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-05 03:04:01.320: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-05 03:04:01.327: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 0
+2025-12-05 03:04:01.330: [INFO][Sync]     Configuration completed, state: 7
+2025-12-05 03:04:01.332: [INFO][Sync] Configured DataTypeManager: Ok
+2025-12-05 03:04:01.350: [INFO][SyncEngineBackend::DoStartSyncing] Start syncing
+2025-12-05 03:05:24.709: [INFO][Sync] Reset engine, reason: 0
+2025-12-05 03:05:24.709: [INFO][Sync] Reset engine with reason: 0
+2025-12-05 03:07:23.085: [INFO][Sync] SyncState after authenticated was: FeatureCanStart
+2025-12-05 03:07:25.267: [INFO][Sync] Try to start sync engine
+2025-12-05 03:07:25.268: [INFO][SyncManagerImpl::NudgeForInitialDownload] Initial download nudge for Encryption Keys
+2025-12-05 03:07:25.268: [INFO][SyncEngineBackend::LoadAndConnectNigoriController] Load and connect Nigori controller
+2025-12-05 03:07:25.268: [INFO][SyncEngineBackend::DoInitialize] Control Types added: Encryption Keys
+2025-12-05 03:07:25.268: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download: Encryption Keys with reason: 3
+2025-12-05 03:07:25.269: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Configure job was blocked
+2025-12-05 03:07:26.068: [INFO][SyncAuthManager::SetLastAuthError] Current auth error: None
+2025-12-05 03:07:26.069: [INFO][SyncAuthManager::EdgeLogTokenErrorState] Token error with: None for account type: MSA
+2025-12-05 03:07:26.070: [INFO][Sync] Credentials changed for: EdgeSyncScopeNew
+2025-12-05 03:07:28.402: [INFO][SyncAuthManager::SetLastAuthError] Current auth error: None
+2025-12-05 03:07:28.402: [INFO][SyncAuthManager::EdgeLogTokenErrorState] Token error with: None for account type: MSA
+2025-12-05 03:07:28.402: [INFO][Sync] Credentials changed for: EdgeSyncKeyDataScope
+2025-12-05 03:07:28.402: [INFO][SyncEngineBackend::DoUpdateKeyDataCredentials] Update key data credentials
+2025-12-05 03:07:28.402: [INFO][SyncEngineBackend::DoUpdateCredentials] Update credentials
+2025-12-05 03:07:28.402: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Blocked types:  and types to download: Encryption Keys
+2025-12-05 03:07:28.737: [INFO][Sync] Started DataTypeManager configuration, reason: 4
+2025-12-05 03:07:28.740: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 4, current state: 0
+2025-12-05 03:07:28.741: [WARN][Sync] Crypto error data types: Passwords, Autofill Profiles, Autofill
+2025-12-05 03:07:28.743: [INFO][Sync] Configure, desired: Bookmarks, Preferences, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys; Allow fail: Passwords, Autofill Profiles, Autofill
+2025-12-05 03:07:28.743: [INFO][Sync] Loading: Bookmarks
+2025-12-05 03:07:28.744: [ERROR][Sync] Load Preferences, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.744: [ERROR][Sync] Stoping type: Preferences, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.744: [INFO][Sync] Loading: Preferences
+2025-12-05 03:07:28.744: [ERROR][Sync] Load Extensions, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.744: [ERROR][Sync] Stoping type: Extensions, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.744: [INFO][Sync] Loading: Extensions
+2025-12-05 03:07:28.744: [INFO][Sync] Loading: Sessions
+2025-12-05 03:07:28.744: [INFO][Sync] Loading: Extension settings
+2025-12-05 03:07:28.744: [ERROR][Sync] Load History Delete Directives, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.744: [ERROR][Sync] Stoping type: History Delete Directives, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.744: [INFO][Sync] Loading: History Delete Directives
+2025-12-05 03:07:28.744: [ERROR][Sync] Load Device Info, failed: OnStoreCreated@components\sync_device_info\device_info_sync_bridge.cc:808 - Model error type: 94
+2025-12-05 03:07:28.744: [ERROR][Sync] Stoping type: Device Info, error: OnStoreCreated@components\sync_device_info\device_info_sync_bridge.cc:808 - Model error type: 94
+2025-12-05 03:07:28.744: [INFO][Sync] Loading: Device Info
+2025-12-05 03:07:28.744: [ERROR][Sync] Load User Consents, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.744: [ERROR][Sync] Stoping type: User Consents, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.744: [INFO][Sync] Loading: User Consents
+2025-12-05 03:07:28.744: [ERROR][Sync] Load Send Tab To Self, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.744: [ERROR][Sync] Stoping type: Send Tab To Self, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.744: [INFO][Sync] Loading: Send Tab To Self
+2025-12-05 03:07:28.744: [ERROR][Sync] Load Web Apps, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.744: [ERROR][Sync] Stoping type: Web Apps, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.744: [INFO][Sync] Loading: Web Apps
+2025-12-05 03:07:28.744: [INFO][Sync] Loading: History
+2025-12-05 03:07:28.744: [ERROR][Sync] Load Saved Tab Group, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.744: [ERROR][Sync] Stoping type: Saved Tab Group, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.744: [INFO][Sync] Loading: Saved Tab Group
+2025-12-05 03:07:28.744: [ERROR][Sync] Load WebAuthn Credentials, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.744: [ERROR][Sync] Stoping type: WebAuthn Credentials, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.744: [INFO][Sync] Loading: WebAuthn Credentials
+2025-12-05 03:07:28.744: [ERROR][Sync] Load Collection, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.744: [ERROR][Sync] Stoping type: Collection, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.744: [INFO][Sync] Loading: Collection
+2025-12-05 03:07:28.744: [INFO][Sync] Loading: Edge E Drop
+2025-12-05 03:07:28.744: [INFO][Sync] Loading: Edge Hub App Usage
+2025-12-05 03:07:28.744: [INFO][Sync] Loading: Edge Wallet
+2025-12-05 03:07:28.746: [ERROR][Sync] Load Sessions, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.746: [ERROR][Sync] Stoping type: Sessions, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.747: [ERROR][Sync] Load Edge E Drop, failed: EDropSyncBridge@components\edge_e_drop\core\browser\sync\e_drop_sync_bridge.cc:71: DataTypeStore for Drop initialization failed
+2025-12-05 03:07:28.747: [ERROR][Sync] Stoping type: Edge E Drop, error: EDropSyncBridge@components\edge_e_drop\core\browser\sync\e_drop_sync_bridge.cc:71: DataTypeStore for Drop initialization failed
+2025-12-05 03:07:28.747: [ERROR][Sync] Load Edge Hub App Usage, failed: EdgeHubAppUsageSyncBridge@components\edge_hub_apps\sync\edge_hub_app_usage_sync_bridge.cc:55: ModelTypeStore for Hub App Usage initialization failed
+2025-12-05 03:07:28.747: [ERROR][Sync] Stoping type: Edge Hub App Usage, error: EdgeHubAppUsageSyncBridge@components\edge_hub_apps\sync\edge_hub_app_usage_sync_bridge.cc:55: ModelTypeStore for Hub App Usage initialization failed
+2025-12-05 03:07:28.753: [ERROR][Sync] Load Extension settings, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.753: [ERROR][Sync] Stoping type: Extension settings, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:07:28.756: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 6, current state: 2
+2025-12-05 03:07:28.756: [WARN][Sync] Crypto error data types: 
+2025-12-05 03:07:28.756: [INFO][Sync] Configure, desired: Bookmarks, History, Edge Wallet, Encryption Keys; Allow fail: Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage
+2025-12-05 03:07:28.756: [INFO][Sync] All data types are ready for configure.
+2025-12-05 03:07:29.148: [INFO][Sync] Started DataTypeManager configuration, reason: 5
+2025-12-05 03:07:29.148: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 5, current state: 1
+2025-12-05 03:07:29.160: [INFO][SyncEngineBackend::DoStartConfiguration] Start configuration
+2025-12-05 03:07:29.160: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 6
+2025-12-05 03:07:29.160: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-05 03:07:29.160: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 3
+2025-12-05 03:07:29.160: [WARN][Sync]     Reconfigure requested while configuration ongoing.
+2025-12-05 03:07:29.160: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 5, current state: 2
+2025-12-05 03:07:29.160: [INFO][Sync] Configure, desired: Bookmarks, Passwords, Autofill Profiles, Autofill, History, Edge Wallet, Encryption Keys; Allow fail: Preferences, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage
+2025-12-05 03:07:29.160: [INFO][Sync] Loading: Passwords
+2025-12-05 03:07:29.160: [INFO][Sync] Loading: Autofill Profiles
+2025-12-05 03:07:29.160: [INFO][Sync] Loading: Autofill
+2025-12-05 03:07:29.160: [INFO][Sync] All data types are ready for configure.
+2025-12-05 03:07:29.160: [INFO][SyncManagerImpl::NudgeForInitialDownload] Initial download nudge for Passwords
+2025-12-05 03:07:29.167: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-05 03:07:29.167: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-05 03:07:29.167: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 4
+2025-12-05 03:07:29.167: [INFO][Sync] Prepare to configure types: Passwords, Encryption Keys
+2025-12-05 03:07:29.168: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download: Passwords, Encryption Keys with reason: 5
+2025-12-05 03:07:29.168: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Blocked types:  and types to download: Passwords, Encryption Keys
+2025-12-05 03:07:29.362: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: Passwords, Encryption Keys
+2025-12-05 03:07:29.371: [INFO][Sync] ConfigurationDone, failed: , succeeded: Passwords, Encryption Keys, remaining count: 3
+2025-12-05 03:07:29.371: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-05 03:07:29.371: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-05 03:07:29.371: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 2
+2025-12-05 03:07:29.371: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-05 03:07:29.371: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-05 03:07:29.377: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 1
+2025-12-05 03:07:29.378: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-05 03:07:29.378: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-05 03:07:29.378: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 0
+2025-12-05 03:07:29.380: [INFO][Sync]     Configuration completed, state: 7
+2025-12-05 03:07:29.381: [INFO][Sync] Configured DataTypeManager: Ok
+2025-12-05 03:07:29.390: [INFO][SyncEngineBackend::DoStartSyncing] Start syncing
+2025-12-05 03:46:12.728: [INFO][Sync] Reset engine, reason: 0
+2025-12-05 03:46:12.728: [INFO][Sync] Reset engine with reason: 0
+2025-12-05 03:47:46.321: [INFO][Sync] SyncState after authenticated was: FeatureCanStart
+2025-12-05 03:47:47.518: [INFO][Sync] Try to start sync engine
+2025-12-05 03:47:47.527: [INFO][SyncManagerImpl::NudgeForInitialDownload] Initial download nudge for Encryption Keys
+2025-12-05 03:47:47.527: [INFO][SyncEngineBackend::LoadAndConnectNigoriController] Load and connect Nigori controller
+2025-12-05 03:47:47.528: [INFO][SyncEngineBackend::DoInitialize] Control Types added: Encryption Keys
+2025-12-05 03:47:47.528: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download: Encryption Keys with reason: 3
+2025-12-05 03:47:47.530: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Configure job was blocked
+2025-12-05 03:47:47.876: [INFO][SyncAuthManager::SetLastAuthError] Current auth error: None
+2025-12-05 03:47:47.877: [INFO][SyncAuthManager::EdgeLogTokenErrorState] Token error with: None for account type: MSA
+2025-12-05 03:47:47.877: [INFO][Sync] Credentials changed for: EdgeSyncScopeNew
+2025-12-05 03:47:50.847: [INFO][SyncAuthManager::SetLastAuthError] Current auth error: None
+2025-12-05 03:47:50.847: [INFO][SyncAuthManager::EdgeLogTokenErrorState] Token error with: None for account type: MSA
+2025-12-05 03:47:50.847: [INFO][Sync] Credentials changed for: EdgeSyncKeyDataScope
+2025-12-05 03:47:50.848: [INFO][SyncEngineBackend::DoUpdateKeyDataCredentials] Update key data credentials
+2025-12-05 03:47:50.848: [INFO][SyncEngineBackend::DoUpdateCredentials] Update credentials
+2025-12-05 03:47:50.848: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Blocked types:  and types to download: Encryption Keys
+2025-12-05 03:47:51.359: [INFO][Sync] Started DataTypeManager configuration, reason: 4
+2025-12-05 03:47:51.361: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 4, current state: 0
+2025-12-05 03:47:51.361: [WARN][Sync] Crypto error data types: Passwords, Autofill Profiles, Autofill
+2025-12-05 03:47:51.366: [INFO][Sync] Configure, desired: Bookmarks, Preferences, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys; Allow fail: Passwords, Autofill Profiles, Autofill
+2025-12-05 03:47:51.368: [INFO][Sync] Loading: Bookmarks
+2025-12-05 03:47:51.368: [ERROR][Sync] Load Preferences, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.368: [ERROR][Sync] Stoping type: Preferences, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.368: [INFO][Sync] Loading: Preferences
+2025-12-05 03:47:51.368: [ERROR][Sync] Load Extensions, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.368: [ERROR][Sync] Stoping type: Extensions, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.368: [INFO][Sync] Loading: Extensions
+2025-12-05 03:47:51.370: [INFO][Sync] Loading: Sessions
+2025-12-05 03:47:51.371: [INFO][Sync] Loading: Extension settings
+2025-12-05 03:47:51.371: [ERROR][Sync] Load History Delete Directives, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.371: [ERROR][Sync] Stoping type: History Delete Directives, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.371: [INFO][Sync] Loading: History Delete Directives
+2025-12-05 03:47:51.372: [ERROR][Sync] Load Device Info, failed: OnStoreCreated@components\sync_device_info\device_info_sync_bridge.cc:808 - Model error type: 94
+2025-12-05 03:47:51.372: [ERROR][Sync] Stoping type: Device Info, error: OnStoreCreated@components\sync_device_info\device_info_sync_bridge.cc:808 - Model error type: 94
+2025-12-05 03:47:51.372: [INFO][Sync] Loading: Device Info
+2025-12-05 03:47:51.372: [ERROR][Sync] Load User Consents, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.372: [ERROR][Sync] Stoping type: User Consents, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.372: [INFO][Sync] Loading: User Consents
+2025-12-05 03:47:51.372: [ERROR][Sync] Load Send Tab To Self, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.372: [ERROR][Sync] Stoping type: Send Tab To Self, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.372: [INFO][Sync] Loading: Send Tab To Self
+2025-12-05 03:47:51.372: [ERROR][Sync] Load Web Apps, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.372: [ERROR][Sync] Stoping type: Web Apps, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.372: [INFO][Sync] Loading: Web Apps
+2025-12-05 03:47:51.372: [INFO][Sync] Loading: History
+2025-12-05 03:47:51.372: [ERROR][Sync] Load Saved Tab Group, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.372: [ERROR][Sync] Stoping type: Saved Tab Group, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.372: [INFO][Sync] Loading: Saved Tab Group
+2025-12-05 03:47:51.372: [ERROR][Sync] Load WebAuthn Credentials, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.372: [ERROR][Sync] Stoping type: WebAuthn Credentials, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.372: [INFO][Sync] Loading: WebAuthn Credentials
+2025-12-05 03:47:51.372: [ERROR][Sync] Load Collection, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.372: [ERROR][Sync] Stoping type: Collection, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.372: [INFO][Sync] Loading: Collection
+2025-12-05 03:47:51.372: [INFO][Sync] Loading: Edge E Drop
+2025-12-05 03:47:51.372: [INFO][Sync] Loading: Edge Hub App Usage
+2025-12-05 03:47:51.372: [INFO][Sync] Loading: Edge Wallet
+2025-12-05 03:47:51.376: [ERROR][Sync] Load Sessions, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.376: [ERROR][Sync] Stoping type: Sessions, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.376: [ERROR][Sync] Load Extension settings, failed: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.376: [ERROR][Sync] Stoping type: Extension settings, error: ConstructDataTypeStoreOnFrontendSequence@components\sync\model\data_type_store_service_impl.cc:95 - Model error type: 86
+2025-12-05 03:47:51.376: [ERROR][Sync] Load Edge E Drop, failed: EDropSyncBridge@components\edge_e_drop\core\browser\sync\e_drop_sync_bridge.cc:71: DataTypeStore for Drop initialization failed
+2025-12-05 03:47:51.376: [ERROR][Sync] Stoping type: Edge E Drop, error: EDropSyncBridge@components\edge_e_drop\core\browser\sync\e_drop_sync_bridge.cc:71: DataTypeStore for Drop initialization failed
+2025-12-05 03:47:51.376: [ERROR][Sync] Load Edge Hub App Usage, failed: EdgeHubAppUsageSyncBridge@components\edge_hub_apps\sync\edge_hub_app_usage_sync_bridge.cc:55: ModelTypeStore for Hub App Usage initialization failed
+2025-12-05 03:47:51.376: [ERROR][Sync] Stoping type: Edge Hub App Usage, error: EdgeHubAppUsageSyncBridge@components\edge_hub_apps\sync\edge_hub_app_usage_sync_bridge.cc:55: ModelTypeStore for Hub App Usage initialization failed
+2025-12-05 03:47:51.376: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 6, current state: 2
+2025-12-05 03:47:51.376: [WARN][Sync] Crypto error data types: 
+2025-12-05 03:47:51.376: [INFO][Sync] Configure, desired: Bookmarks, History, Edge Wallet, Encryption Keys; Allow fail: Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage
+2025-12-05 03:47:51.376: [INFO][Sync] All data types are ready for configure.
+2025-12-05 03:47:51.796: [INFO][Sync] Started DataTypeManager configuration, reason: 5
+2025-12-05 03:47:51.796: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 5, current state: 1
+2025-12-05 03:47:51.808: [INFO][SyncEngineBackend::DoStartConfiguration] Start configuration
+2025-12-05 03:47:51.809: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 6
+2025-12-05 03:47:51.809: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-05 03:47:51.813: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 3
+2025-12-05 03:47:51.813: [WARN][Sync]     Reconfigure requested while configuration ongoing.
+2025-12-05 03:47:51.813: [INFO][Sync] Configuring for: Bookmarks, Preferences, Passwords, Autofill Profiles, Autofill, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, History, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage, Edge Wallet, Encryption Keys, reason: 5, current state: 2
+2025-12-05 03:47:51.813: [INFO][Sync] Configure, desired: Bookmarks, Passwords, Autofill Profiles, Autofill, History, Edge Wallet, Encryption Keys; Allow fail: Preferences, Extensions, Sessions, Extension settings, History Delete Directives, Device Info, User Consents, Send Tab To Self, Web Apps, Saved Tab Group, WebAuthn Credentials, Collection, Edge E Drop, Edge Hub App Usage
+2025-12-05 03:47:51.813: [INFO][Sync] Loading: Passwords
+2025-12-05 03:47:51.813: [INFO][Sync] Loading: Autofill Profiles
+2025-12-05 03:47:51.813: [INFO][Sync] Loading: Autofill
+2025-12-05 03:47:51.837: [INFO][Sync] All data types are ready for configure.
+2025-12-05 03:47:51.838: [INFO][SyncManagerImpl::NudgeForInitialDownload] Initial download nudge for Passwords
+2025-12-05 03:47:51.839: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-05 03:47:51.839: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-05 03:47:51.839: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 4
+2025-12-05 03:47:51.839: [INFO][Sync] Prepare to configure types: Passwords, Encryption Keys
+2025-12-05 03:47:51.839: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download: Passwords, Encryption Keys with reason: 5
+2025-12-05 03:47:51.839: [INFO][SyncSchedulerImpl::DoConfigurationSyncCycleJob] Blocked types:  and types to download: Passwords, Encryption Keys
+2025-12-05 03:47:52.136: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: Passwords, Encryption Keys
+2025-12-05 03:47:52.141: [INFO][Sync] ConfigurationDone, failed: , succeeded: Passwords, Encryption Keys, remaining count: 3
+2025-12-05 03:47:52.141: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-05 03:47:52.141: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-05 03:47:52.148: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 2
+2025-12-05 03:47:52.149: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-05 03:47:52.149: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-05 03:47:52.149: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 1
+2025-12-05 03:47:52.158: [INFO][SyncManagerImpl::ConfigureSyncer] Types to download:  with reason: 5
+2025-12-05 03:47:52.158: [INFO][SyncEngineBackend::DoFinishConfigureDataTypes] Failed to download types:  and succeeded types: 
+2025-12-05 03:47:52.164: [INFO][Sync] ConfigurationDone, failed: , succeeded: , remaining count: 0
+2025-12-05 03:47:52.165: [INFO][Sync]     Configuration completed, state: 7
+2025-12-05 03:47:52.179: [INFO][Sync] Configured DataTypeManager: Ok
+2025-12-05 03:47:52.204: [INFO][SyncEngineBackend::DoStartSyncing] Start syncing
+2025-12-05 12:46:09.965: [INFO][Sync] Reset engine, reason: 0
+2025-12-05 12:46:09.965: [INFO][Sync] Reset engine with reason: 0

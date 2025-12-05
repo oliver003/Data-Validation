@@ -10,34 +10,42 @@ class Contable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // ===== CAMBIO 1: Permitir que el degradado se vea detrás del AppBar =====
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text('Revisión de Facturas'),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors:[
-              Color.fromRGBO(134, 207, 61, 1), 
-              Colors.white,                  
+        // ===== CAMBIO 2: AppBar transparente para que se vea el degradado completo =====
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      // ===== CAMBIO 3: Degradado en toda la pantalla =====
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromRGBO(134, 207, 61, 1), // Verde pastel
+              Colors.white,                     // Blanco
             ],
             begin: Alignment.topCenter,
-            end: Alignment.bottomCenter)
+            end: Alignment.bottomCenter,
           ),
-          width: double.infinity,
-          height: kToolbarHeight * 4,
         ),
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('Ilumel-Pedidos')
-            .where('Estado', isEqualTo: 'Enviado')
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Center(child: Text('Error al cargar los datos.'));
-          }
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text('No hay facturas pendientes.'));
-          }
+        // ===== CAMBIO 4: SafeArea para que el contenido no se solape con la barra de estado =====
+        child: SafeArea(
+          child: StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('Ilumel-Pedidos')
+                .where('Estado', isEqualTo: 'Enviado')
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return const Center(child: Text('Error al cargar los datos.'));
+              }
+              if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return const Center(child: Text('No hay facturas pendientes.'));
+              }
 
           final docs = snapshot.data!.docs;
 
@@ -254,22 +262,24 @@ class Contable extends StatelessWidget {
                                           }
                                         },
                                         child: const Text('Confirmar'),
-                                      ),
-                                    ],
+                                        ),
+                                        ],
+                                      );
+                                    },
                                   );
                                 },
                               );
                             },
-                          );
-                        },
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               );
             },
-          );
-        },
+          ),
+        ),
       ),
     );
   }
