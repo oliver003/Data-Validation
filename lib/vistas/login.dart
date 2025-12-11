@@ -150,22 +150,37 @@ class _LoginViewState extends State<LoginView> {
                     ),
                     const SizedBox(height: 20),
                     _isLoading
-                        ? const CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Color.fromRGBO(134, 207, 61, 1)),
-                        )
-                        : ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromRGBO(134, 207, 61, 1),//color del fondo
-                            foregroundColor:  Colors.white,
-                            minimumSize: const Size(200, 60),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24)
-                            )
+                      ? const CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Color.fromRGBO(134, 207, 61, 1)),
+                      )
+                      :// 🔽🔽🔽 AQUÍ SE HIZO EL CAMBIO (BOTÓN CON SOMBRA) 🔽🔽🔽
+                      Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              // ignore: deprecated_member_use
+                              color: Colors.black.withOpacity(0.5),
+                              blurRadius: 11,
+                              offset: Offset(0, 5),
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromRGBO(134, 207, 61, 1),
+                          foregroundColor: Colors.white,
+                          minimumSize: const Size(200, 60),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
                           ),
-                            onPressed: _login,
-                            child: const Text("Ingresar",
-                            style: TextStyle(fontSize: 18),),
-                          ),
+                          elevation: 0, // importante para evitar doble sombra
+                        ),
+                          onPressed: _login,
+                          child: const Text("Ingresar",
+                          style: TextStyle(fontSize: 18),),
+                        ),
+                      ),
                   ],
                 ),
               ),

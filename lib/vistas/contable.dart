@@ -122,17 +122,45 @@ class _ContableState extends State<Contable> {
           height: kToolbarHeight * 4,
         ),
       ),
-      body: (!kIsWeb && Platform.isWindows)
-          ? _buildWindowsView()
-          : _buildMobileWebView(),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _mostrarHistorialConfirmados,
-        backgroundColor: const Color.fromRGBO(134, 207, 61, 1),
-        icon: const Icon(Icons.history, color: Colors.white),
-        label: const Text(
-          'Historial',
-          style: TextStyle(color: Colors.white),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromRGBO(248, 249, 248, 1),
+              Color.fromRGBO(134, 207, 61, 0.08),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
         ),
+        child: SafeArea(
+          child: (!kIsWeb && Platform.isWindows)
+              ? _buildWindowsView()
+              : _buildMobileWebView(),
+        ),
+      ),
+      floatingActionButton: LayoutBuilder(
+        builder: (context, constraints) {
+          final isCompact = MediaQuery.of(context).size.width < 480;
+          return isCompact
+              ? FloatingActionButton(
+                  onPressed: _mostrarHistorialConfirmados,
+                  backgroundColor: const Color.fromRGBO(134, 207, 61, 1),
+                  tooltip: 'Historial',
+                  child: const Icon(Icons.history, color: Colors.white),
+                )
+              : FloatingActionButton.extended(
+                  onPressed: _mostrarHistorialConfirmados,
+                  backgroundColor: const Color.fromRGBO(134, 207, 61, 1),
+                  icon: const Icon(Icons.history, color: Colors.white),
+                  label: const Text(
+                    'Historial',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                );
+        },
       ),
     );
   }
@@ -203,10 +231,28 @@ class _ContableState extends State<Contable> {
     String imagenUrl,
   ) {
     return Card(
-      elevation: 4,
-      margin: const EdgeInsets.symmetric(vertical: 10),
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: const EdgeInsets.symmetric(vertical: 8),
       child: ListTile(
-        title: Text('Pedido: #$pedido'),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: const Color.fromRGBO(134, 207, 61, 0.15),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: const Icon(Icons.receipt_long, color: Color.fromRGBO(134, 207, 61, 1)),
+        ),
+        title: Tooltip(
+          message: 'Pedido: #$pedido',
+          child: Text(
+            'Pedido: #$pedido',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+            softWrap: true,
+            maxLines: 2,
+          ),
+        ),
         subtitle: nombre != 'Sin nombre' ? Text('Usuario: $nombre') : null,
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -246,67 +292,86 @@ class _ContableState extends State<Contable> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.8,
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                // ENCABEZADO
-                Container(
+          child: SafeArea(
+            child: LayoutBuilder(
+            builder: (context, constraints) {
+              final maxHeight = constraints.maxHeight > 600 ? 600.0 : constraints.maxHeight * 0.98;
+              return ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: 500,
+                  maxHeight: maxHeight,
+                  minWidth: 260,
+                  minHeight: 200,
+                ),
+                child: Padding(
                   padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color.fromRGBO(134, 207, 61, 1),
-                        Color.fromRGBO(111, 184, 46, 1),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Row(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.check_circle, color: Colors.white, size: 28),
-                      SizedBox(width: 12),
-                      Text(
-                        'Pedidos Confirmados',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                      // ENCABEZADO
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [
+                              Color.fromRGBO(134, 207, 61, 1),
+                              Color.fromRGBO(111, 184, 46, 1),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                          child: const Row(
+                          children: [
+                            Icon(Icons.check_circle, color: Colors.white, size: 28),
+                            SizedBox(width: 12),
+                              Expanded(
+                              child: Text(
+                                'Pedidos Confirmados',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      // LISTA DE PEDIDOS CONFIRMADOS
+                        SizedBox(
+                          height: (maxHeight - 160).clamp(120, 400),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: (!kIsWeb && Platform.isWindows)
+                                ? _buildHistorialWindows()
+                                : _buildHistorialMobileWeb(),
+                          ),
+                        ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: () => Navigator.pop(context),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          icon: const Icon(Icons.close),
+                          label: const Text('Cerrar'),
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
-                
-                // LISTA DE PEDIDOS CONFIRMADOS
-                Expanded(
-                  child: (!kIsWeb && Platform.isWindows)
-                      ? _buildHistorialWindows()
-                      : _buildHistorialMobileWeb(),
-                ),
-
-                // BOTÓN CERRAR
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: () => Navigator.pop(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    icon: const Icon(Icons.close),
-                    label: const Text('Cerrar'),
-                  ),
-                ),
-              ],
+              );
+            },
             ),
           ),
         );
@@ -452,11 +517,16 @@ class _ContableState extends State<Contable> {
                 color: Color.fromRGBO(134, 207, 61, 1),
               ),
             ),
-            title: Text(
-              'Pedido #${pedido['N_Pedido']}',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+            title: Tooltip(
+              message: 'Pedido #${pedido['N_Pedido']}',
+              child: Text(
+                'Pedido #${pedido['N_Pedido']}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+                softWrap: true,
+                maxLines: 2,
               ),
             ),
             subtitle: Column(
@@ -467,9 +537,15 @@ class _ContableState extends State<Contable> {
                   children: [
                     const Icon(Icons.person, size: 16, color: Colors.grey),
                     const SizedBox(width: 4),
-                    Text(
-                      'Cliente: ${pedido['Nombre']}',
-                      style: const TextStyle(fontSize: 14),
+                    Expanded(
+                      child: Tooltip(
+                        message: 'Cliente: ${pedido['Nombre']}',
+                        child: Text(
+                          'Cliente: ${pedido['Nombre']}',
+                          style: const TextStyle(fontSize: 14),
+                          softWrap: true,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -478,16 +554,20 @@ class _ContableState extends State<Contable> {
                   children: [
                     const Icon(Icons.verified_user, size: 16, color: Colors.green),
                     const SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        'Confirmado por: ${pedido['ConfirmadoPor']}',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.green,
-                        ),
-                      ),
-                    ),
+                     Expanded(
+                       child: Tooltip(
+                         message: 'Confirmado por: ${pedido['ConfirmadoPor']}',
+                         child: Text(
+                           'Confirmado por: ${pedido['ConfirmadoPor']}',
+                           style: const TextStyle(
+                             fontSize: 14,
+                             fontWeight: FontWeight.w500,
+                             color: Colors.green,
+                           ),
+                           softWrap: true,
+                         ),
+                       ),
+                     ),
                   ],
                 ),
               ],
@@ -504,36 +584,49 @@ class _ContableState extends State<Contable> {
                     const SizedBox(height: 8),
                     _buildDetalleFila('N° Aprobación', pedido['NumeroAprobacion'] ?? 'N/A'),
                     const SizedBox(height: 12),
-                    // Imagen confirmada (si existe)
+                    // Imagen confirmada (si existe) | toda la fila es clicable sin InkWell
                     if (pedido['imagenUrl'] != null && (pedido['imagenUrl'] as String).isNotEmpty)
-                      Row(
-                        children: [
-                          InkWell(
-                            borderRadius: BorderRadius.circular(6),
-                            onTap: () => _showImagePreview(context, pedido['imagenUrl'] as String, 'Pedido #${pedido['N_Pedido']}'),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(6),
-                              child: Image.network(
-                                pedido['imagenUrl'] as String,
-                                width: 80,
-                                height: 80,
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, color: Colors.grey),
+                      GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (_) => Dialog(
+                              child: InteractiveViewer(
+                                child: Image.network(
+                                  pedido['imagenUrl'] as String,
+                                  fit: BoxFit.contain,
+                                  errorBuilder: (_, __, ___) => const SizedBox(
+                                    width: 240,
+                                    height: 240,
+                                    child: Center(child: Icon(Icons.broken_image, size: 48)),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text('Imagen confirmada', style: TextStyle(fontWeight: FontWeight.bold)),
-                                const SizedBox(height: 6),
-                                Text('Pulsa la miniatura para ver en grande', style: TextStyle(color: Colors.grey[700])),
-                              ],
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Image.network(
+                              pedido['imagenUrl'] as String,
+                              width: 80,
+                              height: 80,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, color: Colors.grey),
                             ),
-                          ),
-                        ],
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('Imagen confirmada', style: TextStyle(fontWeight: FontWeight.bold)),
+                                  const SizedBox(height: 6),
+                                  Text('Pulsa la miniatura para ver en grande', style: TextStyle(color: Colors.grey[700])),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                   ],
                 ),
@@ -545,57 +638,6 @@ class _ContableState extends State<Contable> {
     );
   }
 
-  void _showImagePreview(BuildContext context, String url, String title) {
-    showDialog(
-      context: context,
-      builder: (_) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width * 0.95,
-            maxHeight: MediaQuery.of(context).size.height * 0.9,
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              color: Colors.black,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    color: Colors.black,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close, color: Colors.white),
-                          onPressed: () => Navigator.of(context).pop(),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: InteractiveViewer(
-                      child: Center(
-                        child: Image.network(
-                          url,
-                          fit: BoxFit.contain,
-                          errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, color: Colors.white, size: 48),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget _buildDetalleFila(String label, String value) {
     return Row(
@@ -757,7 +799,6 @@ class _ContableState extends State<Contable> {
                   const SizedBox(height: 20),
                   TextField(
                     controller: aprobacionController,
-                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       labelText: 'Número de aprobación',
                       hintText: 'Ej: 849392',

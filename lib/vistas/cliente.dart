@@ -366,18 +366,31 @@ class _ClienteState extends State<Cliente> {
 
         return ListTile(
           leading: imagenUrl != null && imagenUrl.isNotEmpty
-              ? InkWell(
-                  borderRadius: BorderRadius.circular(6),
-                  onTap: () => _showImagePreview(ctx, imagenUrl, label),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(6),
-                    child: Image.network(
-                      imagenUrl,
-                      width: 56,
-                      height: 56,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
-                    ),
+              ? GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: ctx,
+                      builder: (_) => Dialog(
+                        child: InteractiveViewer(
+                          child: Image.network(
+                            imagenUrl,
+                            fit: BoxFit.contain,
+                            errorBuilder: (_, __, ___) => const SizedBox(
+                              width: 240,
+                              height: 240,
+                              child: Center(child: Icon(Icons.broken_image, size: 48)),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  child: Image.network(
+                    imagenUrl,
+                    width: 56,
+                    height: 56,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
                   ),
                 )
               : const SizedBox(width: 56, height: 56, child: Icon(Icons.image_not_supported)),
@@ -396,68 +409,18 @@ class _ClienteState extends State<Cliente> {
     );
   }
 
-  void _showImagePreview(BuildContext ctx, String url, String title) {
-    showDialog(
-      context: ctx,
-      builder: (_) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(ctx).size.width * 0.95,
-              maxHeight: MediaQuery.of(ctx).size.height * 0.9,
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Container(
-                color: Colors.black,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // header
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      color: Colors.black,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close, color: Colors.white),
-                            onPressed: () => Navigator.of(ctx).pop(),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // image
-                    Expanded(
-                      child: InteractiveViewer(
-                        child: Center(
-                          child: Image.network(
-                            url,
-                            fit: BoxFit.contain,
-                            errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, color: Colors.white, size: 48),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
+  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
+      extendBodyBehindAppBar: true, 
       appBar: AppBar(
         title: Text('Envio de Confirmación - $nombre'),
-        backgroundColor: const Color.fromRGBO(134, 207, 61, 1),
+        //backgroundColor: const Color.fromRGBO(134, 207, 61, 1),
+        backgroundColor: Colors.transparent, 
+        elevation: 0, 
       ),
       body: Container(
         width: double.infinity,
@@ -472,281 +435,301 @@ class _ClienteState extends State<Cliente> {
             end: Alignment.bottomCenter,
           ),
         ),
-      
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: () async {
-              final imagen = await getImage();
-              if (imagen != null) {
-                setState(() {
-                  imageName = imagen.name;
-                  if (kIsWeb) {
-                    webImageBytes = imagen.bytes;
-                  } else {
-                    imagen_to_upload = File(imagen.xfile!.path);
-                  }
-                });
-              }
-            },
-            child: Container(
-              margin: const EdgeInsets.all(16),
-              height: 220,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.blueAccent, width: 2),
-                boxShadow: [
-                  BoxShadow(
-                    // ignore: deprecated_member_use
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: (kIsWeb ? webImageBytes != null : imagen_to_upload != null)
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(14),
-                    child: kIsWeb
-                        ? Image.memory(
-                            webImageBytes!,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          )
-                        : Image.file(
-                            imagen_to_upload!,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          ),
-                  )
-                : Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(Icons.add_a_photo, size: 60, color: Colors.blueAccent),
-                        SizedBox(height: 10),
-                        Text(
-                          "Toca para seleccionar una imagen",
-                          style: TextStyle(color: Colors.blueGrey, fontSize: 16),
-                        ),
-                      ],
+      child: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 16),
+          child: Column(
+          children: [
+            GestureDetector(
+              onTap: () async {
+                final imagen = await getImage();
+                if (imagen != null) {
+                  setState(() {
+                    imageName = imagen.name;
+                    if (kIsWeb) {
+                      webImageBytes = imagen.bytes;
+                    } else {
+                      imagen_to_upload = File(imagen.xfile!.path);
+                    }
+                  });
+                }
+              },
+              child: Container(
+                margin: const EdgeInsets.all(16),
+                height: 220,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.blueAccent, width: 2),
+                  boxShadow: [
+                    BoxShadow(
+                      // ignore: deprecated_member_use
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
                     ),
-                  ),
-            ),
-          ),
-          
-          const SizedBox(height: 20),
-          Form(
-            key: formKey,
-            child: Column(
-              children: [
-                TextFormField (
-                  controller: N_Pedido,
-                  style: const TextStyle(color: Colors.black),
-                  // Limitar a 10 caracteres: 'PV-' + 7 dígitos = 10
-                  maxLength: 10,
-                  inputFormatters: [
-                    PrefixDigitsFormatter(prefix: _prefix, maxDigits: 7),
                   ],
-                  textCapitalization: TextCapitalization.characters,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese el Numero de Pedido';
-                    }
-
-                    // Requerimos el formato exacto: PV- seguido de 7 dígitos
-                      final pattern = RegExp(r'^PV-\d{7}$');
-                    if (!pattern.hasMatch(value)) {
-                      return 'Formato requerido: PV-1234567';
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    labelText: "Numero de Pedido",
-                    hintText: "PV-0000001",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      //borderSide: BorderSide(color: Colors.blue, width: 2)
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-                  )
                 ),
-              
-                const SizedBox(height: 20),
-
-                ElevatedButton(
-                  onPressed: _isUploading ? null : () async {
-                    if (formKey.currentState!.validate()) {
-                      if (imagen_to_upload == null && webImageBytes == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Por favor selecciona una imagen.")),
-                        );
-                        return;
+                child: (kIsWeb ? webImageBytes != null : imagen_to_upload != null)
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(14),
+                        child: kIsWeb
+                            ? Image.memory(
+                                webImageBytes!,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: double.infinity,
+                              )
+                            : Image.file(
+                                imagen_to_upload!,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: double.infinity,
+                              ),
+                      )
+                    : Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.add_a_photo, size: 60, color: Colors.blueAccent),
+                            SizedBox(height: 10),
+                            Text(
+                              "Toca para seleccionar una imagen",
+                              style: TextStyle(color: Colors.blueGrey, fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      ),
+              ),
+            ),
+            
+            const SizedBox(height: 20),
+            Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  TextFormField (
+                    controller: N_Pedido,
+                    style: const TextStyle(color: Colors.black),
+                    // Limitar a 10 caracteres: 'PV-' + 7 dígitos = 10
+                    maxLength: 10,
+                    inputFormatters: [
+                      PrefixDigitsFormatter(prefix: _prefix, maxDigits: 7),
+                    ],
+                    textCapitalization: TextCapitalization.characters,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor ingrese el Numero de Pedido';
                       }
 
-                      setState(() {
-                        _isUploading = true;
-                      });
+                      // Requerimos el formato exacto: PV- seguido de 7 dígitos
+                        final pattern = RegExp(r'^PV-\d{7}$');
+                      if (!pattern.hasMatch(value)) {
+                        return 'Formato requerido: PV-1234567';
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                      labelText: "Numero de Pedido",
+                      hintText: "PV-0000001",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        //borderSide: BorderSide(color: Colors.blue, width: 2)
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                    )
+                  ),
+                
+                  const SizedBox(height: 20),
 
-                      try {
-                        final pedidoId = N_Pedido.text;
-
-                        // 🌐 Caso móvil/web → usar Firestore plugin
-                        if (kIsWeb || Platform.isAndroid || Platform.isIOS) {
-                          final docRef = FirebaseFirestore.instance
-                              .collection('Ilumel-Pedidos')
-                              .doc(pedidoId);
-
-                          await docRef.set({
-                            'N_Pedido': pedidoId,
-                            'Fecha': DateTime.now(),
-                            'Nombre': nombre,
-                            'Estado': 'Enviado',
-                          });
-
-                          final imageUrl = await uploadImage(
-                            file: imagen_to_upload,
-                            bytes: webImageBytes,
-                            name: imageName,
-                            docId: docRef.id,
+                  ElevatedButton(
+                    onPressed: _isUploading ? null : () async {
+                      if (formKey.currentState!.validate()) {
+                        if (imagen_to_upload == null && webImageBytes == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Por favor selecciona una imagen.")),
                           );
-
-                          if (imageUrl != null) {
-                            await docRef.update({'imagenUrl': imageUrl});
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Pedido e imagen subidos correctamente $nombre")),
-                              );
-                            }
-                            // refrescar lista de pedidos del usuario
-                            await _loadMyPedidos();
-                          }
+                          return;
                         }
 
-                        // 💻 Caso Windows → usar REST API
-                        else if (Platform.isWindows) {
-                          const projectId = "tickets-firebase-aba0a"; // ⚠️ cambia por tu Project ID
+                        setState(() {
+                          _isUploading = true;
+                        });
 
-                          // 1️⃣ Crear documento en Firestore vía REST
-                          final firestoreUrl = Uri.parse(
-                            "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents/Ilumel-Pedidos/$pedidoId",
-                          );
+                        try {
+                          final pedidoId = N_Pedido.text;
 
-                          final firestoreBody = {
-                            "fields": {
-                              "N_Pedido": {"stringValue": pedidoId},
-                              "Fecha": {"timestampValue": DateTime.now().toUtc().toIso8601String()},
-                              "Nombre": {"stringValue": nombre},
-                              "Estado": {"stringValue": "Enviado"},
-                            }
-                          };
+                          // 🌐 Caso móvil/web → usar Firestore plugin
+                          if (kIsWeb || Platform.isAndroid || Platform.isIOS) {
+                            final docRef = FirebaseFirestore.instance
+                                .collection('Ilumel-Pedidos')
+                                .doc(pedidoId);
 
-                          final firestoreResponse = await http.patch(
-                            firestoreUrl,
-                            headers: {"Content-Type": "application/json"},
-                            body: jsonEncode(firestoreBody),
-                          );
+                            await docRef.set({
+                              'N_Pedido': pedidoId,
+                              'Fecha': DateTime.now(),
+                              'Nombre': nombre,
+                              'Estado': 'Enviado',
+                            });
 
-                          if (firestoreResponse.statusCode != 200) {
-                            throw Exception("Error al crear documento: ${firestoreResponse.body}");
-                          }
-
-                          // 2️⃣ Subir imagen a Storage vía REST
-                          final imageUrl = await uploadImage(
-                            file: imagen_to_upload,
-                            bytes: webImageBytes,
-                            name: imageName,
-                            docId: pedidoId,
-                          );
-
-                          // 3️⃣ Actualizar documento con la URL
-                          if (imageUrl != null) {
-                            final updateBody = {
-                              "fields": {
-                                "imagenUrl": {"stringValue": imageUrl}
-                              }
-                            };
-
-                            final updateResponse = await http.patch(
-                              firestoreUrl,
-                              headers: {"Content-Type": "application/json"},
-                              body: jsonEncode(updateBody),
+                            final imageUrl = await uploadImage(
+                              file: imagen_to_upload,
+                              bytes: webImageBytes,
+                              name: imageName,
+                              docId: docRef.id,
                             );
 
-                            if (updateResponse.statusCode != 200) {
-                              throw Exception("Error al actualizar documento: ${updateResponse.body}");
-                            }
-
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Pedido e imagen subidos correctamente $nombre")),
-                              );
+                            if (imageUrl != null) {
+                              await docRef.update({'imagenUrl': imageUrl});
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("Pedido e imagen subidos correctamente, $nombre"),
+                                    backgroundColor: Colors.green,
+                                    duration: const Duration(seconds: 4),
+                                  ),
+                                );
+                              }
                               // refrescar lista de pedidos del usuario
                               await _loadMyPedidos();
                             }
                           }
-                        }
 
-                        // Opcional: limpiar formulario
-                        setState(() {
-                          imagen_to_upload = null;
-                          webImageBytes = null;
-                          N_Pedido.text = _prefix;
-                          N_Pedido.selection = TextSelection.collapsed(offset: _prefix.length);
-                        });
-                      } catch (e) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Error al guardar datos: $e")),
-                          );
-                        }
-                      } finally {
-                        if (mounted) {
+                          // 💻 Caso Windows → usar REST API
+                          else if (Platform.isWindows) {
+                            const projectId = "tickets-firebase-aba0a"; // ⚠️ cambia por tu Project ID
+
+                            // 1️⃣ Crear documento en Firestore vía REST
+                            final firestoreUrl = Uri.parse(
+                              "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents/Ilumel-Pedidos/$pedidoId",
+                            );
+
+                            final firestoreBody = {
+                              "fields": {
+                                "N_Pedido": {"stringValue": pedidoId},
+                                "Fecha": {"timestampValue": DateTime.now().toUtc().toIso8601String()},
+                                "Nombre": {"stringValue": nombre},
+                                "Estado": {"stringValue": "Enviado"},
+                              }
+                            };
+
+                            final firestoreResponse = await http.patch(
+                              firestoreUrl,
+                              headers: {"Content-Type": "application/json"},
+                              body: jsonEncode(firestoreBody),
+                            );
+
+                            if (firestoreResponse.statusCode != 200) {
+                              throw Exception("Error al crear documento: ${firestoreResponse.body}");
+                            }
+
+                            // 2️⃣ Subir imagen a Storage vía REST
+                            final imageUrl = await uploadImage(
+                              file: imagen_to_upload,
+                              bytes: webImageBytes,
+                              name: imageName,
+                              docId: pedidoId,
+                            );
+
+                            // 3️⃣ Actualizar documento con la URL
+                            if (imageUrl != null) {
+                              final updateBody = {
+                                "fields": {
+                                  "imagenUrl": {"stringValue": imageUrl}
+                                }
+                              };
+
+                              final updateResponse = await http.patch(
+                                firestoreUrl,
+                                headers: {"Content-Type": "application/json"},
+                                body: jsonEncode(updateBody),
+                              );
+
+                              if (updateResponse.statusCode != 200) {
+                                throw Exception("Error al actualizar documento: ${updateResponse.body}");
+                              }
+
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Pedido e imagen subidos correctamente $nombre")),
+                                );
+                                // refrescar lista de pedidos del usuario
+                                await _loadMyPedidos();
+                              }
+                            }
+                          }
+
+                          // Opcional: limpiar formulario
                           setState(() {
-                            _isUploading = false;
+                            imagen_to_upload = null;
+                            webImageBytes = null;
+                            N_Pedido.text = _prefix;
+                            N_Pedido.selection = TextSelection.collapsed(offset: _prefix.length);
                           });
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Error al guardar datos: $e")),
+                            );
+                          }
+                        } finally {
+                          if (mounted) {
+                            setState(() {
+                              _isUploading = false;
+                            });
+                          }
                         }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Por favor complete todos los campos.")),
+                        );
                       }
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Por favor complete todos los campos.")),
-                      );
-                    }
-                  },
-                  child: _isUploading
-                      ? Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SizedBox(
-                              width: 18,
-                              height: 18,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    },
+                    child: _isUploading
+                        ? Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 12),
-                            const Text("Subiendo..."),
-                          ],
-                        )
-                      : const Text("Subir a Base de Datos"),
-                ),
-                const SizedBox(height: 12),
-              ],
+                              const SizedBox(width: 12),
+                              const Text("Subiendo..."),
+                            ],
+                          )
+                        : const Text("Subir a Base de Datos"),
+                  ),
+                  const SizedBox(height: 12),
+                ],
+              ),
             ),
+          ],
           ),
-        ],
+        ),
       ),
     ), 
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _showHistorial,
-        backgroundColor: const Color.fromRGBO(134, 207, 61, 1),
-        icon: const Icon(Icons.history, color: Colors.white),
-        label: const Text('Historial', style: TextStyle(color: Colors.white)),
+      floatingActionButton: LayoutBuilder(
+        builder: (context, constraints) {
+          final isCompact = MediaQuery.of(context).size.width < 480;
+          return isCompact
+              ? FloatingActionButton(
+                  onPressed: _showHistorial,
+                  backgroundColor: const Color.fromRGBO(134, 207, 61, 1),
+                  tooltip: 'Historial',
+                  child: const Icon(Icons.history, color: Colors.white),
+                )
+              : FloatingActionButton.extended(
+                  onPressed: _showHistorial,
+                  backgroundColor: const Color.fromRGBO(134, 207, 61, 1),
+                  icon: const Icon(Icons.history, color: Colors.white),
+                  label: const Text('Historial', style: TextStyle(color: Colors.white)),
+                );
+        },
       ),
     );
   }

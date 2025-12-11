@@ -134,17 +134,45 @@ class _CajeraState extends State<Cajera> {
         height: kToolbarHeight * 4,
        ),
       ),
-      body: (!kIsWeb && Platform.isWindows)
-          ? _buildWindowsView()
-          : _buildMobileWebView(),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _mostrarHistorialConsumidos,
-        backgroundColor: const Color.fromRGBO(134, 207, 61, 1),
-        icon: const Icon(Icons.history, color: Colors.white),
-        label: const Text(
-          'Historial',
-          style: TextStyle(color: Colors.white),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromRGBO(248, 249, 248, 1),
+              Color.fromRGBO(134, 207, 61, 0.08),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
         ),
+        child: SafeArea(
+          child: (!kIsWeb && Platform.isWindows)
+              ? _buildWindowsView()
+              : _buildMobileWebView(),
+        ),
+      ),
+      floatingActionButton: LayoutBuilder(
+        builder: (context, constraints) {
+          final isCompact = MediaQuery.of(context).size.width < 480;
+          return isCompact
+              ? FloatingActionButton(
+                  onPressed: _mostrarHistorialConsumidos,
+                  backgroundColor: const Color.fromRGBO(134, 207, 61, 1),
+                  tooltip: 'Historial',
+                  child: const Icon(Icons.history, color: Colors.white),
+                )
+              : FloatingActionButton.extended(
+                  onPressed: _mostrarHistorialConsumidos,
+                  backgroundColor: const Color.fromRGBO(134, 207, 61, 1),
+                  icon: const Icon(Icons.history, color: Colors.white),
+                  label: const Text(
+                    'Historial',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                );
+        },
       ),
     );
   }
@@ -171,17 +199,22 @@ class _CajeraState extends State<Cajera> {
               final docId = data['id'];
               final imagenUrl = data["imagenUrl"] ?? "";
 
-              return ListTile(
-                title: Text("Pedido #${data['N_Pedido'] ?? 'N/A'}"),
-                subtitle: Text("Cliente: ${data['Nombre'] ?? 'N/A'}"),
-                leading: Radio<String>(
-                  value: docId,
-                  groupValue: pedidoSeleccionado,
-                  onChanged: (value) {
-                    setState(() => pedidoSeleccionado = value);
-                  },
-                ),
-                trailing: Row(
+              return Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                margin: const EdgeInsets.symmetric(vertical: 6),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  title: Text("Pedido #${data['N_Pedido'] ?? 'N/A'}", style: const TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: Text("Cliente: ${data['Nombre'] ?? 'N/A'}"),
+                  leading: Radio<String>(
+                    value: docId,
+                    groupValue: pedidoSeleccionado,
+                    onChanged: (value) {
+                      setState(() => pedidoSeleccionado = value);
+                    },
+                  ),
+                  trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     if (imagenUrl.isNotEmpty)
@@ -206,7 +239,7 @@ class _CajeraState extends State<Cajera> {
                       ],
                     ),
                   ],
-                ),
+                ),                ),
               );
             },
           ),
@@ -243,19 +276,24 @@ class _CajeraState extends State<Cajera> {
                     final docId = docs[index].id;
                     final imagenUrl = data["imagenUrl"] ?? "";
 
-                    return ListTile(
-                      title: Text("Pedido #${data['N_Pedido'] ?? 'N/A'}"),
-                      subtitle: Text("Cliente: ${data['Nombre'] ?? 'N/A'}"),
+                    return Card(
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        title: Text("Pedido #${data['N_Pedido'] ?? 'N/A'}", style: const TextStyle(fontWeight: FontWeight.bold)),
+                        subtitle: Text("Cliente: ${data['Nombre'] ?? 'N/A'}"),
 
-                      leading: Radio<String>(
-                        value: docId,
-                        groupValue: pedidoSeleccionado,
-                        onChanged: (value) {
-                          setState(() => pedidoSeleccionado = value);
-                        },
-                      ),
+                        leading: Radio<String>(
+                          value: docId,
+                          groupValue: pedidoSeleccionado,
+                          onChanged: (value) {
+                            setState(() => pedidoSeleccionado = value);
+                          },
+                        ),
 
-                      trailing: Row(
+                        trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           if (imagenUrl.isNotEmpty)
@@ -265,7 +303,6 @@ class _CajeraState extends State<Cajera> {
                                 mostrarImagen(context, imagenUrl);
                               },
                             ),
-
                           PopupMenuButton<String>(
                             icon: const Icon(Icons.more_vert),
                             onSelected: (value) {
@@ -282,6 +319,7 @@ class _CajeraState extends State<Cajera> {
                           ),
                         ],
                       ),
+                    ),
                     );
                   },
                 ),
@@ -300,22 +338,32 @@ class _CajeraState extends State<Cajera> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 123, 243, 79),
-              foregroundColor: Colors.white,
+          SizedBox(
+            width: 140,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF4CAF50),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+              onPressed: pedidoSeleccionado == null ? null : _showConsumirConfirmDialog,
+              child: const Text("Consumir"),
             ),
-            onPressed: pedidoSeleccionado == null ? null : _showConsumirConfirmDialog,
-            child: const Text("Consumir"),
           ),
-          ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              foregroundColor: Colors.white,
+          SizedBox(
+            width: 140,
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+              icon: const Icon(Icons.picture_as_pdf),
+              onPressed: pedidoSeleccionado == null ? null : _compartirComoPDF,
+              label: const Text("Compartir"),
             ),
-            icon: const Icon(Icons.picture_as_pdf),
-            onPressed: pedidoSeleccionado == null ? null : _compartirComoPDF,
-            label: const Text("Compartir"),
           ),
         ],
       ),
@@ -605,22 +653,99 @@ class _CajeraState extends State<Cajera> {
     
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Confirmar Consumo'),
-        content: Text('¿Deseas marcar el pedido $pedidoNumero como consumido? Esta acción no se puede deshacer.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancelar'),
+      builder: (ctx) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            color: Colors.white,
           ),
-          ElevatedButton(
-            onPressed: () async {
-              Navigator.pop(ctx);
-              await _consumirPedido();
-            },
-            child: const Text('Consumir'),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Header con icono y gradiente suave
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color.fromRGBO(134, 207, 61, 1),
+                      Color.fromRGBO(111, 184, 46, 1),
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: const [
+                    Icon(Icons.check_circle, color: Colors.white),
+                    SizedBox(width: 10),
+                    Text(
+                      'Confirmar Consumo',
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Contenido
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Icons.receipt_long, color: Color.fromRGBO(134, 207, 61, 1)),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      '¿Deseas marcar el pedido $pedidoNumero como consumido? Esta acción no se puede deshacer.',
+                      style: const TextStyle(fontSize: 15),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 18),
+              // Botones
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () => Navigator.pop(ctx),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                    icon: const Icon(Icons.close, size: 18),
+                    label: const Text('Cancelar',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      Navigator.pop(ctx);
+                      await _consumirPedido();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromRGBO(134, 207, 61, 1),
+                      foregroundColor: Colors.white,
+                      elevation: 2,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                    icon: const Icon(Icons.check_circle, size: 18),
+                    label: const Text('Consumir',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ),
+                ],
+              )
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -771,12 +896,17 @@ class _CajeraState extends State<Cajera> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: camposFiltrados.map((entry) {
                 final key = nombresBonitos[entry.key] ?? entry.key;
-                final value = entry.value;
+                final value = entry.value?.toString() ?? '';
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Text(
-                    "$key: $value",
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(text: "$key: ", style: const TextStyle(fontWeight: FontWeight.bold)),
+                        TextSpan(text: value),
+                      ],
+                    ),
                     style: const TextStyle(fontSize: 16),
                   ),
                 );
@@ -784,13 +914,17 @@ class _CajeraState extends State<Cajera> {
             ),
           ),
           actions: [
-            TextButton(
+            ElevatedButton.icon(
               onPressed: () => Navigator.pop(context),
-              style: TextButton.styleFrom(
+              style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
-              child: const Text("Cerrar"),
+              icon: const Icon(Icons.close, size: 18),
+              label: const Text("Cerrar"),
             )
           ],
         );
@@ -820,67 +954,84 @@ class _CajeraState extends State<Cajera> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.8,
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                // ENCABEZADO
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color.fromRGBO(134, 207, 61, 1),
-                        Color.fromRGBO(111, 184, 46, 1),
+          child: SafeArea(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final maxHeight = constraints.maxHeight;
+                final maxWidth = constraints.maxWidth;
+                return ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: maxHeight,
+                    maxWidth: maxWidth,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // ENCABEZADO
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [
+                                Color.fromRGBO(134, 207, 61, 1),
+                                Color.fromRGBO(111, 184, 46, 1),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Row(
+                            children: [
+                              Icon(Icons.remove_shopping_cart, color: Colors.white, size: 28),
+                              SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  'Pedidos Consumidos',
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+
+                        // LISTA DE PEDIDOS CONSUMIDOS con Flexible para evitar overflow
+                        Flexible(
+                          child: (!kIsWeb && Platform.isWindows)
+                              ? _buildHistorialConsumidosWindows()
+                              : _buildHistorialConsumidosMobileWeb(),
+                        ),
+
+                        // BOTÓN CERRAR
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            onPressed: () => Navigator.pop(context),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            icon: const Icon(Icons.close),
+                            label: const Text('Cerrar'),
+                          ),
+                        ),
                       ],
                     ),
-                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.remove_shopping_cart, color: Colors.white, size: 28),
-                      SizedBox(width: 12),
-                      Text(
-                        'Pedidos Consumidos',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                // LISTA DE PEDIDOS CONSUMIDOS
-                Expanded(
-                  child: (!kIsWeb && Platform.isWindows)
-                      ? _buildHistorialConsumidosWindows()
-                      : _buildHistorialConsumidosMobileWeb(),
-                ),
-
-                // BOTÓN CERRAR
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: () => Navigator.pop(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    icon: const Icon(Icons.close),
-                    label: const Text('Cerrar'),
-                  ),
-                ),
-              ],
+                );
+              },
             ),
           ),
         );
@@ -926,7 +1077,14 @@ class _CajeraState extends State<Cajera> {
             return Card(
               margin: const EdgeInsets.symmetric(vertical: 8),
               child: ListTile(
-                title: Text('Pedido #${data['N_Pedido'] ?? 'N/A'}'),
+                  title: Text.rich(
+                    TextSpan(
+                      children: [
+                        const TextSpan(text: 'Pedido #', style: TextStyle(fontWeight: FontWeight.bold)),
+                        TextSpan(text: '${data['N_Pedido'] ?? 'N/A'}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ),
                 subtitle: Text('Cliente: ${data['Nombre'] ?? 'N/A'}'),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -1060,51 +1218,84 @@ class _CajeraState extends State<Cajera> {
                     color: Color.fromRGBO(134, 207, 61, 1),
                   ),
                 ),
-                title: Text('Pedido #${pedido['N_Pedido']}'),
-                subtitle: Text('Cliente: ${pedido['Nombre']}'),
+                  title: Text.rich(
+                    TextSpan(
+                      children: [
+                        const TextSpan(text: 'Pedido #', style: TextStyle(fontWeight: FontWeight.bold)),
+                        TextSpan(text: '${pedido['N_Pedido']}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ),
+                subtitle: Text.rich(
+                  TextSpan(
+                    children: [
+                      const TextSpan(text: 'Cliente: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: '${pedido['Nombre']}'),
+                    ],
+                  ),
+                ),
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Consumido por: ${pedido['ConsumidoPor'] ?? 'N/A'}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.green)),
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              const TextSpan(text: 'Consumido por: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                              TextSpan(text: '${pedido['ConsumidoPor'] ?? 'N/A'}'),
+                            ],
+                          ),
+                          style: const TextStyle(color: Colors.green),
+                        ),
                         const SizedBox(height: 8),
-                        Text('Fecha de consumo: $fechaFormateada'),
-                        Text('Confirmado por: ${pedido['ConfirmadoPor'] ?? 'N/A'}'),
-                        Text('Fecha de confirmación: $fechaConfirmadoFormateada'),
-                        Text('Banco: ${pedido['Banco']}'),
-                        Text('Número de aprobación: ${pedido['NumeroAprobacion']}'),
+                        Text.rich(TextSpan(children: [
+                          const TextSpan(text: 'Fecha de Consumo: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          TextSpan(text: fechaFormateada),
+                        ])),
+                        Text.rich(TextSpan(children: [
+                          const TextSpan(text: 'Confirmado por: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          TextSpan(text: '${pedido['ConfirmadoPor'] ?? 'N/A'}'),
+                        ])),
+                        Text.rich(TextSpan(children: [
+                          const TextSpan(text: 'Fecha de Confirmación: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          TextSpan(text: fechaConfirmadoFormateada),
+                        ])),
+                        Text.rich(TextSpan(children: [
+                          const TextSpan(text: 'Banco: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          TextSpan(text: '${pedido['Banco']}'),
+                        ])),
+                        Text.rich(TextSpan(children: [
+                          const TextSpan(text: 'Número de aprobación: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          TextSpan(text: '${pedido['NumeroAprobacion']}'),
+                        ])),
                         const SizedBox(height: 12),
                         if (pedido['imagenUrl'] != null && (pedido['imagenUrl'] as String).isNotEmpty)
-                          Row(
-                            children: [
-                              InkWell(
-                                borderRadius: BorderRadius.circular(6),
-                                onTap: () => mostrarImagen(context, pedido['imagenUrl'] as String),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(6),
-                                  child: Image.network(
-                                    pedido['imagenUrl'] as String,
-                                    width: 80,
-                                    height: 80,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, color: Colors.grey),
+                          GestureDetector(
+                            onTap: () => mostrarImagen(context, pedido['imagenUrl'] as String),
+                            child: Row(
+                              children: [
+                                Image.network(
+                                  pedido['imagenUrl'] as String,
+                                  width: 80,
+                                  height: 80,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, color: Colors.grey),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text('Imagen consumida', style: TextStyle(fontWeight: FontWeight.bold)),
+                                      const SizedBox(height: 6),
+                                      const Text('Pulsa la miniatura para ver en grande', style: TextStyle(color: Colors.grey)),
+                                    ],
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text('Imagen consumida', style: TextStyle(fontWeight: FontWeight.bold)),
-                                    const SizedBox(height: 6),
-                                    const Text('Pulsa la miniatura para ver en grande', style: TextStyle(color: Colors.grey)),
-                                  ],
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                       ],
                     ),
