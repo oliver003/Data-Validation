@@ -8,6 +8,7 @@ import 'package:flutter_application_2/services/upload_image.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 final String nombre = AppData.nombre;
 
@@ -61,10 +62,7 @@ class _ClienteState extends State<Cliente> {
   Uint8List? webImageBytes;
   String? imageName;
   bool _isUploading = false;
-  // Pedidos del usuario
-  List<Map<String, dynamic>> _myPedidos = [];
-  String? _selectedPedidoId;
-  bool _loadingPedidos = false;
+  
 
   // ignore: non_constant_identifier_names
   final TextEditingController N_Pedido = TextEditingController();
@@ -78,336 +76,9 @@ class _ClienteState extends State<Cliente> {
     // prefijar y posicionar el cursor después del prefijo
     N_Pedido.text = _prefix;
     N_Pedido.selection = TextSelection.collapsed(offset: _prefix.length);
-    // Cargar pedidos del usuario al iniciar
-    _loadMyPedidos();
   }
 
-  Future<void> _loadMyPedidos() async {
-    setState(() {
-      _loadingPedidos = true;
-    });
-
-    try {
-      List<Map<String, dynamic>> items = [];
-
-      // Móvil/Web con el plugin de Firestore
-      if (kIsWeb || Platform.isAndroid || Platform.isIOS) {
-        final snapshot = await FirebaseFirestore.instance
-            .collection('Ilumel-Pedidos')
-            .where('Nombre', isEqualTo: nombre)
-            .orderBy('Fecha', descending: true)
-            .get();
-
-        items = snapshot.docs.map((d) {
-          final data = d.data();
-          final fecha = data['Fecha'];
-          String fechaStr = '';
-          try {
-            if (fecha != null) {
-              // Timestamp -> DateTime
-              if (fecha is Timestamp) {
-                fechaStr = fecha.toDate().toString();
-              } else {
-                fechaStr = fecha.toString();
-              }
-            }
-          } catch (_) {}
-
-          return {
-            'id': d.id,
-            'N_Pedido': data['N_Pedido'] ?? d.id,
-            'Fecha': fechaStr,
-            'Estado': data['Estado'] ?? '',
-            'imagenUrl': data['imagenUrl'],
-          };
-        }).toList();
-      }
-
-      // Windows (REST)
-      else if (Platform.isWindows) {
-        const projectId = "tickets-firebase-aba0a"; // mismo que en otras operaciones
-        final url = Uri.parse(
-          'https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents/Ilumel-Pedidos',
-        );
-
-        final resp = await http.get(url);
-        if (resp.statusCode == 200) {
-          final jsonBody = jsonDecode(resp.body);
-          final docs = jsonBody['documents'] as List<dynamic>? ?? [];
-          for (final doc in docs) {
-            final fields = doc['fields'] as Map<String, dynamic>? ?? {};
-            final nombreField = fields['Nombre']?['stringValue'];
-            if (nombreField == nombre) {
-              final nPedido = fields['N_Pedido']?['stringValue'] ?? '';
-              final fecha = fields['Fecha']?['timestampValue'] ?? '';
-              final estado = fields['Estado']?['stringValue'] ?? '';
-              final imagenUrl = fields['imagenUrl']?['stringValue'];
-              // extraer id del nombre del documento
-              final name = doc['name'] as String? ?? '';
-              final id = name.split('/').isNotEmpty ? name.split('/').last : name;
-              items.add({
-                'id': id,
-                'N_Pedido': nPedido.isNotEmpty ? nPedido : id,
-                'Fecha': fecha,
-                'Estado': estado,
-                'imagenUrl': imagenUrl,
-              });
-            }
-          }
-        }
-      }
-
-      if (mounted) {
-        setState(() {
-          _myPedidos = items;
-          // si no hay seleccion previa, dejar null
-          if (_myPedidos.isNotEmpty && _selectedPedidoId == null) {
-            _selectedPedidoId = _myPedidos.first['id'] as String?;
-          }
-        });
-      }
-    } catch (e) {
-      // si ocurre un error, mantener la lista vacía y mostrar por consola
-      debugPrint('Error cargando pedidos: $e');
-    } finally {
-      if (mounted) {
-        setState(() {
-          _loadingPedidos = false;
-        });
-      }
-    }
-  }
-
-  // ignore: unused_element
-  Widget _buildPedidosContent(BuildContext ctx) {
-    if (_loadingPedidos) {
-      return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: const [
-            SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2)),
-            SizedBox(width: 8),
-            Text('Cargando pedidos...'),
-          ],
-        ),
-      );
-    }
-
-    if (_myPedidos.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: const Text('No hay pedidos subidos aún.', style: TextStyle(color: Colors.black54)),
-      );
-    }
-
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Tus pedidos:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-            const SizedBox(height: 8),
-            ..._myPedidos.map((p) {
-              final id = p['id']?.toString() ?? '';
-              final label = p['N_Pedido']?.toString() ?? id;
-              final fecha = p['Fecha']?.toString() ?? '';
-              return Card(
-                child: ListTile(
-                  title: Text(label),
-                  subtitle: Text('Fecha: $fecha'),
-                  onTap: () {
-                    setState(() {
-                      _selectedPedidoId = id;
-                    });
-                    Navigator.of(ctx).pop();
-                  },
-                ),
-              );
-            }),
-            if (_selectedPedidoId != null) ...[
-              const SizedBox(height: 12),
-              const Text('Seleccionado:', style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 6),
-              Builder(builder: (_) {
-                final sel = _myPedidos.firstWhere((e) => e['id'] == _selectedPedidoId, orElse: () => {});
-                if (sel.isEmpty) return const SizedBox.shrink();
-                return Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Pedido: ${sel['N_Pedido'] ?? sel['id']}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 6),
-                        Text('Fecha: ${sel['Fecha'] ?? ''}'),
-                      ],
-                    ),
-                  ),
-                );
-              })
-            ]
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showHistorial() {
-    // refrescar antes de mostrar
-    _loadMyPedidos().then((_) {
-      showDialog(
-        // ignore: use_build_context_synchronously
-        context: context,
-        builder: (BuildContext ctx) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: MediaQuery.of(context).size.height * 0.8,
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  // Encabezado con gradiente
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color.fromRGBO(134, 207, 61, 1),
-                          Color.fromRGBO(111, 184, 46, 1),
-                        ],
-                      ),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: const [
-                        Icon(Icons.history, color: Colors.white, size: 28),
-                        SizedBox(width: 12),
-                        Text(
-                          'Historial de Pedidos',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Lista expandida
-                  Expanded(child: _buildHistorialList(ctx)),
-
-                  // Botón Cerrar con estilo similar al de contable.dart
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: () => Navigator.pop(ctx),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      icon: const Icon(Icons.close),
-                      label: const Text('Cerrar'),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-    });
-  }
-
-  Widget _buildHistorialList(BuildContext ctx) {
-    if (_loadingPedidos) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: const [CircularProgressIndicator(), SizedBox(height: 8), Text('Cargando pedidos...')],
-        ),
-      );
-    }
-
-    if (_myPedidos.isEmpty) {
-      return const Center(child: Text('No hay pedidos subidos aún.', style: TextStyle(color: Colors.black54)));
-    }
-
-    return ListView.separated(
-      padding: const EdgeInsets.only(bottom: 8),
-      itemCount: _myPedidos.length,
-      separatorBuilder: (_, __) => const Divider(height: 1),
-      itemBuilder: (context, index) {
-        final p = _myPedidos[index];
-        final id = p['id']?.toString() ?? '';
-        final label = p['N_Pedido']?.toString() ?? id;
-        final fecha = p['Fecha']?.toString() ?? '';
-        final estado = p['Estado']?.toString() ?? '';
-        final imagenUrl = p['imagenUrl'] as String?;
-
-        Color chipColor;
-        if (estado.toLowerCase().contains('enviado')) {
-          chipColor = Colors.green;
-        } else if (estado.toLowerCase().contains('confirmado')) {
-          chipColor = Colors.blue;
-        } else {
-          chipColor = Colors.red;
-        }
-
-        return ListTile(
-          leading: imagenUrl != null && imagenUrl.isNotEmpty
-              ? GestureDetector(
-                  onTap: () {
-                    showDialog(
-                      context: ctx,
-                      builder: (_) => Dialog(
-                        child: InteractiveViewer(
-                          child: Image.network(
-                            imagenUrl,
-                            fit: BoxFit.contain,
-                            errorBuilder: (_, __, ___) => const SizedBox(
-                              width: 240,
-                              height: 240,
-                              child: Center(child: Icon(Icons.broken_image, size: 48)),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                  child: Image.network(
-                    imagenUrl,
-                    width: 56,
-                    height: 56,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
-                  ),
-                )
-              : const SizedBox(width: 56, height: 56, child: Icon(Icons.image_not_supported)),
-          title: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
-          subtitle: Text('Fecha: $fecha'),
-          trailing: Chip(label: Text(estado.isNotEmpty ? estado : 'Desconocido', style: const TextStyle(color: Colors.white)), backgroundColor: chipColor),
-          onTap: () {
-            // Seleccionar el pedido y cerrar el diálogo (comportamiento previo)
-            setState(() {
-              _selectedPedidoId = id;
-            });
-            Navigator.of(ctx).pop();
-          },
-        );
-      },
-    );
-  }
+  
 
   
 
@@ -452,6 +123,15 @@ class _ClienteState extends State<Cliente> {
                       imagen_to_upload = File(imagen.xfile!.path);
                     }
                   });
+                } else {
+                  // Puede ser cancelación o tamaño > 10 MB
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Imagen no seleccionada o excede los 10 MB.'),
+                      ),
+                    );
+                  }
                 }
               },
               child: Container(
@@ -495,7 +175,7 @@ class _ClienteState extends State<Cliente> {
                             Icon(Icons.add_a_photo, size: 60, color: Colors.blueAccent),
                             SizedBox(height: 10),
                             Text(
-                              "Toca para seleccionar una imagen",
+                              "Toca para seleccionar una imagen \n (Máximo 10 MB).",
                               style: TextStyle(color: Colors.blueGrey, fontSize: 16),
                             ),
                           ],
@@ -591,8 +271,7 @@ class _ClienteState extends State<Cliente> {
                                   ),
                                 );
                               }
-                              // refrescar lista de pedidos del usuario
-                              await _loadMyPedidos();
+                              
                             }
                           }
 
@@ -654,8 +333,7 @@ class _ClienteState extends State<Cliente> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text("Pedido e imagen subidos correctamente $nombre")),
                                 );
-                                // refrescar lista de pedidos del usuario
-                                await _loadMyPedidos();
+                                
                               }
                             }
                           }
@@ -712,25 +390,487 @@ class _ClienteState extends State<Cliente> {
           ),
         ),
       ),
-    ), 
+      ), 
       floatingActionButton: LayoutBuilder(
         builder: (context, constraints) {
           final isCompact = MediaQuery.of(context).size.width < 480;
           return isCompact
               ? FloatingActionButton(
-                  onPressed: _showHistorial,
+                  onPressed: _mostrarHistorialConfirmados,
                   backgroundColor: const Color.fromRGBO(134, 207, 61, 1),
                   tooltip: 'Historial',
                   child: const Icon(Icons.history, color: Colors.white),
                 )
               : FloatingActionButton.extended(
-                  onPressed: _showHistorial,
+                  onPressed: _mostrarHistorialConfirmados,
                   backgroundColor: const Color.fromRGBO(134, 207, 61, 1),
                   icon: const Icon(Icons.history, color: Colors.white),
-                  label: const Text('Historial', style: TextStyle(color: Colors.white)),
+                  label: const Text(
+                    'Historial',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 );
         },
       ),
     );
+  }
+
+  // ==================== MOSTRAR HISTORIAL DE CONFIRMADOS ====================
+  void _mostrarHistorialConfirmados() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: SafeArea(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final maxHeight = constraints.maxHeight > 600 ? 600.0 : constraints.maxHeight * 0.98;
+                return ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 500,
+                    maxHeight: maxHeight,
+                    minWidth: 260,
+                    minHeight: 200,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [
+                                Color.fromRGBO(134, 207, 61, 1),
+                                Color.fromRGBO(111, 184, 46, 1),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Row(
+                            children: [
+                              Icon(Icons.check_circle, color: Colors.white, size: 28),
+                              SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  'Historial de tus pedidos',
+                                  style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        SizedBox(
+                          height: (maxHeight - 160).clamp(120, 400),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: (!kIsWeb && Platform.isWindows)
+                                ? _buildHistorialWindows()
+                                : _buildHistorialMobileWeb(),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            onPressed: () => Navigator.pop(context),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            icon: const Icon(Icons.close),
+                            label: const Text('Cerrar'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildHistorialWindows() {
+    // Polling cada 5 segundos para ver cambios de estado en Windows
+    final stream = Stream<int>.periodic(
+      const Duration(seconds: 5),
+    ).asyncMap((_) => _loadConfirmadosREST());
+
+    return StreamBuilder<List<Map<String, dynamic>>>(
+      stream: stream,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.inbox, size: 64, color: Colors.grey),
+                SizedBox(height: 16),
+                Text(
+                  'No tienes pedidos enviados',
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              ],
+            ),
+          );
+        }
+
+        final pedidos = snapshot.data!;
+        return _buildListaConfirmados(pedidos);
+      },
+    );
+  }
+
+  Widget _buildHistorialMobileWeb() {
+    return StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+          .collection('Ilumel-Pedidos')
+          .where('Nombre', isEqualTo: nombre)
+          .orderBy('Fecha', descending: true)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.inbox, size: 64, color: Colors.grey),
+                SizedBox(height: 16),
+                Text('No tienes pedidos enviados', style: TextStyle(fontSize: 16, color: Colors.grey)),
+              ],
+            ),
+          );
+        }
+
+        final pedidos = snapshot.data!.docs.map((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          return {
+            'N_Pedido': data['N_Pedido'] ?? 'N/A',
+            'Nombre': data['Nombre'] ?? 'Sin nombre',
+            'imagenUrl': data['imagenUrl'] ?? '',
+            'Fecha': data['Fecha'],
+            'Estado': data['Estado'] ?? 'N/A',
+          };
+        }).toList();
+
+        pedidos.sort((a, b) {
+          final fechaA = a['Fecha'];
+          final fechaB = b['Fecha'];
+          if (fechaA == null && fechaB == null) return 0;
+          if (fechaA == null) return 1;
+          if (fechaB == null) return -1;
+          DateTime dateA = fechaA is Timestamp ? fechaA.toDate() : DateTime.tryParse(fechaA.toString()) ?? DateTime.fromMillisecondsSinceEpoch(0);
+          DateTime dateB = fechaB is Timestamp ? fechaB.toDate() : DateTime.tryParse(fechaB.toString()) ?? DateTime.fromMillisecondsSinceEpoch(0);
+          return dateB.compareTo(dateA);
+        });
+
+        return _buildListaConfirmados(pedidos);
+      },
+    );
+  }
+
+  Widget _buildListaConfirmados(List<Map<String, dynamic>> pedidos) {
+    final DateFormat formato = DateFormat("dd/MM/yyyy hh:mm a");
+
+    return ListView.builder(
+      itemCount: pedidos.length,
+      itemBuilder: (context, index) {
+        final pedido = pedidos[index];
+
+        String fechaFormateada = 'N/A';
+        final fecha = pedido['Fecha'];
+        if (fecha != null) {
+          try {
+            if (fecha is Timestamp) {
+              fechaFormateada = formato.format(fecha.toDate());
+            } else if (fecha is String) {
+              fechaFormateada = formato.format(DateTime.parse(fecha));
+            } else {
+              fechaFormateada = formato.format(DateTime.parse(fecha.toString()));
+            }
+          } catch (_) {}
+        }
+
+        // Estado como string para usar en chip/cuadro
+        final String estadoStr = (pedido['Estado'] ?? 'N/A').toString();
+
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          elevation: 2,
+          child: ExpansionTile(
+            leading: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color.fromRGBO(134, 207, 61, 0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(
+                Icons.check_circle,
+                color: Color.fromRGBO(134, 207, 61, 1),
+              ),
+            ),
+            title: Tooltip(
+              message: 'Pedido #${pedido['N_Pedido']}',
+              child: Text(
+                'Pedido #${pedido['N_Pedido']}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+                softWrap: true,
+                maxLines: 2,
+              ),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    const Icon(Icons.person, size: 16, color: Colors.grey),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Tooltip(
+                        message: 'Cliente: ${pedido['Nombre']}',
+                        child: Text.rich(
+                          TextSpan(
+                            children: [
+                              const TextSpan(
+                                text: 'Cliente: ',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              TextSpan(text: '${pedido['Nombre']}'),
+                            ],
+                          ),
+                          style: const TextStyle(fontSize: 14),
+                          softWrap: true,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildDetalleFila('Fecha de Envío', fechaFormateada),
+                    const SizedBox(height: 8),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          width: 120,
+                          child: Text(
+                            'Estado:',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                        Flexible(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: _estadoColor(estadoStr).withOpacity(0.14),
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(color: _estadoColor(estadoStr).withOpacity(0.35)),
+                            ),
+                            child: Text(
+                              estadoStr,
+                              style: TextStyle(
+                                color: _estadoColor(estadoStr),
+                                fontWeight: FontWeight.w600,
+                              ),
+                              maxLines: 1,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    if (pedido['imagenUrl'] != null && (pedido['imagenUrl'] as String).isNotEmpty)
+                      GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (_) => Dialog(
+                              child: InteractiveViewer(
+                                child: Image.network(pedido['imagenUrl'] as String),
+                              ),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.grey[200],
+                              ),
+                              clipBehavior: Clip.antiAlias,
+                              child: Image.network(
+                                pedido['imagenUrl'] as String,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            const Expanded(
+                              child: Text(
+                                'Toca para ver la imagen.',
+                                style: TextStyle(color: Colors.blueGrey),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildDetalleFila(String label, String value) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 125,
+          child: Text(
+            '$label:',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Text(
+            value,
+            style: const TextStyle(fontSize: 14),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Color _estadoColor(String estado) {
+    final e = estado.toLowerCase();
+    if (e.contains('confirmado')) return const Color(0xFF2E7D32); // verde
+    if (e.contains('enviado')) return const Color(0xFF1565C0); // azul
+    if (e.contains('consumido')) return const Color(0xFF616161); // gris
+    //if (e.contains('rechaz')) return const Color(0xFFC62828); // rojo
+    return const Color(0xFF6D4C41); // marrón por defecto
+  }
+
+  Future<List<Map<String, dynamic>>> _loadConfirmadosREST() async {
+    try {
+      const projectId = "tickets-firebase-aba0a";
+      final url = Uri.parse(
+        "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents:runQuery",
+      );
+
+      final queryBody = {
+        "structuredQuery": {
+          "from": [{"collectionId": "Ilumel-Pedidos"}],
+          "where": {
+            "fieldFilter": {
+              "field": {"fieldPath": "Nombre"},
+              "op": "EQUAL",
+              "value": {"stringValue": nombre}
+            }
+          },
+          "orderBy": [
+            {
+              "field": {"fieldPath": "Fecha"},
+              "direction": "DESCENDING"
+            }
+          ]
+        }
+      };
+
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(queryBody),
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> results = jsonDecode(response.body);
+        final pedidos = <Map<String, dynamic>>[];
+
+        for (var result in results) {
+          if (result['document'] != null) {
+            final doc = result['document'];
+            final fields = doc['fields'] as Map<String, dynamic>;
+
+            pedidos.add({
+              'N_Pedido': fields['N_Pedido']?['stringValue'] ?? 'N/A',
+              'Nombre': fields['Nombre']?['stringValue'] ?? 'Sin nombre',
+              'imagenUrl': fields['imagenUrl']?['stringValue'] ?? '',
+              'Fecha': fields['Fecha']?['timestampValue'],
+              'Estado': fields['Estado']?['stringValue'] ?? 'N/A',
+            });
+          }
+        }
+
+        pedidos.sort((a, b) {
+          final fechaA = a['Fecha'];
+          final fechaB = b['Fecha'];
+          if (fechaA == null && fechaB == null) return 0;
+          if (fechaA == null) return 1;
+          if (fechaB == null) return -1;
+          try {
+            DateTime dateA = DateTime.parse(fechaA.toString());
+            DateTime dateB = DateTime.parse(fechaB.toString());
+            return dateB.compareTo(dateA);
+          } catch (_) {
+            return 0;
+          }
+        });
+
+        return pedidos;
+      } else {
+        throw Exception('Error ${response.statusCode}: ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Error al cargar confirmados: $e');
+    }
   }
 }

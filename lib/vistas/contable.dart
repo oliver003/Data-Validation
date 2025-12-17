@@ -542,7 +542,7 @@ class _ContableState extends State<Contable> {
                         message: 'Cliente: ${pedido['Nombre']}',
                         child: Text(
                           'Cliente: ${pedido['Nombre']}',
-                          style: const TextStyle(fontSize: 14),
+                          style: const TextStyle(fontSize: 14, ),
                           softWrap: true,
                         ),
                       ),

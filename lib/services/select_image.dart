@@ -12,17 +12,27 @@ class PickedImage {
 }
 
 Future<PickedImage?> getImage() async {
+  // Límite máximo de 10 MB
+  const int kMaxImageBytes = 10 * 1024 * 1024;
 
   if (kIsWeb) {
     // 🌐 En Web usamos FilePicker
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.image,
       allowMultiple: false,
+      withData: true, // asegura que tengamos los bytes para verificar tamaño
     );
 
     if (result != null && result.files.isNotEmpty) {
-      final fileBytes = result.files.first.bytes;
-      final fileName = result.files.first.name;
+      final file = result.files.first;
+      // Verificar tamaño por metadata y por bytes si están disponibles
+      final int size = file.size;
+      if (size > kMaxImageBytes) {
+        return null; // excede límite
+      }
+
+      final fileBytes = file.bytes;
+      final fileName = file.name;
 
       return PickedImage(bytes: fileBytes, name: fileName);
     }
@@ -31,6 +41,11 @@ Future<PickedImage?> getImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
+      // Verificar tamaño del archivo seleccionado
+      final int fileSize = await image.length();
+      if (fileSize > kMaxImageBytes) {
+        return null; // excede límite
+      }
       return PickedImage(xfile: image, name: image.name);
     }
   }
