@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/main.dart' show AppData;
-import 'package:flutter_application_2/services/auth_service.dart';
+import '../main.dart' show AppData;
+import '../services_windows/auth_service.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -16,10 +16,22 @@ class _LoginViewState extends State<LoginView> {
   bool _isLoading = false;
 
   void _login() async {
-    setState(() => _isLoading = true);
-
     final codigo = _codigoController.text.trim();
     final password = _passwordController.text.trim();
+
+    // Validar inputs
+    if (codigo.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Por favor completa todos los campos ⚠️"),
+          backgroundColor: Colors.orange,
+          duration: Duration(seconds: 3),
+        ),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
 
     final usuario = await _authService.login(codigo, password);
 
@@ -100,10 +112,10 @@ class _LoginViewState extends State<LoginView> {
               alignment: Alignment.topCenter,
               child: Container(
                 margin: const EdgeInsets.only(top: 20),
-                child: Image.asset("lib/vistas/assets/img/hola.png",
+                child: Image.asset("lib/vistas_windows/assets/img/hola.png",
                 width: 250,
                 height: 250,
-                fit: BoxFit.contain,
+                fit: BoxFit.contain
                 ),
               ),
             ),
