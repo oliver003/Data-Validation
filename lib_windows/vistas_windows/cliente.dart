@@ -1,11 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_application_2/main.dart' show AppData;
-import 'package:flutter_application_2/services/select_image.dart';
-import 'package:flutter_application_2/services/upload_image.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import '../main.dart' show AppData;
+import '../services_windows/select_image.dart';
+import '../services_windows/upload_image.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
@@ -48,14 +46,14 @@ class PrefixDigitsFormatter extends TextInputFormatter {
   }
 }
 
-class Cliente extends StatefulWidget {
-  const Cliente({super.key});
+class ClienteWindows extends StatefulWidget {
+  const ClienteWindows({super.key});
 
   @override
-  State<Cliente> createState() => _ClienteState();
+  State<ClienteWindows> createState() => _ClienteWindowsState();
 }
 
-class _ClienteState extends State<Cliente> {
+class _ClienteWindowsState extends State<ClienteWindows> {
 
   // ignore: non_constant_identifier_names
   File? imagen_to_upload;
@@ -63,7 +61,6 @@ class _ClienteState extends State<Cliente> {
   String? imageName;
   bool _isUploading = false;
   
-
   // ignore: non_constant_identifier_names
   final TextEditingController N_Pedido = TextEditingController();
   final formKey = GlobalKey<FormState>();
@@ -78,9 +75,7 @@ class _ClienteState extends State<Cliente> {
     N_Pedido.selection = TextSelection.collapsed(offset: _prefix.length);
   }
 
-  
 
-  
 
   @override
   Widget build(BuildContext context) {
@@ -117,11 +112,7 @@ class _ClienteState extends State<Cliente> {
                 if (imagen != null) {
                   setState(() {
                     imageName = imagen.name;
-                    if (kIsWeb) {
-                      webImageBytes = imagen.bytes;
-                    } else {
-                      imagen_to_upload = File(imagen.xfile!.path);
-                    }
+                    imagen_to_upload = File(imagen.xfile!.path);
                   });
                 } else {
                   // Puede ser cancelación o tamaño > 10 MB
@@ -151,22 +142,15 @@ class _ClienteState extends State<Cliente> {
                     ),
                   ],
                 ),
-                child: (kIsWeb ? webImageBytes != null : imagen_to_upload != null)
+                child: imagen_to_upload != null
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(14),
-                        child: kIsWeb
-                            ? Image.memory(
-                                webImageBytes!,
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                height: double.infinity,
-                              )
-                            : Image.file(
-                                imagen_to_upload!,
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                height: double.infinity,
-                              ),
+                        child: Image.file(
+                            imagen_to_upload!,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                          ),
                       )
                     : Center(
                         child: Column(
@@ -226,7 +210,7 @@ class _ClienteState extends State<Cliente> {
                   ElevatedButton(
                     onPressed: _isUploading ? null : () async {
                       if (formKey.currentState!.validate()) {
-                        if (imagen_to_upload == null && webImageBytes == null) {
+                        if (imagen_to_upload == null) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("Por favor selecciona una imagen.")),
                           );
@@ -240,108 +224,70 @@ class _ClienteState extends State<Cliente> {
                         try {
                           final pedidoId = N_Pedido.text;
 
-                          // 🌐 Caso móvil/web → usar Firestore plugin
-                          if (kIsWeb || Platform.isAndroid || Platform.isIOS) {
-                            final docRef = FirebaseFirestore.instance
-                                .collection('Ilumel-Pedidos')
-                                .doc(pedidoId);
+                          // 💻 Caso Windows → usar REST API
+                          const projectId = "tickets-firebase-aba0a"; // ⚠️ cambia por tu Project ID
 
-                            await docRef.set({
-                              'N_Pedido': pedidoId,
-                              'Fecha': DateTime.now(),
-                              'Nombre': nombre,
-                              'Estado': 'Enviado',
-                            });
+                          // 1️⃣ Crear documento en Firestore vía REST
+                          final firestoreUrl = Uri.parse(
+                            "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents/Ilumel-Pedidos/$pedidoId",
+                          );
 
-                            final imageUrl = await uploadImage(
-                              file: imagen_to_upload,
-                              bytes: webImageBytes,
-                              name: imageName,
-                              docId: docRef.id,
-                            );
-
-                            if (imageUrl != null) {
-                              await docRef.update({'imagenUrl': imageUrl});
-                              if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text("Pedido e imagen subidos correctamente, $nombre"),
-                                    backgroundColor: Colors.green,
-                                    duration: const Duration(seconds: 4),
-                                  ),
-                                );
-                              }
-                              
+                          final firestoreBody = {
+                            "fields": {
+                              "N_Pedido": {"stringValue": pedidoId},
+                              "Fecha": {"timestampValue": DateTime.now().toUtc().toIso8601String()},
+                              "Nombre": {"stringValue": nombre},
+                              "Estado": {"stringValue": "Enviado"},
                             }
+                          };
+
+                          final firestoreResponse = await http.patch(
+                            firestoreUrl,
+                            headers: {"Content-Type": "application/json"},
+                            body: jsonEncode(firestoreBody),
+                          );
+
+                          if (firestoreResponse.statusCode != 200) {
+                            throw Exception("Error al crear documento: ${firestoreResponse.body}");
                           }
 
-                          // 💻 Caso Windows → usar REST API
-                          else if (Platform.isWindows) {
-                            const projectId = "tickets-firebase-aba0a"; // ⚠️ cambia por tu Project ID
+                          // 2️⃣ Subir imagen a Storage vía REST
+                          final imageUrl = await uploadImage(
+                            file: imagen_to_upload,
+                            bytes: null,
+                            name: imageName,
+                            docId: pedidoId,
+                          );
 
-                            // 1️⃣ Crear documento en Firestore vía REST
-                            final firestoreUrl = Uri.parse(
-                              "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents/Ilumel-Pedidos/$pedidoId",
-                            );
-
-                            final firestoreBody = {
+                          // 3️⃣ Actualizar documento con la URL
+                          if (imageUrl != null) {
+                            final updateBody = {
                               "fields": {
-                                "N_Pedido": {"stringValue": pedidoId},
-                                "Fecha": {"timestampValue": DateTime.now().toUtc().toIso8601String()},
-                                "Nombre": {"stringValue": nombre},
-                                "Estado": {"stringValue": "Enviado"},
+                                "imagenUrl": {"stringValue": imageUrl}
                               }
                             };
 
-                            final firestoreResponse = await http.patch(
+                            final updateResponse = await http.patch(
                               firestoreUrl,
                               headers: {"Content-Type": "application/json"},
-                              body: jsonEncode(firestoreBody),
+                              body: jsonEncode(updateBody),
                             );
 
-                            if (firestoreResponse.statusCode != 200) {
-                              throw Exception("Error al crear documento: ${firestoreResponse.body}");
+                            if (updateResponse.statusCode != 200) {
+                              throw Exception("Error al actualizar documento: ${updateResponse.body}");
                             }
 
-                            // 2️⃣ Subir imagen a Storage vía REST
-                            final imageUrl = await uploadImage(
-                              file: imagen_to_upload,
-                              bytes: webImageBytes,
-                              name: imageName,
-                              docId: pedidoId,
-                            );
-
-                            // 3️⃣ Actualizar documento con la URL
-                            if (imageUrl != null) {
-                              final updateBody = {
-                                "fields": {
-                                  "imagenUrl": {"stringValue": imageUrl}
-                                }
-                              };
-
-                              final updateResponse = await http.patch(
-                                firestoreUrl,
-                                headers: {"Content-Type": "application/json"},
-                                body: jsonEncode(updateBody),
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("Pedido e imagen subidos correctamente $nombre")),
                               );
-
-                              if (updateResponse.statusCode != 200) {
-                                throw Exception("Error al actualizar documento: ${updateResponse.body}");
-                              }
-
-                              if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("Pedido e imagen subidos correctamente $nombre")),
-                                );
-                                
-                              }
+                              
                             }
                           }
 
                           // Opcional: limpiar formulario
                           setState(() {
                             imagen_to_upload = null;
-                            webImageBytes = null;
                             N_Pedido.text = _prefix;
                             N_Pedido.selection = TextSelection.collapsed(offset: _prefix.length);
                           });
@@ -469,9 +415,7 @@ class _ClienteState extends State<Cliente> {
                           height: (maxHeight - 160).clamp(120, 400),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: (!kIsWeb && Platform.isWindows)
-                                ? _buildHistorialWindows()
-                                : _buildHistorialMobileWeb(),
+                            child: _buildHistorialWindows(),
                           ),
                         ),
                         const SizedBox(height: 12),
@@ -540,60 +484,6 @@ class _ClienteState extends State<Cliente> {
     );
   }
 
-  Widget _buildHistorialMobileWeb() {
-    return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-          .collection('Ilumel-Pedidos')
-          .where('Nombre', isEqualTo: nombre)
-          .orderBy('Fecha', descending: true)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.inbox, size: 64, color: Colors.grey),
-                SizedBox(height: 16),
-                Text('No tienes pedidos enviados', style: TextStyle(fontSize: 16, color: Colors.grey)),
-              ],
-            ),
-          );
-        }
-
-        final pedidos = snapshot.data!.docs.map((doc) {
-          final data = doc.data() as Map<String, dynamic>;
-          return {
-            'N_Pedido': data['N_Pedido'] ?? 'N/A',
-            'Nombre': data['Nombre'] ?? 'Sin nombre',
-            'imagenUrl': data['imagenUrl'] ?? '',
-            'Fecha': data['Fecha'],
-            'Estado': data['Estado'] ?? 'N/A',
-          };
-        }).toList();
-
-        pedidos.sort((a, b) {
-          final fechaA = a['Fecha'];
-          final fechaB = b['Fecha'];
-          if (fechaA == null && fechaB == null) return 0;
-          if (fechaA == null) return 1;
-          if (fechaB == null) return -1;
-          DateTime dateA = fechaA is Timestamp ? fechaA.toDate() : DateTime.tryParse(fechaA.toString()) ?? DateTime.fromMillisecondsSinceEpoch(0);
-          DateTime dateB = fechaB is Timestamp ? fechaB.toDate() : DateTime.tryParse(fechaB.toString()) ?? DateTime.fromMillisecondsSinceEpoch(0);
-          return dateB.compareTo(dateA);
-        });
-
-        return _buildListaConfirmados(pedidos);
-      },
-    );
-  }
-
   Widget _buildListaConfirmados(List<Map<String, dynamic>> pedidos) {
     final DateFormat formato = DateFormat("dd/MM/yyyy hh:mm a");
 
@@ -606,13 +496,7 @@ class _ClienteState extends State<Cliente> {
         final fecha = pedido['Fecha'];
         if (fecha != null) {
           try {
-            if (fecha is Timestamp) {
-              fechaFormateada = formato.format(fecha.toDate());
-            } else if (fecha is String) {
-              fechaFormateada = formato.format(DateTime.parse(fecha));
-            } else {
-              fechaFormateada = formato.format(DateTime.parse(fecha.toString()));
-            }
+            fechaFormateada = formato.format(DateTime.parse(fecha.toString()));
           } catch (_) {}
         }
 
@@ -701,8 +585,10 @@ class _ClienteState extends State<Cliente> {
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
+                              // ignore: deprecated_member_use
                               color: _estadoColor(estadoStr).withOpacity(0.14),
                               borderRadius: BorderRadius.circular(6),
+                              // ignore: deprecated_member_use
                               border: Border.all(color: _estadoColor(estadoStr).withOpacity(0.35)),
                             ),
                             child: Text(

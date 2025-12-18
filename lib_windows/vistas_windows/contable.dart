@@ -1,22 +1,19 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/main.dart' show AppData;
+import '../main.dart' show AppData;
 import 'dart:convert';
-import 'dart:io' show Platform;
 import 'package:http/http.dart' as http;
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:intl/intl.dart';
 
 String name = AppData.nombre;
 
-class Contable extends StatefulWidget {
-  const Contable({super.key});
+class ContableWindows extends StatefulWidget {
+  const ContableWindows({super.key});
 
   @override
-  State<Contable> createState() => _ContableState();
+  State<ContableWindows> createState() => _ContableWindowsState();
 }
 
-class _ContableState extends State<Contable> {
+class _ContableWindowsState extends State<ContableWindows> {
   List<Map<String, dynamic>> _pedidos = [];
   bool _isLoading = true;
   String? _error;
@@ -24,14 +21,12 @@ class _ContableState extends State<Contable> {
   @override
   void initState() {
     super.initState();
-    if (!kIsWeb && Platform.isWindows) {
-      _loadPedidosREST();
-      Future.delayed(const Duration(seconds: 5), _startPolling);
-    }
+    _loadPedidosREST();
+    Future.delayed(const Duration(seconds: 5), _startPolling);
   }
 
   void _startPolling() {
-    if (!mounted || kIsWeb || !Platform.isWindows) return;
+    if (!mounted) return;
     Future.delayed(const Duration(seconds: 5), () {
       _loadPedidosREST();
       _startPolling();
@@ -136,9 +131,7 @@ class _ContableState extends State<Contable> {
           ),
         ),
         child: SafeArea(
-          child: (!kIsWeb && Platform.isWindows)
-              ? _buildWindowsView()
-              : _buildMobileWebView(),
+          child: _buildWindowsView(),
         ),
       ),
       floatingActionButton: LayoutBuilder(
@@ -186,40 +179,6 @@ class _ContableState extends State<Contable> {
         _pedidos[index]['N_Pedido'],
         _pedidos[index]['imagenUrl'],
       ),
-    );
-  }
-
-  Widget _buildMobileWebView() {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('Ilumel-Pedidos')
-          .where('Estado', isEqualTo: 'Enviado')
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const Center(child: Text('Error al cargar los datos.'));
-        }
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(child: Text('No hay facturas pendientes.'));
-        }
-
-        final docs = snapshot.data!.docs;
-
-        return ListView.builder(
-          padding: const EdgeInsets.all(12),
-          itemCount: docs.length,
-          itemBuilder: (context, index) {
-            final data = docs[index].data() as Map<String, dynamic>;
-            return _buildPedidoCard(
-              context,
-              docs[index].id,
-              data['Nombre'] ?? 'Sin nombre',
-              data['N_Pedido'] ?? 'N/A',
-              data['imagenUrl'] ?? '',
-            );
-          },
-        );
-      },
     );
   }
 
@@ -345,9 +304,7 @@ class _ContableState extends State<Contable> {
                           height: (maxHeight - 160).clamp(120, 400),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: (!kIsWeb && Platform.isWindows)
-                                ? _buildHistorialWindows()
-                                : _buildHistorialMobileWeb(),
+                            child: _buildHistorialWindows(),
                           ),
                         ),
                       const SizedBox(height: 12),
@@ -411,72 +368,6 @@ class _ContableState extends State<Contable> {
     );
   }
 
-  Widget _buildHistorialMobileWeb() {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('Ilumel-Pedidos')
-          .where('Estado', isEqualTo: 'Confirmado')
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.inbox, size: 64, color: Colors.grey),
-                SizedBox(height: 16),
-                Text(
-                  'No hay pedidos confirmados',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
-                ),
-              ],
-            ),
-          );
-        }
-
-        final pedidos = snapshot.data!.docs.map((doc) {
-          final data = doc.data() as Map<String, dynamic>;
-          return {
-            'N_Pedido': data['N_Pedido'] ?? 'N/A',
-            'Nombre': data['Nombre'] ?? 'Sin nombre',
-            'imagenUrl': data['imagenUrl'] ?? '',
-            'ConfirmadoPor': data['ConfirmadoPor'] ?? 'Desconocido',
-            'FechaConfirmado': data['FechaConfirmado'],
-            'Banco': data['Banco'] ?? 'N/A',
-            'NumeroAprobacion': data['NumeroAprobacion'] ?? 'N/A',
-          };
-        }).toList();
-
-        // Ordenar manualmente por fecha (más reciente primero)
-        pedidos.sort((a, b) {
-          final fechaA = a['FechaConfirmado'];
-          final fechaB = b['FechaConfirmado'];
-          
-          if (fechaA == null && fechaB == null) return 0;
-          if (fechaA == null) return 1;
-          if (fechaB == null) return -1;
-          
-          DateTime dateA = fechaA is Timestamp 
-              ? fechaA.toDate() 
-              : DateTime.parse(fechaA.toString());
-          DateTime dateB = fechaB is Timestamp 
-              ? fechaB.toDate() 
-              : DateTime.parse(fechaB.toString());
-          
-          return dateB.compareTo(dateA); // Descendente
-        });
-
-        return _buildListaConfirmados(pedidos);
-      },
-    );
-  }
-
   Widget _buildListaConfirmados(List<Map<String, dynamic>> pedidos) {
     final DateFormat formato = DateFormat("dd/MM/yyyy hh:mm a");
 
@@ -487,11 +378,7 @@ class _ContableState extends State<Contable> {
         
         String fechaFormateada = 'N/A';
         if (pedido['FechaConfirmado'] != null) {
-          if (pedido['FechaConfirmado'] is Timestamp) {
-            fechaFormateada = formato.format(
-              (pedido['FechaConfirmado'] as Timestamp).toDate()
-            );
-          } else if (pedido['FechaConfirmado'] is String) {
+          if (pedido['FechaConfirmado'] is String) {
             try {
               fechaFormateada = formato.format(
                 DateTime.parse(pedido['FechaConfirmado'])
@@ -584,7 +471,7 @@ class _ContableState extends State<Contable> {
                     const SizedBox(height: 8),
                     _buildDetalleFila('N° Aprobación', pedido['NumeroAprobacion'] ?? 'N/A'),
                     const SizedBox(height: 12),
-                    // Imagen confirmada (si existe) | toda la fila es clicable sin InkWell
+                    // Imagen confirmada (si existe)
                     if (pedido['imagenUrl'] != null && (pedido['imagenUrl'] as String).isNotEmpty)
                       GestureDetector(
                         onTap: () {
@@ -637,7 +524,6 @@ class _ContableState extends State<Contable> {
       },
     );
   }
-
 
   Widget _buildDetalleFila(String label, String value) {
     return Row(
@@ -701,7 +587,7 @@ class _ContableState extends State<Contable> {
             pedidos.add({
               'N_Pedido': fields['N_Pedido']?['stringValue'] ?? 'N/A',
               'Nombre': fields['Nombre']?['stringValue'] ?? 'Sin nombre',
-                  'imagenUrl': fields['imagenUrl']?['stringValue'] ?? '',
+              'imagenUrl': fields['imagenUrl']?['stringValue'] ?? '',
               'ConfirmadoPor': fields['ConfirmadoPor']?['stringValue'] ?? 'Desconocido',
               'FechaConfirmado': fields['FechaConfirmado']?['timestampValue'],
               'Banco': fields['Banco']?['stringValue'] ?? 'N/A',
@@ -885,48 +771,35 @@ class _ContableState extends State<Contable> {
     String numeroAprobacion,
   ) async {
     try {
-      if (kIsWeb || !Platform.isWindows) {
-        await FirebaseFirestore.instance
-            .collection('Ilumel-Pedidos')
-            .doc(docId)
-            .update({
-          'ConfirmadoPor': name,
-          'Estado': 'Confirmado',
-          'FechaConfirmado': DateTime.now(),
-          'Banco': banco,
-          'NumeroAprobacion': numeroAprobacion,
-        });
-      } else {
-        const projectId = "tickets-firebase-aba0a";
-        final firestoreUrl = Uri.parse(
-          "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents/Ilumel-Pedidos/$docId?updateMask.fieldPaths=ConfirmadoPor&updateMask.fieldPaths=Estado&updateMask.fieldPaths=FechaConfirmado&updateMask.fieldPaths=Banco&updateMask.fieldPaths=NumeroAprobacion",
-        );
+      const projectId = "tickets-firebase-aba0a";
+      final firestoreUrl = Uri.parse(
+        "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents/Ilumel-Pedidos/$docId?updateMask.fieldPaths=ConfirmadoPor&updateMask.fieldPaths=Estado&updateMask.fieldPaths=FechaConfirmado&updateMask.fieldPaths=Banco&updateMask.fieldPaths=NumeroAprobacion",
+      );
 
-        final updateBody = {
-          "fields": {
-            "ConfirmadoPor": {"stringValue": name},
-            "Estado": {"stringValue": "Confirmado"},
-            "FechaConfirmado": {
-              "timestampValue": DateTime.now().toUtc().toIso8601String()
-            },
-            "Banco": {"stringValue": banco},
-            "NumeroAprobacion": {"stringValue": numeroAprobacion},
-          }
-        };
-
-        final response = await http.patch(
-          firestoreUrl,
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode(updateBody),
-        );
-
-        if (response.statusCode != 200) {
-          throw Exception("Error al actualizar documento: ${response.body}");
+      final updateBody = {
+        "fields": {
+          "ConfirmadoPor": {"stringValue": name},
+          "Estado": {"stringValue": "Confirmado"},
+          "FechaConfirmado": {
+            "timestampValue": DateTime.now().toUtc().toIso8601String()
+          },
+          "Banco": {"stringValue": banco},
+          "NumeroAprobacion": {"stringValue": numeroAprobacion},
         }
+      };
 
-        if (mounted) {
-          _loadPedidosREST();
-        }
+      final response = await http.patch(
+        firestoreUrl,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(updateBody),
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception("Error al actualizar documento: ${response.body}");
+      }
+
+      if (mounted) {
+        _loadPedidosREST();
       }
 
       if (context.mounted) {

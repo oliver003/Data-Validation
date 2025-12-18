@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/main.dart' show AppData;
-import 'package:flutter_application_2/services/auth_service.dart';
+import '../main.dart' show AppData;
+import '../services_windows/auth_service.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -100,10 +100,10 @@ class _LoginViewState extends State<LoginView> {
               alignment: Alignment.topCenter,
               child: Container(
                 margin: const EdgeInsets.only(top: 20),
-                child: Image.asset("lib/vistas/assets/img/hola.png",
+                child: Image.asset("lib_windows/vistas_windows/assets/img/hola.png",
                 width: 250,
                 height: 250,
-                fit: BoxFit.contain,
+                fit: BoxFit.contain
                 ),
               ),
             ),
