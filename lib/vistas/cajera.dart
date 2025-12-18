@@ -1,114 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import '../main.dart' show AppData;
+import 'package:flutter_application_2/main.dart' show AppData;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'dart:typed_data';
+import 'package:http/http.dart' as http;
 
 final String nombre = AppData.nombre;
 
-class CajeraWindows extends StatefulWidget {
-  const CajeraWindows({super.key});
+class Cajera extends StatefulWidget {
+  const Cajera({super.key});
 
   @override
-  State<CajeraWindows> createState() => _CajeraWindowsState();
+  State<Cajera> createState() => _CajeraState();
 }
 
-class _CajeraWindowsState extends State<CajeraWindows> {
+class _CajeraState extends State<Cajera> {
   String? pedidoSeleccionado;
-  List<Map<String, dynamic>> _pedidos = [];
-  bool _isLoading = true;
-  String? _error;
 
   @override
   void initState() {
     super.initState();
-    _loadPedidosREST();
-    Future.delayed(const Duration(seconds: 5), _startPolling);
-  }
-
-  void _startPolling() {
-    if (!mounted) return;
-    Future.delayed(const Duration(seconds: 5), () {
-      _loadPedidosREST();
-      _startPolling();
-    });
-  }
-
-  Future<void> _loadPedidosREST() async {
-    try {
-      const projectId = "tickets-firebase-aba0a";
-      final url = Uri.parse(
-        "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents:runQuery",
-      );
-
-      final queryBody = {
-        "structuredQuery": {
-          "from": [{"collectionId": "Ilumel-Pedidos"}],
-          "where": {
-            "fieldFilter": {
-              "field": {"fieldPath": "Estado"},
-              "op": "EQUAL",
-              "value": {"stringValue": "Confirmado"}
-            }
-          }
-        }
-      };
-
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(queryBody),
-      );
-
-      if (response.statusCode == 200) {
-        final List<dynamic> results = jsonDecode(response.body);
-        final pedidos = <Map<String, dynamic>>[];
-
-        for (var result in results) {
-          if (result['document'] != null) {
-            final doc = result['document'];
-            final fields = doc['fields'] as Map<String, dynamic>;
-            final docId = (doc['name'] as String).split('/').last;
-
-            pedidos.add({
-              'id': docId,
-              'Nombre': fields['Nombre']?['stringValue'] ?? 'N/A',
-              'N_Pedido': fields['N_Pedido']?['stringValue'] ?? 'N/A',
-              'imagenUrl': fields['imagenUrl']?['stringValue'] ?? '',
-              'ConfirmadoPor': fields['ConfirmadoPor']?['stringValue'],
-              'Banco': fields['Banco']?['stringValue'],
-              'NumeroAprobacion': fields['NumeroAprobacion']?['stringValue'],
-              'Estado': fields['Estado']?['stringValue'],
-              'Fecha': fields['Fecha']?['timestampValue'],
-              'FechaConfirmado': fields['FechaConfirmado']?['timestampValue'],
-              'FechaConsumo': fields['FechaConsumo']?['timestampValue'],
-              'ConsumidoPor': fields['ConsumidoPor']?['stringValue'],
-            });
-          }
-        }
-
-        if (mounted) {
-          setState(() {
-            _pedidos = pedidos;
-            _isLoading = false;
-            _error = null;
-          });
-        }
-      } else {
-        throw Exception('Error ${response.statusCode}: ${response.body}');
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _error = e.toString();
-          _isLoading = false;
-        });
-      }
-    }
   }
 
   @override
@@ -143,7 +57,7 @@ class _CajeraWindowsState extends State<CajeraWindows> {
           ),
         ),
         child: SafeArea(
-          child: _buildWindowsView(),
+          child: _buildMobileWebView(),
         ),
       ),
       floatingActionButton: LayoutBuilder(
@@ -170,77 +84,87 @@ class _CajeraWindowsState extends State<CajeraWindows> {
     );
   }
 
-  Widget _buildWindowsView() {
-    if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-    if (_error != null) {
-      return Center(child: Text('Error: $_error'));
-    }
-    if (_pedidos.isEmpty) {
-      return const Center(child: Text("No hay pedidos confirmados."));
-    }
+  Widget _buildMobileWebView() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('Ilumel-Pedidos')
+          .where('Estado', isEqualTo: 'Confirmado')
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Center(child: Text("Error al cargar los datos."));
+        }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return const Center(child: Text("No hay pedidos confirmados."));
+        }
 
-    return Column(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.all(12),
-            itemCount: _pedidos.length,
-            itemBuilder: (context, index) {
-              final data = _pedidos[index];
-              final docId = data['id'];
-              final imagenUrl = data["imagenUrl"] ?? "";
+        final docs = snapshot.data!.docs;
 
-              return Card(
-                elevation: 3,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                margin: const EdgeInsets.symmetric(vertical: 6),
-                child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  title: Text("Pedido #${data['N_Pedido'] ?? 'N/A'}", style: const TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: Text("Cliente: ${data['Nombre'] ?? 'N/A'}"),
-                  leading: Radio<String>(
-                    value: docId,
-                    groupValue: pedidoSeleccionado,
-                    onChanged: (value) {
-                      setState(() => pedidoSeleccionado = value);
-                    },
-                  ),
-                  trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (imagenUrl.isNotEmpty)
-                      IconButton(
-                        icon: const Icon(Icons.image, color: Colors.blue),
-                        onPressed: () {
-                          mostrarImagen(context, imagenUrl);
-                        },
-                      ),
-                    PopupMenuButton<String>(
-                      icon: const Icon(Icons.more_vert),
-                      onSelected: (value) {
-                        if (value == "datos") {
-                          mostrarDatosPedido(context, data);
-                        }
-                      },
-                      itemBuilder: (context) => [
-                        const PopupMenuItem(
-                          value: "datos",
-                          child: Text("Datos"),
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(12),
+                  itemCount: docs.length,
+                  itemBuilder: (context, index) {
+                    final data = docs[index].data() as Map<String, dynamic>;
+                    final docId = docs[index].id;
+                    final imagenUrl = data["imagenUrl"] ?? "";
+
+                    return Card(
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        title: Text("Pedido #${data['N_Pedido'] ?? 'N/A'}", style: const TextStyle(fontWeight: FontWeight.bold)),
+                        subtitle: Text("Cliente: ${data['Nombre'] ?? 'N/A'}"),
+
+                        leading: Radio<String>(
+                          value: docId,
+                          groupValue: pedidoSeleccionado,
+                          onChanged: (value) {
+                            setState(() => pedidoSeleccionado = value);
+                          },
                         ),
-                      ],
+
+                        trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (imagenUrl.isNotEmpty)
+                            IconButton(
+                              icon: const Icon(Icons.image, color: Colors.blue),
+                              onPressed: () {
+                                mostrarImagen(context, imagenUrl);
+                              },
+                            ),
+                          PopupMenuButton<String>(
+                            icon: const Icon(Icons.more_vert),
+                            onSelected: (value) {
+                              if (value == "datos") {
+                                mostrarDatosPedido(context, data);
+                              }
+                            },
+                            itemBuilder: (context) => [
+                              const PopupMenuItem(
+                                value: "datos",
+                                child: Text("Datos"),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
+                    );
+                  },
                 ),
-                ),
-              );
-            },
-          ),
-        ),
-        _buildActionButtons(),
-      ],
-    );
+              ),
+
+              _buildActionButtons(),
+            ],
+          );
+        },
+      );
   }
 
   Widget _buildActionButtons() {
@@ -308,12 +232,13 @@ class _CajeraWindowsState extends State<CajeraWindows> {
 
     try {
       // Obtener datos del pedido
-      final datosPedido = _pedidos.firstWhere(
-        (p) => p['id'] == pedidoSeleccionado,
-        orElse: () => {},
-      );
-
-      if (datosPedido.isEmpty) {
+      final doc = await FirebaseFirestore.instance
+          .collection('Ilumel-Pedidos')
+          .doc(pedidoSeleccionado)
+          .get();
+      final datosPedido = doc.data();
+      
+      if (datosPedido == null) {
         throw Exception('No se encontraron datos del pedido');
       }
 
@@ -357,13 +282,14 @@ class _CajeraWindowsState extends State<CajeraWindows> {
     final DateFormat formato = DateFormat("dd/MM/yyyy hh:mm a");
 
     String formatear(dynamic valor) {
+      if (valor is Timestamp) {
+        return formato.format(valor.toDate());
+      }
       if (valor is String) {
         try {
           final dt = DateTime.parse(valor);
           return formato.format(dt);
-        } catch (_) {
-          return valor;
-        }
+        } catch (_) {}
       }
       return valor?.toString() ?? "";
     }
@@ -548,12 +474,6 @@ class _CajeraWindowsState extends State<CajeraWindows> {
   void _showConsumirConfirmDialog() {
     if (pedidoSeleccionado == null) return;
     
-    final match = _pedidos.firstWhere(
-      (p) => p['id'] == pedidoSeleccionado,
-      orElse: () => {},
-    );
-    final pedidoNumero = match['N_Pedido'] ?? pedidoSeleccionado!;
-    
     showDialog(
       context: context,
       builder: (ctx) => Dialog(
@@ -601,7 +521,7 @@ class _CajeraWindowsState extends State<CajeraWindows> {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      '¿Deseas marcar el pedido $pedidoNumero como consumido? Esta acción no se puede deshacer.',
+                      '¿Deseas marcar el pedido $pedidoSeleccionado como consumido? Esta acción no se puede deshacer.',
                       style: const TextStyle(fontSize: 15),
                     ),
                   ),
@@ -657,33 +577,16 @@ class _CajeraWindowsState extends State<CajeraWindows> {
     if (pedidoSeleccionado == null) return;
 
     try {
-      const projectId = "tickets-firebase-aba0a";
-      final firestoreUrl = Uri.parse(
-        "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents/Ilumel-Pedidos/$pedidoSeleccionado?updateMask.fieldPaths=Estado&updateMask.fieldPaths=FechaConsumo&updateMask.fieldPaths=ConsumidoPor",
-      );
-
-      final updateBody = {
-        "fields": {
-          "Estado": {"stringValue": "Consumido"},
-          "FechaConsumo": {
-            "timestampValue": DateTime.now().toUtc().toIso8601String()
-          },
-          "ConsumidoPor": {"stringValue": nombre},
-        }
-      };
-
-      final response = await http.patch(
-        firestoreUrl,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(updateBody),
-      );
-
-      if (response.statusCode != 200) {
-        throw Exception("Error al actualizar documento: ${response.body}");
-      }
+      await FirebaseFirestore.instance
+          .collection('Ilumel-Pedidos')
+          .doc(pedidoSeleccionado)
+          .update({
+        'Estado': 'Consumido',
+        'FechaConsumo': DateTime.now(),
+        'ConsumidoPor': nombre,
+      });
 
       if (mounted) {
-        _loadPedidosREST();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Pedido marcado como consumido."),
@@ -707,6 +610,9 @@ class _CajeraWindowsState extends State<CajeraWindows> {
     final DateFormat formato = DateFormat("dd/MM/yyyy hh:mm a");
 
     String formatear(dynamic valor) {
+      if (valor is Timestamp) {
+        return formato.format(valor.toDate());
+      }
       if (valor is String) {
         try {
           final dt = DateTime.parse(valor);
@@ -888,9 +794,9 @@ class _CajeraWindowsState extends State<CajeraWindows> {
                         ),
                         const SizedBox(height: 16),
 
-                        // LISTA DE PEDIDOS CONSUMIDOS
+                        // LISTA DE PEDIDOS CONSUMIDOS con Flexible para evitar overflow
                         Flexible(
-                          child: _buildHistorialConsumidosWindows(),
+                          child: _buildHistorialConsumidosMobileWeb(),
                         ),
 
                         // BOTÓN CERRAR
@@ -923,9 +829,12 @@ class _CajeraWindowsState extends State<CajeraWindows> {
     );
   }
 
-  Widget _buildHistorialConsumidosWindows() {
-    return FutureBuilder<List<Map<String, dynamic>>>(
-      future: _loadConsumidosREST(),
+  Widget _buildHistorialConsumidosMobileWeb() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('Ilumel-Pedidos')
+          .where('Estado', isEqualTo: 'Consumido')
+          .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -933,7 +842,7 @@ class _CajeraWindowsState extends State<CajeraWindows> {
         if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         }
-        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -949,102 +858,20 @@ class _CajeraWindowsState extends State<CajeraWindows> {
           );
         }
 
-        final pedidos = snapshot.data!;
-
-        return ListView.builder(
-          padding: const EdgeInsets.all(12),
-          itemCount: pedidos.length,
-          itemBuilder: (context, index) {
-            final data = pedidos[index];
-            final imagenUrl = data['imagenUrl'] ?? '';
-
-            return Card(
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              child: ListTile(
-                  title: Text.rich(
-                    TextSpan(
-                      children: [
-                        const TextSpan(text: 'Pedido #', style: TextStyle(fontWeight: FontWeight.bold)),
-                        TextSpan(text: '${data['N_Pedido'] ?? 'N/A'}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  ),
-                subtitle: Text('Cliente: ${data['Nombre'] ?? 'N/A'}'),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (imagenUrl.isNotEmpty)
-                      IconButton(
-                        icon: const Icon(Icons.image, color: Colors.blue),
-                        onPressed: () => mostrarImagen(context, imagenUrl),
-                      ),
-                    PopupMenuButton<String>(
-                      icon: const Icon(Icons.more_vert),
-                      onSelected: (value) {
-                        if (value == 'datos') mostrarDatosPedido(context, data);
-                      },
-                      itemBuilder: (context) => [
-                        const PopupMenuItem(value: 'datos', child: Text('Datos')),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Future<List<Map<String, dynamic>>> _loadConsumidosREST() async {
-    try {
-      const projectId = "tickets-firebase-aba0a";
-      final url = Uri.parse(
-        "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents:runQuery",
-      );
-
-      final queryBody = {
-        "structuredQuery": {
-          "from": [{"collectionId": "Ilumel-Pedidos"}],
-          "where": {
-            "fieldFilter": {
-              "field": {"fieldPath": "Estado"},
-              "op": "EQUAL",
-              "value": {"stringValue": "Consumido"}
-            }
-          }
-        }
-      };
-
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(queryBody),
-      );
-
-      if (response.statusCode == 200) {
-        final List<dynamic> results = jsonDecode(response.body);
-        final pedidos = <Map<String, dynamic>>[];
-
-        for (var result in results) {
-          if (result['document'] != null) {
-            final doc = result['document'];
-            final fields = doc['fields'] as Map<String, dynamic>;
-
-            pedidos.add({
-              'N_Pedido': fields['N_Pedido']?['stringValue'] ?? 'N/A',
-              'Nombre': fields['Nombre']?['stringValue'] ?? 'Sin nombre',
-              'imagenUrl': fields['imagenUrl']?['stringValue'] ?? '',
-              'ConsumidoPor': fields['ConsumidoPor']?['stringValue'] ?? 'Desconocido',
-              'FechaConsumo': fields['FechaConsumo']?['timestampValue'],
-              'FechaConfirmado': fields['FechaConfirmado']?['timestampValue'],
-              'ConfirmadoPor': fields['ConfirmadoPor']?['stringValue'] ?? 'N/A',
-              'Banco': fields['Banco']?['stringValue'] ?? 'N/A',
-              'NumeroAprobacion': fields['NumeroAprobacion']?['stringValue'] ?? 'N/A',
-            });
-          }
-        }
+        final pedidos = snapshot.data!.docs.map((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          return {
+            'N_Pedido': data['N_Pedido'] ?? 'N/A',
+            'Nombre': data['Nombre'] ?? 'Sin nombre',
+            'imagenUrl': data['imagenUrl'] ?? '',
+            'ConsumidoPor': data['ConsumidoPor'] ?? 'Desconocido',
+            'FechaConsumo': data['FechaConsumo'],
+            'FechaConfirmado': data['FechaConfirmado'],
+            'ConfirmadoPor': data['ConfirmadoPor'] ?? 'N/A',
+            'Banco': data['Banco'] ?? 'N/A',
+            'NumeroAprobacion': data['NumeroAprobacion'] ?? 'N/A',
+          };
+        }).toList();
 
         // Ordenar por FechaConsumo descendente
         pedidos.sort((a, b) {
@@ -1055,21 +882,147 @@ class _CajeraWindowsState extends State<CajeraWindows> {
           if (fechaA == null) return 1;
           if (fechaB == null) return -1;
 
-          try {
-            DateTime dateA = DateTime.parse(fechaA.toString());
-            DateTime dateB = DateTime.parse(fechaB.toString());
-            return dateB.compareTo(dateA);
-          } catch (e) {
-            return 0;
-          }
+          DateTime dateA = fechaA is Timestamp ? fechaA.toDate() : DateTime.parse(fechaA.toString());
+          DateTime dateB = fechaB is Timestamp ? fechaB.toDate() : DateTime.parse(fechaB.toString());
+
+          return dateB.compareTo(dateA);
         });
 
-        return pedidos;
-      } else {
-        throw Exception('Error ${response.statusCode}: ${response.body}');
-      }
-    } catch (e) {
-      throw Exception('Error al cargar consumidos: $e');
-    }
+        return ListView.builder(
+          padding: const EdgeInsets.all(12),
+          itemCount: pedidos.length,
+          itemBuilder: (context, index) {
+            final pedido = pedidos[index];
+
+            String fechaFormateada = 'N/A';
+            if (pedido['FechaConsumo'] != null) {
+              if (pedido['FechaConsumo'] is Timestamp) {
+                fechaFormateada = DateFormat("dd/MM/yyyy hh:mm a").format((pedido['FechaConsumo'] as Timestamp).toDate());
+              } else {
+                try {
+                  fechaFormateada = DateFormat("dd/MM/yyyy hh:mm a").format(DateTime.parse(pedido['FechaConsumo'].toString()));
+                } catch (_) {
+                  fechaFormateada = pedido['FechaConsumo'].toString();
+                }
+              }
+            }
+
+            String fechaConfirmadoFormateada = 'N/A';
+            if (pedido['FechaConfirmado'] != null) {
+              if (pedido['FechaConfirmado'] is Timestamp) {
+                fechaConfirmadoFormateada = DateFormat("dd/MM/yyyy hh:mm a").format((pedido['FechaConfirmado'] as Timestamp).toDate());
+              } else {
+                try {
+                  fechaConfirmadoFormateada = DateFormat("dd/MM/yyyy hh:mm a").format(DateTime.parse(pedido['FechaConfirmado'].toString()));
+                } catch (_) {
+                  fechaConfirmadoFormateada = pedido['FechaConfirmado'].toString();
+                }
+              }
+            }
+
+            return Card(
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              child: ExpansionTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color.fromRGBO(134, 207, 61, 0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(
+                    Icons.remove_shopping_cart,
+                    color: Color.fromRGBO(134, 207, 61, 1),
+                  ),
+                ),
+                  title: Text.rich(
+                    TextSpan(
+                      children: [
+                        const TextSpan(text: 'Pedido #', style: TextStyle(fontWeight: FontWeight.bold)),
+                        TextSpan(text: '${pedido['N_Pedido']}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ),
+                subtitle: Text.rich(
+                  TextSpan(
+                    children: [
+                      const TextSpan(text: 'Cliente: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: '${pedido['Nombre']}'),
+                    ],
+                  ),
+                ),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              const TextSpan(text: 'Consumido por: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                              TextSpan(text: '${pedido['ConsumidoPor'] ?? 'N/A'}'),
+                            ],
+                          ),
+                          style: const TextStyle(color: Colors.green),
+                        ),
+                        const SizedBox(height: 8),
+                        Text.rich(TextSpan(children: [
+                          const TextSpan(text: 'Fecha de Consumo: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          TextSpan(text: fechaFormateada),
+                        ])),
+                        Text.rich(TextSpan(children: [
+                          const TextSpan(text: 'Confirmado por: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          TextSpan(text: '${pedido['ConfirmadoPor'] ?? 'N/A'}'),
+                        ])),
+                        Text.rich(TextSpan(children: [
+                          const TextSpan(text: 'Fecha de Confirmación: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          TextSpan(text: fechaConfirmadoFormateada),
+                        ])),
+                        Text.rich(TextSpan(children: [
+                          const TextSpan(text: 'Banco: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          TextSpan(text: '${pedido['Banco']}'),
+                        ])),
+                        Text.rich(TextSpan(children: [
+                          const TextSpan(text: 'Número de aprobación: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          TextSpan(text: '${pedido['NumeroAprobacion']}'),
+                        ])),
+                        const SizedBox(height: 12),
+                        if (pedido['imagenUrl'] != null && (pedido['imagenUrl'] as String).isNotEmpty)
+                          GestureDetector(
+                            onTap: () => mostrarImagen(context, pedido['imagenUrl'] as String),
+                            child: Row(
+                              children: [
+                                Image.network(
+                                  pedido['imagenUrl'] as String,
+                                  width: 80,
+                                  height: 80,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, color: Colors.grey),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text('Imagen consumida', style: TextStyle(fontWeight: FontWeight.bold)),
+                                      const SizedBox(height: 6),
+                                      const Text('Pulsa la miniatura para ver en grande', style: TextStyle(color: Colors.grey)),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
+
 }

@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../main.dart' show AppData;
-import '../services_windows/select_image.dart';
-import '../services_windows/upload_image.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_application_2/main.dart' show AppData;
+import 'package:flutter_application_2/services/select_image.dart';
+import 'package:flutter_application_2/services/upload_image.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:intl/intl.dart';
 
 final String nombre = AppData.nombre;
@@ -46,14 +46,14 @@ class PrefixDigitsFormatter extends TextInputFormatter {
   }
 }
 
-class ClienteWindows extends StatefulWidget {
-  const ClienteWindows({super.key});
+class Cliente extends StatefulWidget {
+  const Cliente({super.key});
 
   @override
-  State<ClienteWindows> createState() => _ClienteWindowsState();
+  State<Cliente> createState() => _ClienteState();
 }
 
-class _ClienteWindowsState extends State<ClienteWindows> {
+class _ClienteState extends State<Cliente> {
 
   // ignore: non_constant_identifier_names
   File? imagen_to_upload;
@@ -61,6 +61,7 @@ class _ClienteWindowsState extends State<ClienteWindows> {
   String? imageName;
   bool _isUploading = false;
   
+
   // ignore: non_constant_identifier_names
   final TextEditingController N_Pedido = TextEditingController();
   final formKey = GlobalKey<FormState>();
@@ -75,7 +76,9 @@ class _ClienteWindowsState extends State<ClienteWindows> {
     N_Pedido.selection = TextSelection.collapsed(offset: _prefix.length);
   }
 
+  
 
+  
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +115,11 @@ class _ClienteWindowsState extends State<ClienteWindows> {
                 if (imagen != null) {
                   setState(() {
                     imageName = imagen.name;
-                    imagen_to_upload = File(imagen.xfile!.path);
+                    if (kIsWeb) {
+                      webImageBytes = imagen.bytes;
+                    } else {
+                      imagen_to_upload = File(imagen.xfile!.path);
+                    }
                   });
                 } else {
                   // Puede ser cancelación o tamaño > 10 MB
@@ -142,15 +149,22 @@ class _ClienteWindowsState extends State<ClienteWindows> {
                     ),
                   ],
                 ),
-                child: imagen_to_upload != null
+                child: (kIsWeb ? webImageBytes != null : imagen_to_upload != null)
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(14),
-                        child: Image.file(
-                            imagen_to_upload!,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          ),
+                        child: kIsWeb
+                            ? Image.memory(
+                                webImageBytes!,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: double.infinity,
+                              )
+                            : Image.file(
+                                imagen_to_upload!,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: double.infinity,
+                              ),
                       )
                     : Center(
                         child: Column(
@@ -210,7 +224,7 @@ class _ClienteWindowsState extends State<ClienteWindows> {
                   ElevatedButton(
                     onPressed: _isUploading ? null : () async {
                       if (formKey.currentState!.validate()) {
-                        if (imagen_to_upload == null) {
+                        if (imagen_to_upload == null && webImageBytes == null) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("Por favor selecciona una imagen.")),
                           );
@@ -224,70 +238,43 @@ class _ClienteWindowsState extends State<ClienteWindows> {
                         try {
                           final pedidoId = N_Pedido.text;
 
-                          // 💻 Caso Windows → usar REST API
-                          const projectId = "tickets-firebase-aba0a"; // ⚠️ cambia por tu Project ID
+                          // 🌐 Caso móvil/web → usar Firestore plugin
+                          final docRef = FirebaseFirestore.instance
+                              .collection('Ilumel-Pedidos')
+                              .doc(pedidoId);
 
-                          // 1️⃣ Crear documento en Firestore vía REST
-                          final firestoreUrl = Uri.parse(
-                            "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents/Ilumel-Pedidos/$pedidoId",
-                          );
+                          await docRef.set({
+                            'N_Pedido': pedidoId,
+                            'Fecha': DateTime.now(),
+                            'Nombre': nombre,
+                            'Estado': 'Enviado',
+                          });
 
-                          final firestoreBody = {
-                            "fields": {
-                              "N_Pedido": {"stringValue": pedidoId},
-                              "Fecha": {"timestampValue": DateTime.now().toUtc().toIso8601String()},
-                              "Nombre": {"stringValue": nombre},
-                              "Estado": {"stringValue": "Enviado"},
-                            }
-                          };
-
-                          final firestoreResponse = await http.patch(
-                            firestoreUrl,
-                            headers: {"Content-Type": "application/json"},
-                            body: jsonEncode(firestoreBody),
-                          );
-
-                          if (firestoreResponse.statusCode != 200) {
-                            throw Exception("Error al crear documento: ${firestoreResponse.body}");
-                          }
-
-                          // 2️⃣ Subir imagen a Storage vía REST
                           final imageUrl = await uploadImage(
                             file: imagen_to_upload,
-                            bytes: null,
+                            bytes: webImageBytes,
                             name: imageName,
-                            docId: pedidoId,
+                            docId: docRef.id,
                           );
 
-                          // 3️⃣ Actualizar documento con la URL
                           if (imageUrl != null) {
-                            final updateBody = {
-                              "fields": {
-                                "imagenUrl": {"stringValue": imageUrl}
-                              }
-                            };
-
-                            final updateResponse = await http.patch(
-                              firestoreUrl,
-                              headers: {"Content-Type": "application/json"},
-                              body: jsonEncode(updateBody),
-                            );
-
-                            if (updateResponse.statusCode != 200) {
-                              throw Exception("Error al actualizar documento: ${updateResponse.body}");
-                            }
-
+                            await docRef.update({'imagenUrl': imageUrl});
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Pedido e imagen subidos correctamente $nombre")),
+                                SnackBar(
+                                  content: Text("Pedido e imagen subidos correctamente, $nombre"),
+                                  backgroundColor: Colors.green,
+                                  duration: const Duration(seconds: 4),
+                                ),
                               );
-                              
                             }
+                            
                           }
 
                           // Opcional: limpiar formulario
                           setState(() {
                             imagen_to_upload = null;
+                            webImageBytes = null;
                             N_Pedido.text = _prefix;
                             N_Pedido.selection = TextSelection.collapsed(offset: _prefix.length);
                           });
@@ -415,7 +402,7 @@ class _ClienteWindowsState extends State<ClienteWindows> {
                           height: (maxHeight - 160).clamp(120, 400),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: _buildHistorialWindows(),
+                            child: _buildHistorialMobileWeb(),
                           ),
                         ),
                         const SizedBox(height: 12),
@@ -447,14 +434,13 @@ class _ClienteWindowsState extends State<ClienteWindows> {
     );
   }
 
-  Widget _buildHistorialWindows() {
-    // Polling cada 5 segundos para ver cambios de estado en Windows
-    final stream = Stream<int>.periodic(
-      const Duration(seconds: 5),
-    ).asyncMap((_) => _loadConfirmadosREST());
-
-    return StreamBuilder<List<Map<String, dynamic>>>(
-      stream: stream,
+  Widget _buildHistorialMobileWeb() {
+    return StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+          .collection('Ilumel-Pedidos')
+          .where('Nombre', isEqualTo: nombre)
+          .orderBy('Fecha', descending: true)
+          .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -462,23 +448,41 @@ class _ClienteWindowsState extends State<ClienteWindows> {
         if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         }
-        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.inbox, size: 64, color: Colors.grey),
                 SizedBox(height: 16),
-                Text(
-                  'No tienes pedidos enviados',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
-                ),
+                Text('No tienes pedidos enviados', style: TextStyle(fontSize: 16, color: Colors.grey)),
               ],
             ),
           );
         }
 
-        final pedidos = snapshot.data!;
+        final pedidos = snapshot.data!.docs.map((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          return {
+            'N_Pedido': data['N_Pedido'] ?? 'N/A',
+            'Nombre': data['Nombre'] ?? 'Sin nombre',
+            'imagenUrl': data['imagenUrl'] ?? '',
+            'Fecha': data['Fecha'],
+            'Estado': data['Estado'] ?? 'N/A',
+          };
+        }).toList();
+
+        pedidos.sort((a, b) {
+          final fechaA = a['Fecha'];
+          final fechaB = b['Fecha'];
+          if (fechaA == null && fechaB == null) return 0;
+          if (fechaA == null) return 1;
+          if (fechaB == null) return -1;
+          DateTime dateA = fechaA is Timestamp ? fechaA.toDate() : DateTime.tryParse(fechaA.toString()) ?? DateTime.fromMillisecondsSinceEpoch(0);
+          DateTime dateB = fechaB is Timestamp ? fechaB.toDate() : DateTime.tryParse(fechaB.toString()) ?? DateTime.fromMillisecondsSinceEpoch(0);
+          return dateB.compareTo(dateA);
+        });
+
         return _buildListaConfirmados(pedidos);
       },
     );
@@ -496,7 +500,13 @@ class _ClienteWindowsState extends State<ClienteWindows> {
         final fecha = pedido['Fecha'];
         if (fecha != null) {
           try {
-            fechaFormateada = formato.format(DateTime.parse(fecha.toString()));
+            if (fecha is Timestamp) {
+              fechaFormateada = formato.format(fecha.toDate());
+            } else if (fecha is String) {
+              fechaFormateada = formato.format(DateTime.parse(fecha));
+            } else {
+              fechaFormateada = formato.format(DateTime.parse(fecha.toString()));
+            }
           } catch (_) {}
         }
 
@@ -685,78 +695,4 @@ class _ClienteWindowsState extends State<ClienteWindows> {
     return const Color(0xFF6D4C41); // marrón por defecto
   }
 
-  Future<List<Map<String, dynamic>>> _loadConfirmadosREST() async {
-    try {
-      const projectId = "tickets-firebase-aba0a";
-      final url = Uri.parse(
-        "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents:runQuery",
-      );
-
-      final queryBody = {
-        "structuredQuery": {
-          "from": [{"collectionId": "Ilumel-Pedidos"}],
-          "where": {
-            "fieldFilter": {
-              "field": {"fieldPath": "Nombre"},
-              "op": "EQUAL",
-              "value": {"stringValue": nombre}
-            }
-          },
-          "orderBy": [
-            {
-              "field": {"fieldPath": "Fecha"},
-              "direction": "DESCENDING"
-            }
-          ]
-        }
-      };
-
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(queryBody),
-      );
-
-      if (response.statusCode == 200) {
-        final List<dynamic> results = jsonDecode(response.body);
-        final pedidos = <Map<String, dynamic>>[];
-
-        for (var result in results) {
-          if (result['document'] != null) {
-            final doc = result['document'];
-            final fields = doc['fields'] as Map<String, dynamic>;
-
-            pedidos.add({
-              'N_Pedido': fields['N_Pedido']?['stringValue'] ?? 'N/A',
-              'Nombre': fields['Nombre']?['stringValue'] ?? 'Sin nombre',
-              'imagenUrl': fields['imagenUrl']?['stringValue'] ?? '',
-              'Fecha': fields['Fecha']?['timestampValue'],
-              'Estado': fields['Estado']?['stringValue'] ?? 'N/A',
-            });
-          }
-        }
-
-        pedidos.sort((a, b) {
-          final fechaA = a['Fecha'];
-          final fechaB = b['Fecha'];
-          if (fechaA == null && fechaB == null) return 0;
-          if (fechaA == null) return 1;
-          if (fechaB == null) return -1;
-          try {
-            DateTime dateA = DateTime.parse(fechaA.toString());
-            DateTime dateB = DateTime.parse(fechaB.toString());
-            return dateB.compareTo(dateA);
-          } catch (_) {
-            return 0;
-          }
-        });
-
-        return pedidos;
-      } else {
-        throw Exception('Error ${response.statusCode}: ${response.body}');
-      }
-    } catch (e) {
-      throw Exception('Error al cargar confirmados: $e');
-    }
-  }
 }
