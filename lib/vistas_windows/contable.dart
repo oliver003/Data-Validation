@@ -381,7 +381,7 @@ class _ContableWindowsState extends State<ContableWindows> {
           if (pedido['FechaConfirmado'] is String) {
             try {
               fechaFormateada = formato.format(
-                DateTime.parse(pedido['FechaConfirmado'])
+                DateTime.parse(pedido['FechaConfirmado']).toLocal()
               );
             } catch (e) {
               fechaFormateada = pedido['FechaConfirmado'];

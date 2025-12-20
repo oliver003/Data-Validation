@@ -35,7 +35,12 @@ Future<String?> uploadImage({
 
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
-    return data['mediaLink']; // URL pública del archivo
+    // Firebase Storage v0 no incluye 'mediaLink'; usa 'name' y 'downloadTokens'.
+    final String storedName = (data['name'] as String?) ?? objectName;
+    final String encodedName = Uri.encodeComponent(storedName);
+    final String? token = (data['downloadTokens'] as String?)?.split(',').first;
+    final String base = "https://firebasestorage.googleapis.com/v0/b/$bucket/o/$encodedName?alt=media";
+    return token != null && token.isNotEmpty ? "$base&token=$token" : base;
   } else {
     // ignore: avoid_print
     print("Error subiendo archivo: ${response.body}");

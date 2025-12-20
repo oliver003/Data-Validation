@@ -120,6 +120,8 @@ class _ClienteWindowsState extends State<ClienteWindows> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Imagen no seleccionada o excede los 10 MB.'),
+                        backgroundColor: Colors.orange,
+                        duration: Duration(seconds: 3),
                       ),
                     );
                   }
@@ -267,8 +269,12 @@ class _ClienteWindowsState extends State<ClienteWindows> {
                               }
                             };
 
+                            // Usar updateMask para actualizar solo imagenUrl y no sobrescribir otros campos
+                            final updateUrl = Uri.parse(
+                              "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents/Ilumel-Pedidos/$pedidoId?updateMask.fieldPaths=imagenUrl",
+                            );
                             final updateResponse = await http.patch(
-                              firestoreUrl,
+                              updateUrl,
                               headers: {"Content-Type": "application/json"},
                               body: jsonEncode(updateBody),
                             );
@@ -494,12 +500,12 @@ class _ClienteWindowsState extends State<ClienteWindows> {
         }
 
         final pedidos = snapshot.data!;
-        return _buildListaConfirmados(pedidos);
+        return _buildListaEnviados(pedidos);
       },
     );
   }
 
-  Widget _buildListaConfirmados(List<Map<String, dynamic>> pedidos) {
+  Widget _buildListaEnviados(List<Map<String, dynamic>> pedidos) {
     final DateFormat formato = DateFormat("dd/MM/yyyy hh:mm a");
 
     return ListView.builder(
@@ -511,7 +517,8 @@ class _ClienteWindowsState extends State<ClienteWindows> {
         final fecha = pedido['Fecha'];
         if (fecha != null) {
           try {
-            fechaFormateada = formato.format(DateTime.parse(fecha.toString()));
+            final DateTime dt = DateTime.parse(fecha.toString());
+            fechaFormateada = formato.format(dt.toLocal());
           } catch (_) {}
         }
 

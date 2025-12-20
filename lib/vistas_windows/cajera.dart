@@ -72,10 +72,8 @@ class _CajeraWindowsState extends State<CajeraWindows> {
           if (result['document'] != null) {
             final doc = result['document'];
             final fields = doc['fields'] as Map<String, dynamic>;
-            final docId = (doc['name'] as String).split('/').last;
 
             pedidos.add({
-              'id': docId,
               'Nombre': fields['Nombre']?['stringValue'] ?? 'N/A',
               'N_Pedido': fields['N_Pedido']?['stringValue'] ?? 'N/A',
               'imagenUrl': fields['imagenUrl']?['stringValue'] ?? '',
@@ -189,7 +187,6 @@ class _CajeraWindowsState extends State<CajeraWindows> {
             itemCount: _pedidos.length,
             itemBuilder: (context, index) {
               final data = _pedidos[index];
-              final docId = data['id'];
               final imagenUrl = data["imagenUrl"] ?? "";
 
               return Card(
@@ -201,7 +198,7 @@ class _CajeraWindowsState extends State<CajeraWindows> {
                   title: Text("Pedido #${data['N_Pedido'] ?? 'N/A'}", style: const TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: Text("Cliente: ${data['Nombre'] ?? 'N/A'}"),
                   leading: Radio<String>(
-                    value: docId,
+                    value: data['N_Pedido'],
                     groupValue: pedidoSeleccionado,
                     onChanged: (value) {
                       setState(() => pedidoSeleccionado = value);
@@ -359,7 +356,7 @@ class _CajeraWindowsState extends State<CajeraWindows> {
     String formatear(dynamic valor) {
       if (valor is String) {
         try {
-          final dt = DateTime.parse(valor);
+          final dt = DateTime.parse(valor).toLocal();
           return formato.format(dt);
         } catch (_) {
           return valor;
@@ -558,95 +555,101 @@ class _CajeraWindowsState extends State<CajeraWindows> {
       context: context,
       builder: (ctx) => Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            color: Colors.white,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: 420,
+            minWidth: 300,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Header con icono y gradiente suave
-              Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [
-                      Color.fromRGBO(134, 207, 61, 1),
-                      Color.fromRGBO(111, 184, 46, 1),
-                    ],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              color: Colors.white,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Header con icono y gradiente suave
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color.fromRGBO(134, 207, 61, 1),
+                        Color.fromRGBO(111, 184, 46, 1),
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  borderRadius: BorderRadius.circular(12),
+                  child: Row(
+                    children: const [
+                      Icon(Icons.check_circle, color: Colors.white),
+                      SizedBox(width: 10),
+                      Text(
+                        'Confirmar Consumo',
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
+                      ),
+                    ],
+                  ),
                 ),
-                child: Row(
-                  children: const [
-                    Icon(Icons.check_circle, color: Colors.white),
-                    SizedBox(width: 10),
-                    Text(
-                      'Confirmar Consumo',
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
+                const SizedBox(height: 16),
+                // Contenido
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.receipt_long, color: Color.fromRGBO(134, 207, 61, 1)),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        '¿Deseas marcar el pedido $pedidoNumero como consumido? Esta acción no se puede deshacer.',
+                        style: const TextStyle(fontSize: 15),
+                      ),
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 16),
-              // Contenido
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(Icons.receipt_long, color: Color.fromRGBO(134, 207, 61, 1)),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      '¿Deseas marcar el pedido $pedidoNumero como consumido? Esta acción no se puede deshacer.',
-                      style: const TextStyle(fontSize: 15),
+                const SizedBox(height: 18),
+                // Botones
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () => Navigator.pop(ctx),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                      icon: const Icon(Icons.close, size: 18),
+                      label: const Text('Cancelar',
+                        style: TextStyle(fontSize: 15),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 18),
-              // Botones
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () => Navigator.pop(ctx),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    const SizedBox(width: 8),
+                    ElevatedButton.icon(
+                      onPressed: () async {
+                        Navigator.pop(ctx);
+                        await _consumirPedido();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromRGBO(134, 207, 61, 1),
+                        foregroundColor: Colors.white,
+                        elevation: 2,
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                      icon: const Icon(Icons.check_circle, size: 18),
+                      label: const Text('Consumir',
+                        style: TextStyle(fontSize: 15),
+                      ),
                     ),
-                    icon: const Icon(Icons.close, size: 18),
-                    label: const Text('Cancelar',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      Navigator.pop(ctx);
-                      await _consumirPedido();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromRGBO(134, 207, 61, 1),
-                      foregroundColor: Colors.white,
-                      elevation: 2,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    ),
-                    icon: const Icon(Icons.check_circle, size: 18),
-                    label: const Text('Consumir',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ),
-                ],
-              )
-            ],
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -686,7 +689,7 @@ class _CajeraWindowsState extends State<CajeraWindows> {
         _loadPedidosREST();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Pedido marcado como consumido."),
+            content: Text("Pedido marcado como consumido ✓"),
             backgroundColor: Colors.green,
           ),
         );
@@ -709,7 +712,7 @@ class _CajeraWindowsState extends State<CajeraWindows> {
     String formatear(dynamic valor) {
       if (valor is String) {
         try {
-          final dt = DateTime.parse(valor);
+          final dt = DateTime.parse(valor).toLocal();
           return formato.format(dt);
         } catch (_) {
           return valor;
@@ -966,7 +969,7 @@ class _CajeraWindowsState extends State<CajeraWindows> {
           if (pedido['FechaConsumo'] is String) {
             try {
               fechaFormateada = formato.format(
-                DateTime.parse(pedido['FechaConsumo'])
+                DateTime.parse(pedido['FechaConsumo']).toLocal()
               );
             } catch (e) {
               fechaFormateada = pedido['FechaConsumo'];
@@ -978,7 +981,7 @@ class _CajeraWindowsState extends State<CajeraWindows> {
           if (pedido['FechaConfirmado'] is String) {
             try {
               fechaConfirmadaFormateada = formato.format(
-                DateTime.parse(pedido['FechaConfirmado'])
+                DateTime.parse(pedido['FechaConfirmado']).toLocal()
               );
             } catch (e) {
               fechaConfirmadaFormateada = pedido['FechaConfirmado'];
