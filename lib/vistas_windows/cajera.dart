@@ -304,9 +304,9 @@ class _CajeraWindowsState extends State<CajeraWindows> {
     );
 
     try {
-      // Obtener datos del pedido
+      // Obtener datos del pedido (selección usa N_Pedido como id)
       final datosPedido = _pedidos.firstWhere(
-        (p) => p['id'] == pedidoSeleccionado,
+        (p) => p['N_Pedido'] == pedidoSeleccionado,
         orElse: () => {},
       );
 
