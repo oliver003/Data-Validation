@@ -129,8 +129,11 @@ class _ClienteWindowsState extends State<ClienteWindows> {
               },
               child: Container(
                 margin: const EdgeInsets.all(16),
-                height: 220,
-                width: double.infinity,
+                constraints: const BoxConstraints(
+                  maxHeight: 400,
+                  minHeight: 100,
+                  minWidth: 200,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(16),
@@ -147,24 +150,32 @@ class _ClienteWindowsState extends State<ClienteWindows> {
                 child: imagen_to_upload != null
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(14),
-                        child: Image.file(
+                        child: InteractiveViewer(
+                          panEnabled: true,
+                          boundaryMargin: const EdgeInsets.all(8),
+                          minScale: 0.5,
+                          maxScale: 4.0,
+                          child: Image.file(
                             imagen_to_upload!,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
+                            fit: BoxFit.contain,
                           ),
+                        ),
                       )
-                    : Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.add_a_photo, size: 60, color: Colors.blueAccent),
-                            SizedBox(height: 10),
-                            Text(
-                              "Toca para seleccionar una imagen \n (Máximo 10 MB).",
-                              style: TextStyle(color: Colors.blueGrey, fontSize: 16),
-                            ),
-                          ],
+                    : SizedBox(
+                        height: 220,
+                        width: double.infinity,
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Icon(Icons.add_a_photo, size: 60, color: Colors.blueAccent),
+                              SizedBox(height: 10),
+                              Text(
+                                "Toca para seleccionar una imagen \n (Máximo 10 MB).",
+                                style: TextStyle(color: Colors.blueGrey, fontSize: 16),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
               ),

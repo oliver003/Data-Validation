@@ -602,9 +602,17 @@ class _CajeraWindowsState extends State<CajeraWindows> {
                     const Icon(Icons.receipt_long, color: Color.fromRGBO(134, 207, 61, 1)),
                     const SizedBox(width: 10),
                     Expanded(
-                      child: Text(
-                        '¿Deseas marcar el pedido $pedidoNumero como consumido? Esta acción no se puede deshacer.',
-                        style: const TextStyle(fontSize: 15),
+                      child: RichText(
+                        text: TextSpan(
+                          style: const TextStyle(fontSize: 15, color: Colors.black),
+                          children: [
+                            TextSpan(text: '¿Deseas marcar el pedido $pedidoNumero como consumido? '),
+                            const TextSpan(
+                              text: 'Esta acción no se puede deshacer.',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -612,7 +620,7 @@ class _CajeraWindowsState extends State<CajeraWindows> {
                 const SizedBox(height: 18),
                 // Botones
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton.icon(
                       onPressed: () => Navigator.pop(ctx),
@@ -628,7 +636,7 @@ class _CajeraWindowsState extends State<CajeraWindows> {
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 40),
                     ElevatedButton.icon(
                       onPressed: () async {
                         Navigator.pop(ctx);
