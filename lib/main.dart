@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-import 'vistas_windows/cliente.dart';
-import 'vistas_windows/inicio.dart';
-import 'vistas_windows/contable.dart';
-import 'vistas_windows/cajera.dart';
-import 'vistas_windows/login.dart';
+import 'package:flutter_application_2/vistas/cliente.dart';
+import 'package:flutter_application_2/vistas/inicio.dart';
+import 'package:flutter_application_2/vistas/contable.dart';
+import 'package:flutter_application_2/vistas/cajera.dart';
+import 'package:flutter_application_2/vistas/login.dart';
 
 class AppData {
   static String nombre = '';
@@ -12,12 +14,16 @@ class AppData {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  runApp(const MainAppWindows());
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  runApp(const MainApp());
 }
 
-class MainAppWindows extends StatelessWidget {
-  const MainAppWindows({super.key});
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +34,9 @@ class MainAppWindows extends StatelessWidget {
       routes: {
         '/Login': (context) => const LoginView(),
         '/Inicio': (context) => const Inicio(),
-        '/Cliente': (context) => const ClienteWindows(),
-        '/Contable': (context) => const ContableWindows(),
-        '/Cajera': (context) => const CajeraWindows(),
+        '/Cliente': (context) => const Cliente(),
+        '/Contable': (context) => const Contable(),
+        '/Cajera': (context) => const Cajera(),
       }
     );
   }
